@@ -1,0 +1,12 @@
+/*
+ * Coded by Steven Bower (cc) 2011
+ * TurnWheel Designs
+ * http://turnwheel.com
+ */
+ 
+#breadcrumbs {
+	display: none;
+}
+#content_inner h2 {
+	margin: 0;
+}

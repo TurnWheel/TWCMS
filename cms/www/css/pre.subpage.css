@@ -1,0 +1,30 @@
+/*
+ * Coded by Steven Bower (cc) 2011
+ * TurnWheel Designs
+ * http://turnwheel.com
+ */
+ 
+p {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#breadcrumbs {
+	display: block;
+	width: 80%;
+	height: 30px;
+	font-size: 12px;
+}
+#nav-above {
+	display: none;
+}
+
+.entry-meta {
+	font-size: 0.8em;
+}
+.entry-content, .entry-summary {
+	margin: 20px 0 20px 0;
+}
+.navigation {
+	margin: 20px 0 20px 0;
+}

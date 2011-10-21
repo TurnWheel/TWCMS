@@ -1,0 +1,35 @@
+#php_flag display_errors on
+#ErrorDocument 404 /error404
+
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+
+	# .net/.org Redirect
+	RewriteCond %{HTTP_HOST} ^hotcouturevintage.(net|org)
+	RewriteRule ^(.*) http://hotcouturevintage.com/$1 [R=301,L]
+
+	# WWW Redirect
+	RewriteCond %{HTTP_HOST} ^www.hotcouturevintage.com
+	RewriteRule ^(.*) http://hotcouturevintage.com/$1 [R=301,L]
+
+	############################################
+	## never rewrite for existing files, directories and links
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-l
+
+	# Index
+	RewriteRule ^/?$ index.php [L,QSA]
+
+	# Global Definitions for CMS
+	RewriteRule ^([0-9a-z\_\-]+)?/?$ index.php?a=$1 [L,QSA]
+	RewriteRule ^([0-9a-z\_\-]+)/([0-9]+)?/?$ index.php?a=$1&id=$2 [L,QSA]
+	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)?/?$ index.php?a=$1&b=$2 [L,QSA]
+	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9]+)?/?$ index.php?a=$1&b=$2&id=$3 [L,QSA]
+	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9a-z\_\-]+)?/?$ index.php?a=$1&b=$2&c=$3 [L,QSA]
+	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9]+)?/?$ index.php?a=$1&b=$2&c=$3&id=$4 [L,QSA]
+	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9a-z\_\-]+)?/?$ index.php?a=$1&b=$2&c=$3&d=$4 [L,QSA]
+</IfModule>
