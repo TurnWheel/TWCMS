@@ -44,9 +44,10 @@ Automated Email Sent By SomeWebsite.com'
 	'image_size_th' => 150, // Size of thumbnail
 
 	// Mail Chimp Settings
-	'mc_enable' => TRUE, // Enable API
+	'mc_enable' => FALSE, // Enable API
 	'mc_ep' => 'http://us2.api.mailchimp.com/1.3/', // Mail Chimp End Points (See Docs)
 	'mc_key' => '{paste key}', // API Key (login to account to edit/add)
+	'mc_listid' => 'effa235ac8', // Unique list id for list to be used
 );
 
 /* Define constants */
