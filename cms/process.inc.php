@@ -162,12 +162,21 @@ else {
 }
 
 // Swap bread crumbs for full title (only if this isnt already set)
-if ($header  !== '') {
+if ($header  !== '' && $page !== strtolower($header)) {
 	foreach ($bcrumbs AS $name => $url) {
-		if ($url === $currurl) unset($bcrumbs[$name]);
+		// Locate pre-set header and remove
+		// Comparisions: /page === /page; /page/ === /page/
+		// /page/ === /page.'/'; /page === /page/
+		if ($url === $currurl || $url === $currurl.'/' ||
+				$url === substr($currurl, 0, -1)) {
+			unset($bcrumbs[$name]);
+		}
 	}
 	
-	if (!isset($bcrumbs[$header])) $bcrumbs[$header] = $currurl;
+	// Set new header for this URL (if not already set)
+	if (!isset($bcrumbs[$header])) {
+		$bcrumbs[$header] = $currurl;
+	}	
 }
 
 // Add previous pages to title format
