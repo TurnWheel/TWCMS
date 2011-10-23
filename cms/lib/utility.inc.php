@@ -35,30 +35,6 @@ function root_url2name($url) {
 
 /*
  * <TWCMS>
- * Prints a false 404 page
- * Intended to match the 404 page of Apache almost
- * byte for byte (including headers). To prevent
- * the revelation of buried files
- */
-function print404() {
-    header('HTTP/1.1 404 Not Found');
-    header('X-Powered-By:',TRUE);
-    header('Set-Cookie',TRUE);
-    ?>
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-<html><head>
-<title>404 Not Found</title>
-</head><body>
-<h1>Not Found</h1>
-<p>The requested URL <?php print $_SERVER['REQUEST_URI']; ?> was not found on this server.</p>
-<hr>
-<address>Apache Server at <?php print $_SERVER['SERVER_NAME']; ?> Port 80</address>
-</body></html>
-    <?php
-}
-
-/*
- * <TWCMS>
  * Check Bit Flags
  * Usage: check_flag(F_FLAG,$flag)
  */
@@ -121,7 +97,7 @@ function format_phone($phone) {
 // -> bar stuff
 function map_replace($map,$text) {
     foreach ($map AS $find => $replace) {
-        $text = str_replace('{'.$find.'}',$replace,$text);
+        $text = str_replace('{'.$find.'}', $replace, $text);
     }
 
     return $text;
@@ -158,7 +134,7 @@ function recursiveDelete($str){
 
 // Get lat/lng from google based on address
 // MAPS_HOST and MAPS_KEY are defined in config
-function google_latlng($addr,&$status) {
+function google_latlng($addr, &$status) {
     if ($addr == '') return FALSE;
 
     // Set up variables
@@ -185,26 +161,6 @@ function google_latlng($addr,&$status) {
 
     // If it reaches this point, just move on
     return FALSE;
-}
-
-// Request HTTP Authorization
-function req_auth($realm = 'Secret Realm') {
-    header('WWW-Authenticate: Basic realm="'.$realm.'"');
-    header('HTTP/1.1 401 Unauthorized');
-    print '<h1>Error 401: Authorization Required</h1>';
-    exit;
-}
-
-/*
- * Veriy HTTP Auth
- * Input: array('user' => 'me', 'pass' => sha1('test'))
- */
-function check_auth($user) {
-    $u = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-    $p = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
-
-    if ($u === $user['user'] && sha1($p) === $user['pass']) return TRUE;
-    else return FALSE;
 }
 
 /*

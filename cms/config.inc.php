@@ -19,6 +19,11 @@ $cfg = array(
 	
 	// Email Settings
 	'email_date' => 'g:ia T \o\n F j, Y', // Email date format
+
+	// Encryption Settings
+	'hash_algo' => 'sha512', // Algorithm for generating one-way hashes (Default: sha512); see php.net/hash_algos for options
+	'enc_algo' => 'triplesdes', // Algorithm for generating two-way enc keys (Default: MCRYPT_3DES); see mcrypt.ciphers for options
+	'enc_key' => 'CHANGE ME ONCE', // Seed key for enc_algo (NOTE: CHANGE ONLY DURING INITIAL INSTALL)
 	
 	/* Contact Page Settings */
 	'contact_admin' => array('steven@turnwheel.com'), // List of emails to send contact requests to
@@ -36,7 +41,7 @@ Automated Email Sent By SomeWebsite.com'
 	),
 
     // Admin Login
-	'admin' => array('user' => 'admin','pass' => sha1('somedude')),
+	'admin' => array('user' => 'admin','pass' => 'somedude'),
 
 	// Image Upload Settings (if needed)
 	'image_types' => array('png','jpg','jpeg'),
