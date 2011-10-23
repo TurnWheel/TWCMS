@@ -10,6 +10,8 @@
  * please seek the mailchimp API docs.
  */
 
+if (!defined('SECURITY')) exit;
+
 /*
  * $data is an array of input
  * accepts any MVAR, and
@@ -39,8 +41,9 @@ function mc_send($data) {
 	$mcdata = array(
 		'apikey' => $cfg['mc_key'],
 		'id' => $cfg['mc_listid'],
-		'email_address' => $data['email'],
+		'email_address' => $email,
 		'email_type' => 'html',
+		'merge_vars' => $mvars,
 		'double_optin' => TRUE,
 		'send_welcome' => FALSE,
 		'update_existing' => FALSE,

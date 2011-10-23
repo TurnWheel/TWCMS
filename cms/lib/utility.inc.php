@@ -8,6 +8,7 @@
  * this means it is vital to the CMS internals
  * Otherwise, it is just a useful function
  */
+
 if (!defined('SECURITY')) exit;
 
 /*
