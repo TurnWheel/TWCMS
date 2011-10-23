@@ -23,9 +23,13 @@ session_start();
 require dirname(__FILE__).'/config.inc.php';
 require LPATH.'sql.inc.php';
 require LPATH.'utility.inc.php';
+require LPATH.'security.inc.php';
 
 sql_connect($cfg['db_host'],$cfg['db_user'],$cfg['db_pass'],$cfg['db_name']); // Connect to SQL Server
 unset($cfg['db_user'],$cfg['db_pass']); // Security Measure
+
+// Encrypt admin pass so it's not stored in plain text
+$cfg['admin']['pass'] = tw_genhash($cfg['admin']['pass']);
 
 // Capture Referer Information
 $cfg['referer'] = isset($_SERVER['HTTP_REFERER']) ? real_escape($_SERVER['HTTP_REFERER']) : '(Direct)';
