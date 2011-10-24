@@ -1,0 +1,41 @@
+#!/usr/bin/php
+<?php
+
+$find = 'ssh.turnwheel.com';
+$replace = 'git.turnwheel.com';
+$file = isset($argv[1]) ? $argv[1] : '';
+
+print 'File: '.$file.'... ';
+
+if ($file === '') {
+	print 'Specify a file'."\n";
+	exit;
+}
+
+$data = file_get_contents($file);
+
+if ($data === FALSE) {
+	print 'Could not open file'."\n";
+	exit;
+}
+
+// Look for find
+if (strpos($data, $find) === FALSE) {
+	print 'String not present. Done'."\n";
+	exit;
+}
+
+// Replace
+$data = str_replace($find, $replace, $data);
+
+// Save file
+if (file_put_contents($file, $data)) {
+	print 'DONE'."\n";
+	exit;
+}
+else {
+	print 'Failed. Could not write changes.'."\n";
+	exit;
+}
+
+?>
