@@ -141,5 +141,8 @@ foreach ($cfg['t_js'] AS $file) {
 			</p>
 		</div>
 	</div>
+<?php
+print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s -->';
+?>
 </body>
 </html>
