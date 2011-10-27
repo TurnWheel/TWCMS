@@ -12,6 +12,7 @@ $cfg = array(
     'debug' => TRUE, // Set to TRUE to enable "Debug" mode (Not recommended for live sites)
 
     /* Database */
+	'db_enable' => TRUE, // Is DB connection even required? (Base CMS doesn't use it, but most addons will!)
     'db_host' => 'localhost', // Host name for MySQL Database ('localhost' works for most installations)
     'db_user' => 'somewebsite', // Username for MySQL login (Reccommend you do NOT use root)
     'db_pass' => 'somesql!', // Password for MySQL user

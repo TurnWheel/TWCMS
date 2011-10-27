@@ -13,14 +13,23 @@ if (!defined('SECURITY')) exit;
 
 /*
  * <TWCMS>
+ * Escape headers for use in includes,
+ * and any file-based function
+ */
+function path_escape($v) {
+	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/','', $v);
+}	
+
+/*
+ * <TWCMS>
  * Escape headers for use in SQL queries.
- * This is integrated into the CMS for every
- * POST or GET variable that comes through.
+ *
+ * Requires $cfg['db_enable'] = TRUE
  *
  * Essential mysql_real_escape_string
  * but it handles if magic_quotes is set or not.
  */
-function real_escape($v,$t = '') {
+function real_escape($v) {
     if (get_magic_quotes_gpc() === 1) $v = stripslashes($v);
 
     return mysql_real_escape_string($v);
@@ -31,7 +40,7 @@ function real_escape($v,$t = '') {
  * Root URL's into their full name
  */
 function root_url2name($url) {
-    return ucwords(str_replace('-',' / ',str_replace('_',' ',$url)));
+    return ucwords(str_replace('-',' / ', str_replace('_',' ',$url)));
 }
 
 /*

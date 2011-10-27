@@ -21,8 +21,8 @@ if (empty($headers) || !isset($headers[0])) $headers = array('a');
  */
 foreach ($headers AS $num => $key) {
     // Handle first param with special condition (defaults to index)
-    if ($num === 0) $_GET[$key] = isset($_GET[$key]) && !empty($_GET[$key]) ? real_escape($_GET[$key]) : 'index';
-    else $_GET[$key] = isset($_GET[$key]) ? real_escape($_GET[$key]) : '';
+    if ($num === 0) $_GET[$key] = isset($_GET[$key]) && !empty($_GET[$key]) ? path_escape($_GET[$key]) : 'index';
+    else $_GET[$key] = isset($_GET[$key]) ? path_escape($_GET[$key]) : '';
 }
 
 // Find current URL
@@ -119,16 +119,18 @@ if ($e404) {
 }
 
 if ($php) {
-    // Set the variables allowed by scripts
-    // These 3 variables should be over-ridden in the .inc.php scripts
-    // Other than that, these scripts can do anything.
-    // Including requesting authentication, accepting post data, etc.
-    // This simply locks you into the default layout provided
-    $header = '';
-    $content = '';
-    $title = '';
+	/*
+	 * Set the variables allowed by scripts
+     * These 3 variables should be over-ridden in the .inc.php scripts
+     * Other than that, these scripts can do anything.
+     * Including requesting authentication, accepting post data, etc.
+     * This simply locks you into the default layout provided
+	 */
+	$header = ''; // Sets the h2 tag in template
+	$title = ''; // Used for the <title> tag (usually same as $header, but not always)
+    $content = ''; // Body of your page!
     
-    include $file;
+    include $file; // Yes, $file is safe
     
     $header = strip_tags($header); // Strip out HTML from header
 }
@@ -136,13 +138,13 @@ if ($php) {
 // NOTE: The first line of every .html file becomes the header!
 else {
     $content = isset($content) ? $content : '';
-    $split = explode("\n",$content,2); // Split Main Content from Header
+    $split = explode("\n", $content, 2); // Split Main Content from Header
 
     // Check to make sure data is valid, otherwise use 404 page and post it as a 404 error
     if ($content === '' || empty($split)) {
         header('HTTP/1.1 404 Not Found');
         $data = file_get_contents(CPATH.'error.404.html');
-        $split = explode("\n",$data,2);
+        $split = explode("\n", $data, 2);
     }
 
     // Split header and content
