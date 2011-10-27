@@ -1,6 +1,10 @@
 #php_flag display_errors on
 #ErrorDocument 404 /error404
 
+# Sonic.net PHP 5.3
+#Action php-cgi /cgi-bin/php53
+#AddHandler php-cgi .php 
+
 DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
@@ -8,12 +12,17 @@ DirectoryIndex index.php
 	RewriteBase /
 
 	# .net/.org Redirect
-	RewriteCond %{HTTP_HOST} ^hotcouturevintage.(net|org)
-	RewriteRule ^(.*) http://hotcouturevintage.com/$1 [R=301,L]
+	#RewriteCond %{HTTP_HOST} ^turnwheel.(net|org)
+	#RewriteRule ^(.*) http://turnwheel.com/$1 [R=301,L]
 
 	# WWW Redirect
-	RewriteCond %{HTTP_HOST} ^www.hotcouturevintage.com
-	RewriteRule ^(.*) http://hotcouturevintage.com/$1 [R=301,L]
+	#RewriteCond %{HTTP_HOST} ^www.turnwheel.com
+	#RewriteRule ^(.*) http://turnwheel.com/$1 [R=301,L]
+
+	############################################
+	## workaround for HTTP authorization
+	## in CGI environment (like Sonic.net PHP 5.3)
+	#RewriteRule .* - [E=HTTP_AUTH:%{HTTP:Authorization}]
 
 	############################################
 	## never rewrite for existing files, directories and links

@@ -120,16 +120,18 @@ if (!function_exists('file_put_contents')) {
 }
 
 // Delete file or directory recursively
-function recursiveDelete($str){
-	if(is_file($str)){
-		return @unlink($str);
+function recursiveDelete($str) {
+	if (is_file($str)) {
+		return unlink($str);
 	}
-	elseif(is_dir($str)){
-		$scan = glob(rtrim($str,'/').'/*');
-		foreach($scan as $index=>$path){
+	elseif (is_dir($str)) {
+		$scan = glob(rtrim($str, '/').'/*');
+
+		foreach ($scan as $index => $path) {
 			recursiveDelete($path);
 		}
-		return @rmdir($str);
+
+		return rmdir($str);
 	}
 }
 
@@ -332,14 +334,14 @@ function time_since($time,$showdate = TRUE) {
 }
 
 // Parse CSV File by Row
-function parse_csv_row($file, $longest, $delimiter = ',') {
+function parse_csv_row($file, $longest = 0, $delimiter = ',') {
     if (!file_exists($file)) return FALSE;
 
     $data = array();
-    $file = fopen($file,'r');
+    $file = fopen($file, 'r');
 
     while (($line = fgetcsv($file, $longest, $delimiter)) !== FALSE) {
-        array_push($data,$line);
+        array_push($data, $line);
     }
 
     fclose($file);
@@ -348,11 +350,10 @@ function parse_csv_row($file, $longest, $delimiter = ',') {
 }
 
 // Parse CSV file by column
-function parse_csv_col($file, $longest, $delimiter = ',') {
+function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
     if (!file_exists($file)) return FALSE;
 
     $data = array();
-    $map = $GLOBALS['cfg']['csv_fields'];
     $file = fopen($file,'r');
 
     $cnt = 0;
@@ -464,92 +465,6 @@ function sanitize($text = '') {
     }
 
     return $text;
-}
-
-/* Create fputcsv for < PHP 5.1.0 */
-if (!function_exists('fputcsv')) {
-    function fputcsv(&$handle, $fields = array(), $delimiter = ',', $enclosure = '"') {
-
-        // Sanity Check
-        if (!is_resource($handle)) {
-            trigger_error('fputcsv() expects parameter 1 to be resource, ' .
-                gettype($handle) . ' given', E_USER_WARNING);
-            return false;
-        }
-
-        if ($delimiter!=NULL) {
-            if( strlen($delimiter) < 1 ) {
-                trigger_error('delimiter must be a character', E_USER_WARNING);
-                return false;
-            }elseif( strlen($delimiter) > 1 ) {
-                trigger_error('delimiter must be a single character', E_USER_NOTICE);
-            }
-
-            /* use first character from string */
-            $delimiter = $delimiter[0];
-        }
-
-        if( $enclosure!=NULL ) {
-             if( strlen($enclosure) < 1 ) {
-                trigger_error('enclosure must be a character', E_USER_WARNING);
-                return false;
-            }elseif( strlen($enclosure) > 1 ) {
-                trigger_error('enclosure must be a single character', E_USER_NOTICE);
-            }
-
-            /* use first character from string */
-            $enclosure = $enclosure[0];
-       }
-
-        $i = 0;
-        $csvline = '';
-        $escape_char = '\\';
-        $field_cnt = count($fields);
-        $enc_is_quote = in_array($enclosure, array('"',"'"));
-        reset($fields);
-
-        foreach( $fields AS $field ) {
-
-            /* enclose a field that contains a delimiter, an enclosure character, or a newline */
-            if( is_string($field) && (
-                strpos($field, $delimiter)!==false ||
-                strpos($field, $enclosure)!==false ||
-                strpos($field, $escape_char)!==false ||
-                strpos($field, "\n")!==false ||
-                strpos($field, "\r")!==false ||
-                strpos($field, "\t")!==false ||
-                strpos($field, ' ')!==false ) ) {
-
-                $field_len = strlen($field);
-                $escaped = 0;
-
-                $csvline .= $enclosure;
-                for( $ch = 0; $ch < $field_len; $ch++ )    {
-                    if( $field[$ch] == $escape_char && $field[$ch+1] == $enclosure && $enc_is_quote ) {
-                        continue;
-                    }elseif( $field[$ch] == $escape_char ) {
-                        $escaped = 1;
-                    }elseif( !$escaped && $field[$ch] == $enclosure ) {
-                        $csvline .= $enclosure;
-                    }else{
-                        $escaped = 0;
-                    }
-                    $csvline .= $field[$ch];
-                }
-                $csvline .= $enclosure;
-            } else {
-                $csvline .= $field;
-            }
-
-            if( $i++ != $field_cnt ) {
-                $csvline .= $delimiter;
-            }
-        }
-
-        $csvline .= "\n";
-
-        return fwrite($handle, $csvline);
-    }
 }
 
 #
@@ -912,7 +827,7 @@ function is_rfc3696_valid_email_address($email) {
 }
 
 function rfc3696_strip_comments($comment, $email, $replace='') {
-	while (1){
+	while (1) {
 		$new = preg_replace("!$comment!", $replace, $email);
 		if (strlen($new) == strlen($email)){
 			return $email;
