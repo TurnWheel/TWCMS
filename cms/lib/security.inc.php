@@ -18,7 +18,7 @@ if (!defined('SECURITY')) exit;
  * Returns computed hash string
  * $salt_str returns the salt by ref
  */
-function tw_genhash($input, $salt = FALSE, &$salt_str = '') {
+function tw_genhash($input, $salt = FALSE, $salt_str = '') {
 	global $cfg;
 	
 	// Add salt encryption
@@ -46,7 +46,7 @@ function tw_chkhash($input, $enc, $salt_str = '') {
 
 	// Add salt to input
 	$input .= $salt_str;
-	
+
 	// If computed hash matches save hash; TRUE
 	return hash($cfg['hash_algo'], $input) === $enc;
 }
@@ -87,10 +87,17 @@ function req_auth($realm = 'Secret Realm') {
  * Input: array('user' => 'me', 'pass' => sha1('test'))
  */
 function check_auth($user) {
+	// For PHP5 CGI In conjunction
+	// with mod_rewrite: E=HTTP_AUTH:%{HTTP:Authorization}
+	if (isset($_SERVER['REDIRECT_HTTP_AUTH']) && !empty($_SERVER['REDIRECT_HTTP_AUTH'])) {
+		list($type, $content) = explode(' ', $_SERVER['REDIRECT_HTTP_AUTH'], 2);
+		list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':',base64_decode($content));
+	}
+
     $u = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
     $p = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
 
-    if ($u === $user['user'] && tw_chkhash($p, $user['pass'])) return TRUE;
+	if ($u === $user['user'] && tw_chkhash($p, $user['pass'])) return TRUE;
     else return FALSE;
 }
 
