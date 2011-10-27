@@ -1,0 +1,149 @@
+/*
+ * Coded By Steven Bower
+ * TurnWheel Designs (cc) 2011
+ *
+ * Global Template CSS
+ */
+
+/* Global Overrides */
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	background: #FFF;
+	font-size: 1em;
+	font-family: Verdana;
+}
+a {
+	text-decoration: underline;
+}
+a:hover {
+	text-decoration: none;
+}
+h1 {
+	display: none;
+}
+h2 {
+	font-size: 2em;
+}
+h3 {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1em;
+}
+p {
+	padding: 4px;
+}
+
+/* Template Definitions */
+#top {
+	width: 100%;
+	height: 170px;
+	background: transparent url(/images/topbg.jpg) top left repeat-x;
+}
+#wrapper {
+	width: 994px;
+	margin: 0 auto;
+}
+#header {
+	position: absolute;
+	margin: 0 auto;
+	top: -170px; /* Negative of #top height */
+	width: 975px;
+	background: transparent;
+}
+#logo {
+	float: left;
+	width: 400px;
+	background: transparent url(/images/logo.png) no-reepat;
+}
+#logo a {
+	display: block;
+	width: 400px; /* Same as #logo height */
+	height: 100px;
+}
+#logo b {
+	display: none;
+}
+
+/* Being #menu */
+#menu {
+	margin: 0px;
+	height: 40px;
+	position: absolute;
+	top: 125px;
+	left: 65px;
+}
+#menu li {
+	list-style: none;
+	position: absolute;
+	top: 0;
+}
+#menu a {
+	color: #FFF;
+	height: 30px;
+	outline: 0;
+	display: block;
+	background: transparent;
+	padding-top: 8px;
+
+	font-size: 14px;
+	font-family: sans-serif;
+
+	text-shadow: 1px 1px 0px #777;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+#menu a:hover {
+	color: #FFF;
+	text-shadow: 0px 0px 4px #FFF;
+}
+/* End #menu */
+
+#inner_wrap {
+	width: 970px;
+	padding: 20px 0 20px 10px;
+}
+#content {
+	float: left;
+	width: 600px;
+}
+#sidebar {
+	float: right;
+	width: 300px;
+	margin: 0;
+	padding: 0 10px 10px 10px;
+	background: #333;
+}
+#sidebar h2 {
+	font-family: Arial, serif;
+	font-size: 1.2em;
+	color: #CCC;
+}
+#footer {
+	width: 100%;
+	height: 160px;
+	background: transparent url(/images/footerbg.png) repeat;
+}
+
+/* Utility Classes */
+.clear {
+	clear: both;
+}
+.center {
+	text-align: center;
+}
+.right {
+	text-align: right;
+}
+.left {
+	text-align: left;
+}
+.fleft {
+	float: left;
+}
+.fright {
+	float: right;
+}
