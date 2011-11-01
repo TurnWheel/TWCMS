@@ -46,6 +46,9 @@ em {
 p {
 	padding: 4px 0;
 }
+ul {
+	margin-left: 3px;
+}
 li {
 	list-style-type: circle;
 	list-style-position: inside;
@@ -269,7 +272,7 @@ tr.table2 { /* Used to higlight important rows */
 }
 
 .box {
-	width: 350px;
+	width: 75%;
 	margin: 5px auto;
 	padding: 15px;
 	background-color: #FFF;
