@@ -10,6 +10,9 @@
 	margin: 0;
 	padding: 0;
 }
+html, body {
+	height: 100%;
+}
 body {
 	background: #FFF;
 	font-size: 1em;
@@ -21,8 +24,11 @@ a {
 a:hover {
 	text-decoration: none;
 }
+img, a img {
+	outline: 0;
+}
 h1 {
-	display: none;
+	font-size: 2em;
 }
 h2 {
 	font-size: 2em;
@@ -33,31 +39,142 @@ h3 {
 h4 {
 	font-size: 1em;
 }
+em {
+	font-style: italic;
+	text-decoration: underline;
+}
 p {
+	padding: 4px 0;
+}
+li {
+	list-style-type: circle;
+	list-style-position: inside;
+}
+hr {
+	margin: 4px;
+	border: 0;
+	border-top: 1px solid #000;
+}
+abbr {
+	cursor: help;
+	border-bottom: 1px dotted #666;
+}
+label {
+	cursor: pointer;
+	font-size: 1.2em
+}
+fieldset {
+	width: 60%;
+	margin: 5px;
+	padding: 8px;
+	border: 1px solid #333;
+}
+legend {
+	font-size: 1.1em;
+	font-family: sans-serif;
+	letter-spacing: 1.5px;
+	background: #CCC;
 	padding: 4px;
+	margin: 5px 0 8px 0;
+	border: 1px solid #666;
+	color: #000;
+	font-weight: 700;
+}
+sub {
+	font-size: 10pt;
+	letter-spacing: 0.035em;
+	color: #333;
+}
+input {
+	width: 350px;
+	border: 1px solid #CCC;
+	background: #FFF;
+	font-size: 12px;
+	color: #000;
+	padding: 3px;
+}
+input[type="checkbox"], input[type="radio"], input.checkbox {
+	width: auto;
+	margin: 0;
+	border: 0;
+	background: #FFF;
+}
+input.short {
+	width: 250px;
+}
+textarea {
+	background: #FFF;
+	border: 1px solid #CCC;
+	font-size: 12px;
+	color: #000;
+	padding: 3px;
+}
+button {
+	margin-top: 4px;
+	padding: 4px;
+	background: #CCC;
+	height: 28px;
+	width: 90px;
+	border: 1px solid #000;
+	color: #000;
+}
+fieldset:hover,button:hover,input:hover,textarea:hover {
+	border-color: #666;
+}
+fieldset:focus,button:focus,input:focus,textarea:focus {
+	border-color: #333;
+	outline: 0;
+}
+
+table {
+	padding: 0;
+	margin: 0 auto;
+	width: 80%;
+	border: #000 1px solid;
+}
+th {
+	font-weight: bold;
+	text-align: center;
+	background-color: #FFF;
+}
+th:hover {
+	background-color: #333;
+}
+tr.table0 {
+	background-color: #CCC;
+}
+tr.table1 {
+	background-color: #FFF;
+}
+tr.table2 { /* Used to higlight important rows */
+	background-color: #EF0000;
 }
 
 /* Template Definitions */
 #top {
-	width: 100%;
-	height: 170px;
-	background: transparent url(/images/topbg.jpg) top left repeat-x;
+	width: 0;
+	height: 0;
 }
 #wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
 	width: 994px;
-	margin: 0 auto;
+	margin: 0 auto -50px; /* Bottom margin is negative of #footer height */
 }
 #header {
-	position: absolute;
+	display: block;
 	margin: 0 auto;
-	top: -170px; /* Negative of #top height */
 	width: 975px;
+	height: 100px;
 	background: transparent;
 }
 #logo {
 	float: left;
 	width: 400px;
-	background: transparent url(/images/logo.png) no-reepat;
+	height: 100px;
+	border: 1px solid #666;
+	background: #CCC url(/images/logo.png) no-repeat;
 }
 #logo a {
 	display: block;
@@ -70,16 +187,15 @@ p {
 
 /* Being #menu */
 #menu {
-	margin: 0px;
-	height: 40px;
-	position: absolute;
-	top: 125px;
-	left: 65px;
+	display: block;
+	padding-top: 32px;
+	height: 30px;
 }
 #menu li {
+	display: block;
 	list-style: none;
-	position: absolute;
-	top: 0;
+	float: left;
+	margin-left: 15px;
 }
 #menu a {
 	color: #FFF;
@@ -97,14 +213,14 @@ p {
 	text-decoration: none;
 }
 #menu a:hover {
-	color: #FFF;
+	color: #000;
 	text-shadow: 0px 0px 4px #FFF;
 }
 /* End #menu */
 
 #inner_wrap {
 	width: 970px;
-	padding: 20px 0 20px 10px;
+	padding: 15px 0 20px 10px;
 }
 #content {
 	float: left;
@@ -114,18 +230,22 @@ p {
 	float: right;
 	width: 300px;
 	margin: 0;
+	border: 1px solid #666;
 	padding: 0 10px 10px 10px;
-	background: #333;
+	background: #CCC;
 }
 #sidebar h2 {
 	font-family: Arial, serif;
 	font-size: 1.2em;
 	color: #CCC;
 }
+#footer, #push {
+	height: 50px;
+}
 #footer {
-	width: 100%;
-	height: 160px;
-	background: transparent url(/images/footerbg.png) repeat;
+	width: 994px; /* Same Width as #wrapper */
+	margin: 0 auto;
+	background: #CCC url(/images/footerbg.png) repeat;
 }
 
 /* Utility Classes */
@@ -146,4 +266,18 @@ p {
 }
 .fright {
 	float: right;
+}
+
+.box {
+	width: 350px;
+	margin: 5px auto;
+	padding: 15px;
+	background-color: #FFF;
+	border: 1px solid #666;
+}
+.box.error strong, label.error {
+	color: #FF0000;
+}
+.box.error, input.error, textarea.error, button.error {
+	border-color: #FF0000;
 }
