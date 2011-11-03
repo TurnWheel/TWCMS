@@ -18,7 +18,7 @@ if (!defined('SECURITY')) exit;
  */
 function path_escape($v) {
 	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/','', $v);
-}	
+}
 
 /*
  * <TWCMS>
@@ -72,6 +72,18 @@ function check_flaglist($text,$compare,$incFlag = TRUE) {
 	return $result === '' ? FALSE : $result;
 }
 
+
+/*
+ * Validate Passwords
+ */
+function valid_pass($pass) {
+	// Restrictions:
+	// Must be atleast 6 chars
+	// Must have at least 1 letter
+	// Must have at least 1 number
+	if (preg_match('/^.*(?=.{6,})(?=.*\d)(?=.*[a-zA-Z]).*$/',$pass) === FALSE) return FALSE; // Invalid Password
+	return TRUE; // Valid Password
+}
 
 /*
  * Validate EMail Address
@@ -250,6 +262,22 @@ function truncate($st,$max,$ext = '&#8230;') {
    return $st;
 }
 
+// Convert bytes to human-readable number
+// $long = TRUE will produce full words (like Kilobytes)
+// By Default (FALSE) it returns 'MB' and 'KB'
+function bytes2num($bytes, $long = FALSE) {
+    $size = $bytes / 1024;
+    
+    if ($size < 1024) $size = number_format($size, 2).' '.($long ? 'Kilobytes' : 'KB');
+    else  { 
+        if ($size / 1024 < 1024) $size = number_format($size / 1024, 2).' '.($long ? 'Megabytes' : 'MB');
+        elseif ($size / 1024 / 1024 < 1024)  $size = number_format($size / 1024 / 1024, 2).' '.($long ? 'Gigabytes' : 'GB');
+        else $size = number_format($bytes/1024).' '.($long ? 'Bytes' : 'B');
+    }
+    
+    return $size; 
+}
+
 // Convert hour time (HH:MM:SS) to seconds
 // Ex: time2sec(01:55:22) -> 6922
 function time2secs($time) {
@@ -386,7 +414,7 @@ function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
 }
 
 // Calculates distance in miles from one set
-// or coordinates to another
+// of coordinates to another
 function calculate_mileage($lat1, $lat2, $lon1, $lon2) {
     // Convert lattitude/longitude (degrees) to radians for calculations
     $lat1 = deg2rad($lat1);
