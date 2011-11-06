@@ -75,10 +75,10 @@ function tw_dec($input, $iv) {
  * Request HTTP Auth
  */
 function req_auth($realm = 'Secret Realm') {
-    header('WWW-Authenticate: Basic realm="'.$realm.'"');
-    header('HTTP/1.1 401 Unauthorized');
-    print '<h1>Error 401: Authorization Required</h1>';
-    exit;
+	header('WWW-Authenticate: Basic realm="'.$realm.'"');
+	header('HTTP/1.1 401 Unauthorized');
+	print '<h1>Error 401: Authorization Required</h1>';
+	exit;
 }
 
 /*
@@ -94,11 +94,11 @@ function check_auth($user) {
 		list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':',base64_decode($content));
 	}
 
-    $u = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-    $p = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
+	$u = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
+	$p = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
 
 	if ($u === $user['user'] && tw_chkhash($p, $user['pass'])) return TRUE;
-    else return FALSE;
+	else return FALSE;
 }
 
 /*
@@ -109,10 +109,10 @@ function check_auth($user) {
  * the revelation of buried files
  */
 function print404() {
-    header('HTTP/1.1 404 Not Found');
-    header('X-Powered-By:',TRUE);
-    header('Set-Cookie',TRUE);
-    ?>
+	header('HTTP/1.1 404 Not Found');
+	header('X-Powered-By:',TRUE);
+	header('Set-Cookie',TRUE);
+	?>
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <title>404 Not Found</title>
@@ -122,7 +122,7 @@ function print404() {
 <hr>
 <address>Apache Server at <?php print $_SERVER['SERVER_NAME']; ?> Port 80</address>
 </body></html>
-    <?php
+	<?php
 }
 
 // EOF

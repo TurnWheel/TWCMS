@@ -8,16 +8,16 @@
  */
 
 $cfg = array(
-    /* Script Config */
-    'debug' => TRUE, // Set to TRUE to enable "Debug" mode (Not recommended for live sites)
+	/* Script Config */
+	'debug' => TRUE, // Set to TRUE to enable "Debug" mode (Not recommended for live sites)
 
-    /* Database */
+	/* Database */
 	'db_enable' => TRUE, // Is DB connection even required? (Base CMS doesn't use it, but most addons will!)
-    'db_host' => 'localhost', // Host name for MySQL Database ('localhost' works for most installations)
-    'db_user' => 'somewebsite', // Username for MySQL login (Reccommend you do NOT use root)
-    'db_pass' => 'somesql!', // Password for MySQL user
-    'db_name' => 'somewebsite', // MySQL Database name
-	
+	'db_host' => 'localhost', // Host name for MySQL Database ('localhost' works for most installations)
+	'db_user' => 'somewebsite', // Username for MySQL login (Reccommend you do NOT use root)
+	'db_pass' => 'somesql!', // Password for MySQL user
+	'db_name' => 'somewebsite', // MySQL Database name
+
 	// Email Settings
 	'email_date' => 'g:ia T \o\n F j, Y', // Email date format
 
@@ -25,7 +25,7 @@ $cfg = array(
 	'hash_algo' => 'sha512', // Algorithm for generating one-way hashes (Default: sha512); see php.net/hash_algos for options
 	'enc_algo' => 'triplesdes', // Algorithm for generating two-way enc keys (Default: MCRYPT_3DES); see mcrypt.ciphers for options
 	'enc_key' => 'CHANGE ME ONCE', // Seed key for enc_algo (NOTE: CHANGE ONLY DURING INITIAL INSTALL)
-	
+
 	/* Contact Page Settings */
 	'contact_admin' => array('steven@turnwheel.com'), // List of emails to send contact requests to
 	//'contact_admin' => array('jax@turnwheel.com'),
@@ -41,7 +41,7 @@ Message Sent @ {date}
 Automated Email Sent By SomeWebsite.com'
 	),
 
-    // Admin Login
+	// Admin Login
 	'admin' => array('user' => 'admin','pass' => 'somedude'),
 
 	// Image Upload Settings (if needed)

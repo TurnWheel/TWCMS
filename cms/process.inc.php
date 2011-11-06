@@ -20,9 +20,9 @@ if (empty($headers) || !isset($headers[0])) $headers = array('a');
  * Maps to content file: CPATH/<a>_(<b>_(<c>_(<d>))).(html|inc.php)
  */
 foreach ($headers AS $num => $key) {
-    // Handle first param with special condition (defaults to index)
-    if ($num === 0) $_GET[$key] = isset($_GET[$key]) && !empty($_GET[$key]) ? path_escape($_GET[$key]) : 'index';
-    else $_GET[$key] = isset($_GET[$key]) ? path_escape($_GET[$key]) : '';
+	// Handle first param with special condition (defaults to index)
+	if ($num === 0) $_GET[$key] = isset($_GET[$key]) && !empty($_GET[$key]) ? path_escape($_GET[$key]) : 'index';
+	else $_GET[$key] = isset($_GET[$key]) ? path_escape($_GET[$key]) : '';
 }
 
 // Find current URL
@@ -37,8 +37,8 @@ $rootpage = ''; // Main page (first root in the chain)
 // Dynamically adds all roots to array
 $pages = array(); // Array of active roots
 foreach ($headers AS $num => $key) {
-    if ($num === 0) $rootpage = $_GET[$key]; // Set root page (first name found)
-    if ($_GET[$key] !== '') $pages[] = $_GET[$key]; // Page array
+	if ($num === 0) $rootpage = $_GET[$key]; // Set root page (first name found)
+	if ($_GET[$key] !== '') $pages[] = $_GET[$key]; // Page array
 }
 
 $page = implode('_',$pages); // String of page for URL's using _ format (used for file lookup)
@@ -47,7 +47,7 @@ $bcrumbs = array(); // For tracking breadcrumbs (empty on index; format <title> 
 
 // Generate starting bread crumbs if not on index
 if ($rootpage !== 'index') {
-    $bcrumbs = array('Home' => FULLURL);
+	$bcrumbs = array('Home' => FULLURL);
 	
 	// Add breadcrumbs for current page + subpages
 	$prev = '';
@@ -121,46 +121,46 @@ if ($e404) {
 if ($php) {
 	/*
 	 * Set the variables allowed by scripts
-     * These 3 variables should be over-ridden in the .inc.php scripts
-     * Other than that, these scripts can do anything.
-     * Including requesting authentication, accepting post data, etc.
-     * This simply locks you into the default layout provided
+	 * These 3 variables should be over-ridden in the .inc.php scripts
+	 * Other than that, these scripts can do anything.
+	 * Including requesting authentication, accepting post data, etc.
+	 * This simply locks you into the default layout provided
 	 */
 	$header = ''; // Sets the h2 tag in template
 	$title = ''; // Used for the <title> tag (usually same as $header, but not always)
-    $content = ''; // Body of your page!
-    
-    include $file; // Yes, $file is safe
-    
-    $header = strip_tags($header); // Strip out HTML from header
+	$content = ''; // Body of your page!
+
+	include $file; // Yes, $file is safe
+
+	$header = strip_tags($header); // Strip out HTML from header
 }
 // Handle .html files
 // NOTE: The first line of every .html file becomes the header!
 else {
-    $content = isset($content) ? $content : '';
-    $split = explode("\n", $content, 2); // Split Main Content from Header
+	$content = isset($content) ? $content : '';
+	$split = explode("\n", $content, 2); // Split Main Content from Header
 
-    // Check to make sure data is valid, otherwise use 404 page and post it as a 404 error
-    if ($content === '' || empty($split)) {
-        header('HTTP/1.1 404 Not Found');
-        $data = file_get_contents(CPATH.'error.404.html');
-        $split = explode("\n", $data, 2);
-    }
+	// Check to make sure data is valid, otherwise use 404 page and post it as a 404 error
+	if ($content === '' || empty($split)) {
+		header('HTTP/1.1 404 Not Found');
+		$data = file_get_contents(CPATH.'error.404.html');
+		$split = explode("\n", $data, 2);
+	}
 
-    // Split header and content
-    if (count($split) > 1) {
-        $header = $split[0];
-        $content = $split[1];
-    }
-    else {
-        $header = '';
-        $content = $data;
-    }
-    
-    $title = $header = strip_tags($header); // Strip out HTML from header
-    
-    // Hard code to have no title on index
-    if ($isindex) $title = '';
+	// Split header and content
+	if (count($split) > 1) {
+		$header = $split[0];
+		$content = $split[1];
+	}
+	else {
+		$header = '';
+		$content = $data;
+	}
+
+	$title = $header = strip_tags($header); // Strip out HTML from header
+
+	// Hard code to have no title on index
+	if ($isindex) $title = '';
 }
 
 // Swap bread crumbs for full title (only if this isnt already set)
@@ -185,15 +185,15 @@ if ($header  !== '' && $page !== strtolower($header)) {
 // make sure to exclude the current page
 // which should already be set
 if ($title !== '') {
-    $tpages = array(); // Array to hold formatted title pages
-    
-    foreach (array_slice(array_reverse($pages),1) AS $val) {
-        if (is_array($val)) continue; // Skip array values to prevent errors and recursion
-        $tpages[] = root_url2name($val);
-    }
-    
-    // Add to title (make sure its not empty)
-    if (sizeof($tpages) > 0) $title .= ' :: '.implode(' > ',$tpages);
+	$tpages = array(); // Array to hold formatted title pages
+
+	foreach (array_slice(array_reverse($pages),1) AS $val) {
+	if (is_array($val)) continue; // Skip array values to prevent errors and recursion
+		$tpages[] = root_url2name($val);
+	}
+
+	// Add to title (make sure its not empty)
+	if (sizeof($tpages) > 0) $title .= ' :: '.implode(' > ',$tpages);
 }
 
 // Remove any left-over characters from title
@@ -206,9 +206,9 @@ $title = str_replace("\r",'',str_replace("\n",'',trim($title)));
  * sidebar.default.(html|inc.php)
  */
 $sidebar =  (file_exists(CPATH.'sidebar.'.$rootpage.'.inc.php') ? CPATH.'sidebar.'.$rootpage.'.inc.php'  :
-            (file_exists(CPATH.'sidebar.'.$rootpage.'.html') ? CPATH.'sidebar.'.$rootpage.'.html' :
-            (file_exists(CPATH.'sidebar.default.inc.php') ? CPATH.'sidebar.default.inc.php' : 
-            (file_exists(CPATH.'sidebar.default.html') ? CPATH.'sidebar.default.html' : ''))));
+			(file_exists(CPATH.'sidebar.'.$rootpage.'.html') ? CPATH.'sidebar.'.$rootpage.'.html' :
+			(file_exists(CPATH.'sidebar.default.inc.php') ? CPATH.'sidebar.default.inc.php' : 
+			(file_exists(CPATH.'sidebar.default.html') ? CPATH.'sidebar.default.html' : ''))));
 
 /*
  * Simple utility function to get CSS/JS files quickly

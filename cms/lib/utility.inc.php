@@ -30,9 +30,9 @@ function path_escape($v) {
  * but it handles if magic_quotes is set or not.
  */
 function real_escape($v) {
-    if (get_magic_quotes_gpc() === 1) $v = stripslashes($v);
+	if (get_magic_quotes_gpc() === 1) $v = stripslashes($v);
 
-    return mysql_real_escape_string($v);
+	return mysql_real_escape_string($v);
 }
 
 /* 
@@ -40,7 +40,7 @@ function real_escape($v) {
  * Root URL's into their full name
  */
 function root_url2name($url) {
-    return ucwords(str_replace('-',' / ', str_replace('_',' ',$url)));
+	return ucwords(str_replace('-',' / ', str_replace('_',' ',$url)));
 }
 
 /*
@@ -49,8 +49,8 @@ function root_url2name($url) {
  * Usage: check_flag(F_FLAG,$flag)
  */
 function check_flag($flag,$val) {
-    if (($flag&$val) === 0) return FALSE;
-    else return TRUE;
+	if (($flag&$val) === 0) return FALSE;
+	else return TRUE;
 }
 
 /*
@@ -96,9 +96,9 @@ function valid_email($email)  {
 
 /* Validate Phone Numbers */
 function valid_phone($phonenumber,$useareacode = true) {
-    if ($phonenumber === '') return FALSE;
-    if (preg_match("/^[ ]*[(]{0,1}[ ]*[0-9]{3,3}[ ]*[)]{0,1}[-]{0,1}[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/",$phonenumber) || (preg_match("/^[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/",$phonenumber) && !$useareacode)) return eregi_replace("[^0-9]", "", $phonenumber);
-    return FALSE;
+	if ($phonenumber === '') return FALSE;
+	if (preg_match("/^[ ]*[(]{0,1}[ ]*[0-9]{3,3}[ ]*[)]{0,1}[-]{0,1}[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/",$phonenumber) || (preg_match("/^[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/",$phonenumber) && !$useareacode)) return eregi_replace("[^0-9]", "", $phonenumber);
+	return FALSE;
 }
 
 /*
@@ -107,37 +107,37 @@ function valid_phone($phonenumber,$useareacode = true) {
  * With AC: (555) 555-3452
  */
 function format_phone($phone) {
-    $phone = preg_replace("/[^0-9]/", "", $phone);
+	$phone = preg_replace("/[^0-9]/", "", $phone);
 
-    if(strlen($phone) == 7) return preg_replace("/([0-9]{3})([0-9]{4})/", "$1-$2", $phone);
-    elseif(strlen($phone) == 10) return preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
-    else return $phone;
+	if(strlen($phone) == 7) return preg_replace("/([0-9]{3})([0-9]{4})/", "$1-$2", $phone);
+	elseif(strlen($phone) == 10) return preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
+	else return $phone;
 }
 
 // Simple array -> Replace mapping function
 // Ex: print map_replace(array('foo' => 'bar'), '{foo} stuff')
 // -> bar stuff
 function map_replace($map,$text) {
-    foreach ($map AS $find => $replace) {
-        $text = str_replace('{'.$find.'}', $replace, $text);
-    }
+	foreach ($map AS $find => $replace) {
+		$text = str_replace('{'.$find.'}', $replace, $text);
+	}
 
-    return $text;
+	return $text;
 }
 
 // file_put_contents from PHP 5.3
 // for servers running older PHP versions
 if (!function_exists('file_put_contents')) {
-    function file_put_contents($filename, $data) {
-        $f = @fopen($filename, 'w');
-        if (!$f) {
-            return false;
-        } else {
-            $bytes = fwrite($f, $data);
-            fclose($f);
-            return $bytes;
-        }
-    }
+	function file_put_contents($filename, $data) {
+		$f = @fopen($filename, 'w');
+		if (!$f) {
+			return false;
+		} else {
+			$bytes = fwrite($f, $data);
+			fclose($f);
+			return $bytes;
+		}
+	}
 }
 
 // Delete file or directory recursively
@@ -159,32 +159,32 @@ function recursiveDelete($str) {
 // Get lat/lng from google based on address
 // MAPS_HOST and MAPS_KEY are defined in config
 function google_latlng($addr, &$status) {
-    if ($addr == '') return FALSE;
+	if ($addr == '') return FALSE;
 
-    // Set up variables
-    $delay = 0;
-    $base = 'http://'.MAPS_HOST.'/maps/geo?output=csv&key='.MAPS_KEY;
-    $pending = TRUE;
-    $status = '';
+	// Set up variables
+	$delay = 0;
+	$base = 'http://'.MAPS_HOST.'/maps/geo?output=csv&key='.MAPS_KEY;
+	$pending = TRUE;
+	$status = '';
 
-    while ($pending) {
-        $request = $base.'&q='.urlencode($addr);
-        $csv = file_get_contents($request);
+	while ($pending) {
+		$request = $base.'&q='.urlencode($addr);
+		$csv = file_get_contents($request);
 
-        if (!$csv) $delay += 100000;
-        else {
-            $split = split(',',$csv);
-            $status = $split[0];
-            if (strcmp($status, '200') == 0) return array($split[2],$split[3], (int) $split[1]); // Return array(lat,lng,acc)
-            elseif (strcmp($status,'620') == 0 || strcmp($status,'403') == 0) $delay += 100000; // Sent geocodes too fast
-            else return FALSE; // Failure to geocode
-        }
+		if (!$csv) $delay += 100000;
+		else {
+			$split = split(',',$csv);
+			$status = $split[0];
+			if (strcmp($status, '200') == 0) return array($split[2],$split[3], (int) $split[1]); // Return array(lat,lng,acc)
+			elseif (strcmp($status,'620') == 0 || strcmp($status,'403') == 0) $delay += 100000; // Sent geocodes too fast
+			else return FALSE; // Failure to geocode
+		}
 
-        usleep($delay);
-    }
+		usleep($delay);
+	}
 
-    // If it reaches this point, just move on
-    return FALSE;
+	// If it reaches this point, just move on
+	return FALSE;
 }
 
 /*
@@ -196,22 +196,22 @@ function google_latlng($addr, &$status) {
  * $quality: Optional; default 75 (only works with jpegs)
  */
 function img_resize($type, $orig, $new, $size, $quality = 75) {
-    global $cfg;
+	global $cfg;
 
 	if ($orig === '') return FALSE;
 
-    $type = strtolower($type);
+	$type = strtolower($type);
 
-    if ($type === 'jpg') $type = 'jpeg';
-    if (array_search($type,$cfg['image_types']) === FALSE) return FALSE;
+	if ($type === 'jpg') $type = 'jpeg';
+	if (array_search($type,$cfg['image_types']) === FALSE) return FALSE;
 
-    $width = $size;
-    $height = $size;
+	$width = $size;
+	$height = $size;
 
-    list($width_orig,$height_orig) = getimagesize($orig);
+	list($width_orig,$height_orig) = getimagesize($orig);
 
 	// If it doesn't need to be resized, copy original file
-    if ($width_orig < $width && $height_orig < $height) {
+	if ($width_orig < $width && $height_orig < $height) {
 		if (!copy($orig,$new)) return FALSE;
 	}
 	// Resize otherwise
@@ -226,9 +226,9 @@ function img_resize($type, $orig, $new, $size, $quality = 75) {
 		else call_user_func('image'.$type,$image_p,$new);
 	}
 
-    chmod($new,0777); // Make sure it has proper permissions
+	chmod($new,0777); // Make sure it has proper permissions
 
-    return TRUE;
+	return TRUE;
 }
 
 /* 
@@ -238,86 +238,86 @@ function img_resize($type, $orig, $new, $size, $quality = 75) {
  * -> 00024-a0ce3dc4
  */
 function gen_receipt($id) {
-    return str_pad($id,5,'0',STR_PAD_LEFT).'-'.substr(sha1(uniqid('',TRUE)),0,8);
+	return str_pad($id,5,'0',STR_PAD_LEFT).'-'.substr(sha1(uniqid('',TRUE)),0,8);
 }
 
 // ISO-81601 Date Format for PHP 4
 // PHP5: date('c')
 function iso_8601($t) {
-   $z = date('O',$t);
-   return date('Y-m-d\TH:i:s',$t).substr($z,0,3).':'.substr($z,3,2);
+	$z = date('O',$t);
+	return date('Y-m-d\TH:i:s',$t).substr($z,0,3).':'.substr($z,3,2);
 }
 
 // Truncate String
 // Common ext: &#8230;
 function truncate($st,$max,$ext = '&#8230;') {
-   // Set the replacement for the "string break" in the wordwrap function
-   $marker = '&#133;';
+	// Set the replacement for the "string break" in the wordwrap function
+	$marker = '&#133;';
 
-   if (strlen($st) > $max) {
-       $st = explode($marker,wordwrap($st,$max,$marker,1));
-       $st = $st[0].$ext;
-   }
+	if (strlen($st) > $max) {
+	   $st = explode($marker,wordwrap($st,$max,$marker,1));
+	   $st = $st[0].$ext;
+	}
 
-   return $st;
+	return $st;
 }
 
 // Convert bytes to human-readable number
 // $long = TRUE will produce full words (like Kilobytes)
 // By Default (FALSE) it returns 'MB' and 'KB'
 function bytes2num($bytes, $long = FALSE) {
-    $size = $bytes / 1024;
-    
-    if ($size < 1024) $size = number_format($size, 2).' '.($long ? 'Kilobytes' : 'KB');
-    else  { 
-        if ($size / 1024 < 1024) $size = number_format($size / 1024, 2).' '.($long ? 'Megabytes' : 'MB');
-        elseif ($size / 1024 / 1024 < 1024)  $size = number_format($size / 1024 / 1024, 2).' '.($long ? 'Gigabytes' : 'GB');
-        else $size = number_format($bytes/1024).' '.($long ? 'Bytes' : 'B');
-    }
-    
-    return $size; 
+	$size = $bytes / 1024;
+
+	if ($size < 1024) $size = number_format($size, 2).' '.($long ? 'Kilobytes' : 'KB');
+	else  { 
+		if ($size / 1024 < 1024) $size = number_format($size / 1024, 2).' '.($long ? 'Megabytes' : 'MB');
+		elseif ($size / 1024 / 1024 < 1024)  $size = number_format($size / 1024 / 1024, 2).' '.($long ? 'Gigabytes' : 'GB');
+		else $size = number_format($bytes/1024).' '.($long ? 'Bytes' : 'B');
+	}
+
+	return $size; 
 }
 
 // Convert hour time (HH:MM:SS) to seconds
 // Ex: time2sec(01:55:22) -> 6922
 function time2secs($time) {
-    $s = explode(':',$time);
-    return (int) ((intval($s[0])*60)*60)+(intval($s[1])*60)+intval($s[2]);
+	$s = explode(':',$time);
+	return (int) ((intval($s[0])*60)*60)+(intval($s[1])*60)+intval($s[2]);
 }
 
 // Convert seconds to a string
 // Ex: secs2str(6922) -> 1hr, 55min, 22secs
 // Ex: secs2str(6922, TRUE) -> 1 hour, 55 minutes, 22 seconds
 function secs2str($secs,$long = FALSE) {
-    // Reset hours, mins, and secs we'll be using
-    $hours = 0;
-    $mins = 0;
-    $secs = $secs > 31536000 ? intval(NOW-$secs) : intval($secs);
-    $t = array(); // Hold all 3 time periods to return as string
+	// Reset hours, mins, and secs we'll be using
+	$hours = 0;
+	$mins = 0;
+	$secs = $secs > 31536000 ? intval(NOW-$secs) : intval($secs);
+	$t = array(); // Hold all 3 time periods to return as string
 
-    // Take care of mins and left-over secs
-    if ($secs >= 60) {
-        $mins += floor($secs/60);
-        $secs = (int)$secs%60;
+	// Take care of mins and left-over secs
+	if ($secs >= 60) {
+		$mins += floor($secs/60);
+		$secs = (int)$secs%60;
 
-        // Now handle hours and left-over mins
-        if ($mins >= 60) {
-            $hours += floor($mins/60);
-            $mins = (int)$mins%60;
-        }
+		// Now handle hours and left-over mins
+		if ($mins >= 60) {
+			$hours += floor($mins/60);
+			$mins = (int)$mins%60;
+		}
 
-        // We're done! now save time periods into our array
-        if ($hours !== 0) $t['hours'] = $hours;
-        $t['mins'] = $mins < 10 ? '0'.$mins : $mins;
-    }
+		// We're done! now save time periods into our array
+		if ($hours !== 0) $t['hours'] = $hours;
+		$t['mins'] = $mins < 10 ? '0'.$mins : $mins;
+	}
 
-    // What's the final amount of secs?
-    $t['secs'] = $secs < 10 ? '0'.$secs : $secs;
+	// What's the final amount of secs?
+	$t['secs'] = $secs < 10 ? '0'.$secs : $secs;
 
-    // Decide how we should name hours, mins, sec
-    $str_hours = $long === TRUE ? ' hour' : 'hr';
-    $str_mins = $long === TRUE ? ' minute' : 'min';
-    $str_secs = $long === TRUE ? ' second' : 'sec';
+	// Decide how we should name hours, mins, sec
+	$str_hours = $long === TRUE ? ' hour' : 'hr';
+	$str_mins = $long === TRUE ? ' minute' : 'min';
+	$str_secs = $long === TRUE ? ' second' : 'sec';
 
 	// Hide number if 0
 	if (intval($t['secs']) === 0) {
@@ -326,13 +326,13 @@ function secs2str($secs,$long = FALSE) {
 		if (intval($t['mins']) === 0) unset($t['mins']);
 	}
 
-    // Build the pretty time string in an ugly way (pluralization and all that)
-    $time_string  = isset($t['hours']) ? $t['hours'].$str_hours.(intval($t['hours']) === 1 ? '' : 's') : '';
-    $time_string .= isset($t['mins']) ? (isset($t['hours']) ? ', ' : '') : '';
-    $time_string .= isset($t['mins']) ? $t['mins'].$str_mins.(intval($t['mins']) === 1 ? '' : 's') : '';
-    $time_string .= isset($t['secs']) ? ', '.$t['secs'].$str_secs.(intval($t['secs']) === 1 ? '' : 's') : '';
+	// Build the pretty time string in an ugly way (pluralization and all that)
+	$time_string  = isset($t['hours']) ? $t['hours'].$str_hours.(intval($t['hours']) === 1 ? '' : 's') : '';
+	$time_string .= isset($t['mins']) ? (isset($t['hours']) ? ', ' : '') : '';
+	$time_string .= isset($t['mins']) ? $t['mins'].$str_mins.(intval($t['mins']) === 1 ? '' : 's') : '';
+	$time_string .= isset($t['secs']) ? ', '.$t['secs'].$str_secs.(intval($t['secs']) === 1 ? '' : 's') : '';
 
-    return empty($time_string) ? 0 : $time_string;
+	return empty($time_string) ? 0 : $time_string;
 }
 
 /*
@@ -341,167 +341,167 @@ function secs2str($secs,$long = FALSE) {
  * Modified By: Steven Bower
  */
 function time_since($time,$showdate = TRUE) {
-    $secs = array(
-        array(31536000,'year'),
-        array(2592000,'month'),
-        array(604800,'week'),
-        array(86400,'day'),
-        array(3600,'hour'),
-        array(60,'minute'),
-    );
+	$secs = array(
+		array(31536000,'year'),
+		array(2592000,'month'),
+		array(604800,'week'),
+		array(86400,'day'),
+		array(3600,'hour'),
+		array(60,'minute'),
+	);
 
-    $since = NOW-$time;
-    $str = '';
+	$since = NOW-$time;
+	$str = '';
 
-    if($showdate === TRUE && $since > 604800) {
-        $str = date('F jS',$time);
-        if ($since > 31536000) $str .= ', '.date('Y',$time);
+	if($showdate === TRUE && $since > 604800) {
+		$str = date('F jS',$time);
+		if ($since > 31536000) $str .= ', '.date('Y',$time);
 
-        return $str;
-    }
+		return $str;
+	}
 
-    for ($i = 3; $i < 6; ++$i) {
-        $name = $secs[$i][1];
-        $num = (int)floor($since/$secs[$i][0]);
+	for ($i = 3; $i < 6; ++$i) {
+		$name = $secs[$i][1];
+		$num = (int)floor($since/$secs[$i][0]);
 
-        if ($num !== 0) break;
-    }
+		if ($num !== 0) break;
+	}
 
-    return $num.' '.$name.($num === 1 ? '' : 's').' ago';
+	return $num.' '.$name.($num === 1 ? '' : 's').' ago';
 }
 
 // Parse CSV File by Row
 function parse_csv_row($file, $longest = 0, $delimiter = ',') {
-    if (!file_exists($file)) return FALSE;
+	if (!file_exists($file)) return FALSE;
 
-    $data = array();
-    $file = fopen($file, 'r');
+	$data = array();
+	$file = fopen($file, 'r');
 
-    while (($line = fgetcsv($file, $longest, $delimiter)) !== FALSE) {
-        array_push($data, $line);
-    }
+	while (($line = fgetcsv($file, $longest, $delimiter)) !== FALSE) {
+		array_push($data, $line);
+	}
 
-    fclose($file);
+	fclose($file);
 
-    return $data;
+	return $data;
 }
 
 // Parse CSV file by column
 function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
-    if (!file_exists($file)) return FALSE;
+	if (!file_exists($file)) return FALSE;
 
-    $data = array();
-    $file = fopen($file,'r');
+	$data = array();
+	$file = fopen($file,'r');
 
-    $cnt = 0;
-    while ($line = fgetcsv($file,$longest,$delimiter)) {
-        if ($cnt == 0) {
-            ++$cnt;
-            continue;
-        }
+	$cnt = 0;
+	while ($line = fgetcsv($file,$longest,$delimiter)) {
+		if ($cnt == 0) {
+			++$cnt;
+			continue;
+		}
 
-        foreach ($map AS $key => $col) {
-            if (isset($line[$key])) {
-                if (!isset($data[$col])) $data[$col][0] = NULL; // Set 0 as empty set
-                $data[$col][] = $line[$key];
-            }
-        }
-    }
+		foreach ($map AS $key => $col) {
+			if (isset($line[$key])) {
+				if (!isset($data[$col])) $data[$col][0] = NULL; // Set 0 as empty set
+				$data[$col][] = $line[$key];
+			}
+		}
+	}
 
-    fclose($file);
+	fclose($file);
 
-    return $data;
+	return $data;
 }
 
 // Calculates distance in miles from one set
 // of coordinates to another
 function calculate_mileage($lat1, $lat2, $lon1, $lon2) {
-    // Convert lattitude/longitude (degrees) to radians for calculations
-    $lat1 = deg2rad($lat1);
-    $lon1 = deg2rad($lon1);
-    $lat2 = deg2rad($lat2);
-    $lon2 = deg2rad($lon2);
+	// Convert lattitude/longitude (degrees) to radians for calculations
+	$lat1 = deg2rad($lat1);
+	$lon1 = deg2rad($lon1);
+	$lat2 = deg2rad($lat2);
+	$lon2 = deg2rad($lon2);
 
-    // Find the deltas
-    $delta_lat = $lat2 - $lat1;
-    $delta_lon = $lon2 - $lon1;
+	// Find the deltas
+	$delta_lat = $lat2 - $lat1;
+	$delta_lon = $lon2 - $lon1;
 
-    // Find the Great Circle distance
-    $temp = pow(sin($delta_lat/2.0),2) + cos($lat1) * cos($lat2) * pow(sin($delta_lon/2.0),2);
-    $distance = 3956 * 2 * atan2(sqrt($temp),sqrt(1-$temp));
+	// Find the Great Circle distance
+	$temp = pow(sin($delta_lat/2.0),2) + cos($lat1) * cos($lat2) * pow(sin($delta_lon/2.0),2);
+	$distance = 3956 * 2 * atan2(sqrt($temp),sqrt(1-$temp));
 
-    return $distance;
+	return $distance;
 }
 
 // Sanitize characters from Windows-1252 (Microsoft Word)
 // Doesn't get all of them, but at least the major ones
 function sanitize($text = '') {
-    $chars = array(
-        128 => '&euro;', // Euro Sign
-        130 => '&#39;', // baseline single quote
-        131 => '&#402;', // florin
-        132 => '&quot;', // baseline double quote
-        133 => '&#8230;', // ellipsis
-        134 => '&dagger;', // dagger (a second footnote)
-        135 => '&Dagger;', // double dagger (a third footnote)
-        136 => '&#94;', // circumflex accent
-        137 => '&permil;', // permile
-        138 => '&#352;', // capital letter S with caron
-        139 => '&lsaquo;', // left single guillemet
-        140 => '&#338;', // large OE ligature
-        142 => 'Z', // Capital Z w/ caron
-        145 => '&lsquo;', // left single quote
-        146 => '&rsquo;', // right single quote
-        147 => '&ldquo;', // left double quote
-        148 => '&rdquo;', // right double quote
-        149 => '&middot;', // bullet
-        150 => '&ndash;', // endash
-        151 => '&mdash;', // emdash
-        152 => '~', // tilde accent
-        153 => '&trade;', // trademark ligature
-        154 => '&#353;', // small letter s with caron
-        155 => '&rsaquo;', // right single guillemet
-        156 => '&#339;', // small oe ligature
-        158 => 'z', // Lowercase Z w/ caron
-        159 => '&#376', // Y Dieresis
-        161 => '!', // Exlamation
-        162 => '&cent;', // Cent sign
-        163 => '&pound;', // pound sterling
-        164 => '&curren;', // Generic Current mark
-        165 => '&yen;', // Yen
-        166 => '&brvbar;', // Broken Bar (or &brkbar;)
-        167 => '&sect;', // Section sign
-        168 => '&die;', // Diaeresis (&die;) or umlaut (&uml;)
-        169 => '&copy;', // Copyright
-        170 => '&ordf;', // feminine ordinal
-        171 => '&laquo;', // left angled double quote
-        172 => '&not;', // Logic not
-        173 => '&shy;', // Soft hyphen
-        174 => '&reg;', // Registered Trademark
-        175 => '&macr;', // Marcon &macr; or &hibar;
-        176 => '&deg;', // Degree
-        177 => '&plusmn;', // Plus-minus
-        178 => '&sup2;', // Squared
-        179 => '&sup3;', // Cubed
-        180 => '&acute;', // Accute accent
-        181 => '&micro;', // Micro sin
-        182 => '&para;', // Paragraph
-        183 => '&middot;', // Inner punctuation
-        184 => '&cedil;', // Cedilla
-        185 => '&sup1;', // Subscript 1
-        186 => '&ordm;', // Masculine ordinal
-        187 => '&raquo;', // right angled double quote
-        188 => '&frac14;', // 1/4
-        189 => '&frac12;', // 1/2
-        190 => '&frac34', // 3/4
-        191 => '&iquest;', // Inverted question mark
-    );
+	$chars = array(
+		128 => '&euro;', // Euro Sign
+		130 => '&#39;', // baseline single quote
+		131 => '&#402;', // florin
+		132 => '&quot;', // baseline double quote
+		133 => '&#8230;', // ellipsis
+		134 => '&dagger;', // dagger (a second footnote)
+		135 => '&Dagger;', // double dagger (a third footnote)
+		136 => '&#94;', // circumflex accent
+		137 => '&permil;', // permile
+		138 => '&#352;', // capital letter S with caron
+		139 => '&lsaquo;', // left single guillemet
+		140 => '&#338;', // large OE ligature
+		142 => 'Z', // Capital Z w/ caron
+		145 => '&lsquo;', // left single quote
+		146 => '&rsquo;', // right single quote
+		147 => '&ldquo;', // left double quote
+		148 => '&rdquo;', // right double quote
+		149 => '&middot;', // bullet
+		150 => '&ndash;', // endash
+		151 => '&mdash;', // emdash
+		152 => '~', // tilde accent
+		153 => '&trade;', // trademark ligature
+		154 => '&#353;', // small letter s with caron
+		155 => '&rsaquo;', // right single guillemet
+		156 => '&#339;', // small oe ligature
+		158 => 'z', // Lowercase Z w/ caron
+		159 => '&#376', // Y Dieresis
+		161 => '!', // Exlamation
+		162 => '&cent;', // Cent sign
+		163 => '&pound;', // pound sterling
+		164 => '&curren;', // Generic Current mark
+		165 => '&yen;', // Yen
+		166 => '&brvbar;', // Broken Bar (or &brkbar;)
+		167 => '&sect;', // Section sign
+		168 => '&die;', // Diaeresis (&die;) or umlaut (&uml;)
+		169 => '&copy;', // Copyright
+		170 => '&ordf;', // feminine ordinal
+		171 => '&laquo;', // left angled double quote
+		172 => '&not;', // Logic not
+		173 => '&shy;', // Soft hyphen
+		174 => '&reg;', // Registered Trademark
+		175 => '&macr;', // Marcon &macr; or &hibar;
+		176 => '&deg;', // Degree
+		177 => '&plusmn;', // Plus-minus
+		178 => '&sup2;', // Squared
+		179 => '&sup3;', // Cubed
+		180 => '&acute;', // Accute accent
+		181 => '&micro;', // Micro sin
+		182 => '&para;', // Paragraph
+		183 => '&middot;', // Inner punctuation
+		184 => '&cedil;', // Cedilla
+		185 => '&sup1;', // Subscript 1
+		186 => '&ordm;', // Masculine ordinal
+		187 => '&raquo;', // right angled double quote
+		188 => '&frac14;', // 1/4
+		189 => '&frac12;', // 1/2
+		190 => '&frac34', // 3/4
+		191 => '&iquest;', // Inverted question mark
+	);
 
-    foreach ($chars as $chr => $replace) {
-        $text = str_replace(chr($chr),$replace,$text);
-    }
+	foreach ($chars as $chr => $replace) {
+		$text = str_replace(chr($chr),$replace,$text);
+	}
 
-    return $text;
+	return $text;
 }
 
 #
@@ -713,7 +713,7 @@ function is_rfc3696_valid_email_address($email) {
 	# now match what's left
 	#
 
-	if (!preg_match("!^$addr_spec$!", $email, $m)){
+	if (!preg_match("!^$addr_spec$!", $email, $m)) {
 
 		return FALSE;
 	}
@@ -754,46 +754,43 @@ function is_rfc3696_valid_email_address($email) {
 
 	if (strlen($bits['domain-literal'])){
 
-		$Snum			= "(\d{1,3})";
-		$IPv4_address_literal	= "$Snum\.$Snum\.$Snum\.$Snum";
+		$Snum = "(\d{1,3})";
+		$IPv4_address_literal = "$Snum\.$Snum\.$Snum\.$Snum";
 
-		$IPv6_hex		= "(?:[0-9a-fA-F]{1,4})";
+		$IPv6_hex = "(?:[0-9a-fA-F]{1,4})";
 
-		$IPv6_full		= "IPv6\:$IPv6_hex(:?\:$IPv6_hex){7}";
+		$IPv6_full = "IPv6\:$IPv6_hex(:?\:$IPv6_hex){7}";
 
-		$IPv6_comp_part		= "(?:$IPv6_hex(?:\:$IPv6_hex){0,5})?";
-		$IPv6_comp		= "IPv6\:($IPv6_comp_part\:\:$IPv6_comp_part)";
+		$IPv6_comp_part = "(?:$IPv6_hex(?:\:$IPv6_hex){0,5})?";
+		$IPv6_comp = "IPv6\:($IPv6_comp_part\:\:$IPv6_comp_part)";
 
-		$IPv6v4_full		= "IPv6\:$IPv6_hex(?:\:$IPv6_hex){5}\:$IPv4_address_literal";
+		$IPv6v4_full = "IPv6\:$IPv6_hex(?:\:$IPv6_hex){5}\:$IPv4_address_literal";
 
-		$IPv6v4_comp_part	= "$IPv6_hex(?:\:$IPv6_hex){0,3}";
-		$IPv6v4_comp		= "IPv6\:((?:$IPv6v4_comp_part)?\:\:(?:$IPv6v4_comp_part\:)?)$IPv4_address_literal";
+		$IPv6v4_comp_part = "$IPv6_hex(?:\:$IPv6_hex){0,3}";
+		$IPv6v4_comp = "IPv6\:((?:$IPv6v4_comp_part)?\:\:(?:$IPv6v4_comp_part\:)?)$IPv4_address_literal";
 
 
 		#
 		# IPv4 is simple
 		#
-
-		if (preg_match("!^\[$IPv4_address_literal\]$!", $bits['domain'], $m)){
-
+		if (preg_match("!^\[$IPv4_address_literal\]$!", $bits['domain'], $m)) {
 			if (intval($m[1]) > 255) return FALSE;
 			if (intval($m[2]) > 255) return FALSE;
 			if (intval($m[3]) > 255) return FALSE;
 			if (intval($m[4]) > 255) return FALSE;
-
-		}else{
-
+		}
+		else {
 			#
 			# this should be IPv6 - a bunch of tests are needed here :)
 			#
 
-			while (1){
+			while (1) {
 
-				if (preg_match("!^\[$IPv6_full\]$!", $bits['domain'])){
+				if (preg_match("!^\[$IPv6_full\]$!", $bits['domain'])) {
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6_comp\]$!", $bits['domain'], $m)){
+				if (preg_match("!^\[$IPv6_comp\]$!", $bits['domain'], $m)) {
 					list($a, $b) = explode('::', $m[1]);
 					$folded = (strlen($a) && strlen($b)) ? "$a:$b" : "$a$b";
 					$groups = explode(':', $folded);
@@ -801,8 +798,7 @@ function is_rfc3696_valid_email_address($email) {
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6v4_full\]$!", $bits['domain'], $m)){
-
+				if (preg_match("!^\[$IPv6v4_full\]$!", $bits['domain'], $m)) {
 					if (intval($m[1]) > 255) return FALSE;
 					if (intval($m[2]) > 255) return FALSE;
 					if (intval($m[3]) > 255) return FALSE;
@@ -810,7 +806,7 @@ function is_rfc3696_valid_email_address($email) {
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6v4_comp\]$!", $bits['domain'], $m)){
+				if (preg_match("!^\[$IPv6v4_comp\]$!", $bits['domain'], $m)) {
 					list($a, $b) = explode('::', $m[1]);
 					$b = substr($b, 0, -1); # remove the trailing colon before the IPv4 address
 					$folded = (strlen($a) && strlen($b)) ? "$a:$b" : "$a$b";
@@ -821,41 +817,34 @@ function is_rfc3696_valid_email_address($email) {
 
 				return FALSE;
 			}
-		}			
-	}else{
+		}
+	}
+	else {
 
 		#
 		# the domain is either dot-atom or obs-domain - either way, it's
 		# made up of simple labels and we split on dots
 		#
-
 		$labels = explode('.', $bits['domain']);
-
 
 		#
 		# this is allowed by both dot-atom and obs-domain, but is un-routeable on the
 		# public internet, so we'll fail it (e.g. user@localhost)
 		#
-
 		if (count($labels) == 1) return FALSE;
-
 
 		#
 		# checks on each label
 		#
-
-		foreach ($labels as $label){
-
+		foreach ($labels as $label) {
 			if (strlen($label) > 63) return FALSE;
 			if (substr($label, 0, 1) == '-') return FALSE;
 			if (substr($label, -1) == '-') return FALSE;
 		}
 
-
 		#
 		# last label can't be all numeric
 		#
-
 		if (preg_match('!^[0-9]+$!', array_pop($labels))) return FALSE;
 	}
 
