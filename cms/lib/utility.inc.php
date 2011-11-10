@@ -269,7 +269,7 @@ function bytes2num($bytes, $long = FALSE) {
 	$size = $bytes / 1024;
 
 	if ($size < 1024) $size = number_format($size, 2).' '.($long ? 'Kilobytes' : 'KB');
-	else  { 
+	else  {
 		if ($size / 1024 < 1024) $size = number_format($size / 1024, 2).' '.($long ? 'Megabytes' : 'MB');
 		elseif ($size / 1024 / 1024 < 1024)  $size = number_format($size / 1024 / 1024, 2).' '.($long ? 'Gigabytes' : 'GB');
 		else $size = number_format($bytes/1024).' '.($long ? 'Bytes' : 'B');

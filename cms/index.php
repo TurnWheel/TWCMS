@@ -17,7 +17,7 @@ require 'process.inc.php';
 <head>
 	<meta charset="UTF-8" />
 	<title><?php print isset($title) && $title !== '' ? $title : 'Home'; ?> :: Misc. Demo Site</title>
-	
+
 	<meta name="description" content="Enter a descrip" />
 	<meta name="keywords" content="Enter keywords" />
 	<meta name="robots" content="index, follow" />
@@ -39,7 +39,7 @@ foreach ($cfg['t_js'] AS $file) {
 	<script src="/js/'.$file.'"></script>';
 }
 ?>
-	
+
 	<script>
 	//<!--
 	var _gaq = _gaq || [];
@@ -102,8 +102,8 @@ foreach ($cfg['t_js'] AS $file) {
 			?>
 			</div>
 			<!-- End content_inner -->
-			
-			<!-- Begin content_side -->				
+
+			<!-- Begin content_side -->
 			<div id="content_side">
 			<?php
 			// Sidebar
@@ -111,7 +111,7 @@ foreach ($cfg['t_js'] AS $file) {
 			?>
 			</div>
 			<!-- End content_side -->
-			
+
 			<div class="clear"></div> 
 		</div>
 		<!-- End #content -->
