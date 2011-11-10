@@ -20,7 +20,7 @@ if (!defined('SECURITY')) exit;
  */
 function tw_genhash($input, $salt = FALSE, $salt_str = '') {
 	global $cfg;
-	
+
 	// Add salt encryption
 	if ($salt) {
 		// A completely over-the-top salt string
