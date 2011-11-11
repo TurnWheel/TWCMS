@@ -48,7 +48,7 @@ $bcrumbs = array(); // For tracking breadcrumbs (empty on index; format <title> 
 // Generate starting bread crumbs if not on index
 if ($rootpage !== 'index') {
 	$bcrumbs = array('Home' => FULLURL);
-	
+
 	// Add breadcrumbs for current page + subpages
 	$prev = '';
 	foreach ($pages AS $bcpage) {
@@ -77,16 +77,16 @@ while ($notFound) {
 		$php = TRUE;
 		$notFound = FALSE;
 	}
-	
+
 	// If still not found, try to load parent page
 	if ($notFound) {
 		// Remove last ending to find parent file
 		$split = explode('_',$file);
 		$sizeof = sizeof($split);
-		
+
 		// Break out of loop, file still not found
 		if ($sizeof === 1) break;
-		
+
 		// Create new file string
 		array_pop($split);
 		$file = implode('_',$split);
@@ -108,9 +108,9 @@ if ($e404) {
     $file = CPATH.'error.404.html';
     $title = '- Error: Page Not Found';
     $php = FALSE;
-    
+
     $bcrumbs = array('Home' => '/','Error: Page Not Found' => $currurl);
-    
+
     // If we can't use the 404 page, it's not good. Kill the script.
     if (!file_exists($file) || !is_readable($file)) {
         print 'Error 404 Times TWO: A 404 error occured, then the 404 document could not be found. Please contact the administrator!';
@@ -174,11 +174,11 @@ if ($header  !== '' && $page !== strtolower($header)) {
 			unset($bcrumbs[$name]);
 		}
 	}
-	
+
 	// Set new header for this URL (if not already set)
 	if (!isset($bcrumbs[$header])) {
 		$bcrumbs[$header] = $currurl;
-	}	
+	}
 }
 
 // Add previous pages to title format
