@@ -27,7 +27,7 @@ function mc_send($data) {
 			|| empty($data) || !isset($data['email'])) {
 		return FALSE;
 	}
-	
+
 	// Save and unset email addr
 	$email = $data['email'];
 	unset($data['email']);

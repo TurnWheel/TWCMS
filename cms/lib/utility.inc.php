@@ -72,7 +72,6 @@ function check_flaglist($text,$compare,$incFlag = TRUE) {
 	return $result === '' ? FALSE : $result;
 }
 
-
 /*
  * Validate Passwords
  */
@@ -95,9 +94,15 @@ function valid_email($email)  {
 }
 
 /* Validate Phone Numbers */
-function valid_phone($phonenumber,$useareacode = true) {
-	if ($phonenumber === '') return FALSE;
-	if (preg_match("/^[ ]*[(]{0,1}[ ]*[0-9]{3,3}[ ]*[)]{0,1}[-]{0,1}[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/",$phonenumber) || (preg_match("/^[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/",$phonenumber) && !$useareacode)) return eregi_replace("[^0-9]", "", $phonenumber);
+function valid_phone($pn, $useareacode = TRUE) {
+	if ($pn === '') return FALSE;
+
+	if (preg_match('/^[ ]*[(]{0,1}[ ]*[0-9]{3,3}[ ]*[)]{0,1}[-]{0,1}[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/',$pn)
+		|| (preg_match('/^[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/',$pn)
+		&& !$useareacode)) {
+		return eregi_replace('[^0-9]', '', $pn);
+	}
+
 	return FALSE;
 }
 
@@ -107,17 +112,22 @@ function valid_phone($phonenumber,$useareacode = true) {
  * With AC: (555) 555-3452
  */
 function format_phone($phone) {
-	$phone = preg_replace("/[^0-9]/", "", $phone);
+	$phone = preg_replace('/[^0-9]/', '', $phone);
 
-	if(strlen($phone) == 7) return preg_replace("/([0-9]{3})([0-9]{4})/", "$1-$2", $phone);
-	elseif(strlen($phone) == 10) return preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
+	if (strlen($phone) === 7) {
+		return preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $phone);
+	}
+	elseif (strlen($phone) === 10) {
+		return preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $phone);
+	}
+
 	else return $phone;
 }
 
 // Simple array -> Replace mapping function
 // Ex: print map_replace(array('foo' => 'bar'), '{foo} stuff')
 // -> bar stuff
-function map_replace($map,$text) {
+function map_replace($map, $text) {
 	foreach ($map AS $find => $replace) {
 		$text = str_replace('{'.$find.'}', $replace, $text);
 	}
@@ -131,8 +141,9 @@ if (!function_exists('file_put_contents')) {
 	function file_put_contents($filename, $data) {
 		$f = @fopen($filename, 'w');
 		if (!$f) {
-			return false;
-		} else {
+			return FALSE;
+		}
+		else {
 			$bytes = fwrite($f, $data);
 			fclose($f);
 			return $bytes;
@@ -148,7 +159,7 @@ function recursiveDelete($str) {
 	elseif (is_dir($str)) {
 		$scan = glob(rtrim($str, '/').'/*');
 
-		foreach ($scan as $index => $path) {
+		foreach ($scan AS $index => $path) {
 			recursiveDelete($path);
 		}
 
@@ -222,6 +233,7 @@ function img_resize($type, $orig, $new, $size, $quality = 75) {
 		$image_p = imagecreatetruecolor($width,$height);
 		$image = call_user_func('imagecreatefrom'.$type,$orig);
 		imagecopyresampled($image_p,$image,0,0,0,0,$width,$height,$width_orig,$height_orig);
+
 		if ($type === 'jpeg') call_user_func('image'.$type,$image_p,$new,$quality);
 		else call_user_func('image'.$type,$image_p,$new);
 	}
@@ -250,7 +262,7 @@ function iso_8601($t) {
 
 // Truncate String
 // Common ext: &#8230;
-function truncate($st,$max,$ext = '&#8230;') {
+function truncate($st, $max, $ext = '&#8230;') {
 	// Set the replacement for the "string break" in the wordwrap function
 	$marker = '&#133;';
 
@@ -288,7 +300,7 @@ function time2secs($time) {
 // Convert seconds to a string
 // Ex: secs2str(6922) -> 1hr, 55min, 22secs
 // Ex: secs2str(6922, TRUE) -> 1 hour, 55 minutes, 22 seconds
-function secs2str($secs,$long = FALSE) {
+function secs2str($secs, $long = FALSE) {
 	// Reset hours, mins, and secs we'll be using
 	$hours = 0;
 	$mins = 0;
@@ -340,7 +352,7 @@ function secs2str($secs,$long = FALSE) {
  * Written By: Frentic
  * Modified By: Steven Bower
  */
-function time_since($time,$showdate = TRUE) {
+function time_since($time, $showdate = TRUE) {
 	$secs = array(
 		array(31536000,'year'),
 		array(2592000,'month'),
@@ -353,7 +365,7 @@ function time_since($time,$showdate = TRUE) {
 	$since = NOW-$time;
 	$str = '';
 
-	if($showdate === TRUE && $since > 604800) {
+	if ($showdate === TRUE && $since > 604800) {
 		$str = date('F jS',$time);
 		if ($since > 31536000) $str .= ', '.date('Y',$time);
 
@@ -362,7 +374,7 @@ function time_since($time,$showdate = TRUE) {
 
 	for ($i = 3; $i < 6; ++$i) {
 		$name = $secs[$i][1];
-		$num = (int)floor($since/$secs[$i][0]);
+		$num = (int) floor($since/$secs[$i][0]);
 
 		if ($num !== 0) break;
 	}
@@ -493,7 +505,7 @@ function sanitize($text = '') {
 		187 => '&raquo;', // right angled double quote
 		188 => '&frac14;', // 1/4
 		189 => '&frac12;', // 1/2
-		190 => '&frac34', // 3/4
+		190 => '&frac34;', // 3/4
 		191 => '&iquest;', // Inverted question mark
 	);
 
