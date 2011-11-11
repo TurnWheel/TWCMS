@@ -8,7 +8,7 @@
  */
 
 // Config Changes
-error_reporting(E_ALL^E_DEPRECATED);
+error_reporting(E_ALL ^ E_DEPRECATED);
 
 // Security Global
 define('SECURITY', TRUE);
