@@ -3,6 +3,9 @@
  * Simple wordpress addon
  * Copy to root wordpress directory,
  * and include into any .inc.php in content DIR
+ *
+ * NOTE: This file is just one giant hack.
+ * It's pretty lame, really
  */
 
 $limit = 500; // Max number of characters in description

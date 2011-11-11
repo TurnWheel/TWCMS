@@ -3,7 +3,7 @@
  * TurnWheel CMS
  * Set of security functions, such as HTTP auth
  * and password encryption methods
- * 
+ *
  * All functions here are fundamental to
  * the internals of TWCMS
  */
@@ -17,15 +17,15 @@ if (!defined('SECURITY')) exit;
  *
  * Returns computed hash string
  * $salt_str returns the salt by ref
+ * Must be called with &$salt_str
  */
 function tw_genhash($input, $salt = FALSE, $salt_str = '') {
 	global $cfg;
-	
+
 	// Add salt encryption
 	if ($salt) {
 		// A completely over-the-top salt string
-		// Why? I couldn't figure out Why Not
-		$salt_str = crypt($input, '$5$'.str_shuffle(base64_encode(str_rot13($input))).'$');
+		$salt_str = crypt($input, '$5$'.str_shuffle(base64_encode(mt_rand())).'$');
 		$input .= $salt_str;
 	}
 
@@ -52,22 +52,36 @@ function tw_chkhash($input, $enc, $salt_str = '') {
 }
 
 /*
- * <TWCMS> <INCOMPLETE>
+ * <TWCMS>
  * Encrypts a string based on config
  * settings, set in config.inc.php
  */
-function tw_enc($input, $iv = FALSE) {
+function tw_enc($input) {
 	global $cfg;
-	return '';
+
+	// Add padding to input, for compatbility with PKCS #7
+	$block = mcrypt_get_block_size($cfg['enc_algo'], 'ecb');
+	$pad = $block - (strlen($input) % $block);
+	$input .= str_repeat(chr($pad), $pad);
+
+	return mcrypt_encrypt($cfg['enc_algo'], $cfg['enc_key'],
+			$input, MCRYPT_MODE_ECB);
 }
 
 /*
- * <TWCMS> <INCOMPLETE>
+ * <TWCMS>
  * Decrypts string encrypted with tw_enc
  */
-function tw_dec($input, $iv) {
+function tw_dec($input) {
 	global $cfg;
-	return '';
+
+	$input = mcrypt_decrypt($cfg['enc_algo'], $cfg['enc_key'],
+			$input, MCRYPT_MODE_ECB);
+
+	// Handle byte padding
+	$block = mcrypt_get_block_size($cfg['enc_algo'], 'ecb');
+	$pad = ord($input[($len = strlen($input)) - 1]);
+	return substr($input, 0, strlen($input) - $pad);
 }
 
 /*
@@ -120,6 +134,7 @@ function print404() {
 <h1>Not Found</h1>
 <p>The requested URL <?php print $_SERVER['REQUEST_URI']; ?> was not found on this server.</p>
 <hr>
+irint 'IV: '.$iv."\n";
 <address>Apache Server at <?php print $_SERVER['SERVER_NAME']; ?> Port 80</address>
 </body></html>
 	<?php

@@ -54,21 +54,21 @@ function sql_query($q) {
 
 	if ($q !== '') {
 		$startsqltime = microtime(TRUE); // Start timer
-		
+
 		// Verify valid query and execute
 		if (!$cfg['sql']['id'] = mysql_query($q, $cfg['sql']['con'])) {
 			sql_error('<strong>Bad SQL Query</strong>: '.htmlentities($q).'<br /><strong>'.mysql_error().'</strong>');
 		}
-		
+
 		// Track time and query count
 		$cfg['sql']['time'] += microtime(TRUE)-$startsqltime;
 		++$cfg['sql']['count'];
-		
+
 		// Add stats if in debug mode
 		if ($cfg['debug']) {
 			$cfg['sql']['qstats'][] = htmlentities($q).'<br /><b>Querytime:</b> '.$cfg['sql']['time'];
 		}
-		
+
 		// Return query reference
 		return $cfg['sql']['id'];
 	}
