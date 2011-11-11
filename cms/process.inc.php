@@ -242,6 +242,7 @@ if ($rootpage !== $page) {
 }
 
 /* Find JS Files */
+
 // Array of JS files to load (managed by template)
 $cfg['t_js'] = array(get_exfile('js','global.js'));
 
