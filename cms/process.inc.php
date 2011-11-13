@@ -254,7 +254,7 @@ if ($page !== 'index') {
 // Load root page JS file
 $cfg['t_js'][] = get_exfile('js',$rootpage.'.js');
 
-// Check for subpage CSS (if not same as root)
+// Check for subpage JS (if not same as root)
 if ($rootpage !== $page) {
 	$cfg['t_js'][] = get_exfile('js',$rootpage.'_'.$page.'.js');
 }

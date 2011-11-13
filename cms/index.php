@@ -142,7 +142,7 @@ foreach ($cfg['t_js'] AS $file) {
 		</div>
 	</div>
 <?php
-print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s; Queries: '.$sql['count'].' -->';
+print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s; Queries: '.$cfg['sql']['count'].' -->';
 ?>
 </body>
 </html>

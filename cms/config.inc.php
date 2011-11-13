@@ -9,7 +9,7 @@
 
 $cfg = array(
 	/* Script Config */
-	'debug' => TRUE, // Set to TRUE to enable "Debug" mode (Not recommended for live sites)
+	'debug' => FALSE, // Set to TRUE to enable "Debug" mode (Not recommended for live sites)
 
 	/* Database */
 	'db_enable' => TRUE, // Is DB connection even required? (Base CMS doesn't use it, but most addons will!)
@@ -77,6 +77,16 @@ define('MAPS_KEY', 'ABQIAAAAZReS-Ex4akb7OZJr5kruGxQCvPwXk464zndFkQpy_L80v-esWBSE
 // dev.somewebsite.com
 //define('MAPS_KEY', 'ABQIAAAAZReS-Ex4akb7OZJr5kruGxTOYl9STBTHMd_HDDjgXxc08qZ7wBRvNiTUXiXoGUcFgP0pf4mTJPAfcw');
 
+
+/*
+ * Define Bit Flags
+ * Do not edit unless you know
+ * what you are doing!
+ */
+
+define('T_APPROVE', 1); // JUST A SAMPLE
+
+
 /*
  * Do Not Edit Below This Line
  * These values should never change
@@ -87,9 +97,6 @@ define('SSL', isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on'
 define('FULLURL', SSL ? SSLURL : WWWURL); // Full URL is the current full domain path
 define('REQUESTURL', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/'); // Get requested path
 define('VERSION', 'TWCMS 0.9-Beta'); // CMS Version
-
-/* Define Bit Flags */
-define('T_APPROVE', 1); // JUST A SAMPLE
 
 // Save User's IP Address as constant
 define('USERIP', isset($_SERVER['REMOTE_ADDR']) ? htmlspecialchars($_SERVER['REMOTE_ADDR']) : 'N/A');
