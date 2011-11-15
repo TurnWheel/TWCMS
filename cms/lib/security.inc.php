@@ -103,9 +103,11 @@ function req_auth($realm = 'Secret Realm') {
 function check_auth($user) {
 	// For PHP5 CGI In conjunction
 	// with mod_rewrite: E=HTTP_AUTH:%{HTTP:Authorization}
-	if (isset($_SERVER['REDIRECT_HTTP_AUTH']) && !empty($_SERVER['REDIRECT_HTTP_AUTH'])) {
+	if (isset($_SERVER['REDIRECT_HTTP_AUTH'])
+			&& !empty($_SERVER['REDIRECT_HTTP_AUTH'])) {
 		list($type, $content) = explode(' ', $_SERVER['REDIRECT_HTTP_AUTH'], 2);
-		list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':',base64_decode($content));
+		list($_SERVER['PHP_AUTH_USER'],
+				$_SERVER['PHP_AUTH_PW']) = explode(':',base64_decode($content));
 	}
 
 	$u = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
@@ -134,7 +136,6 @@ function print404() {
 <h1>Not Found</h1>
 <p>The requested URL <?php print $_SERVER['REQUEST_URI']; ?> was not found on this server.</p>
 <hr>
-irint 'IV: '.$iv."\n";
 <address>Apache Server at <?php print $_SERVER['SERVER_NAME']; ?> Port 80</address>
 </body></html>
 	<?php

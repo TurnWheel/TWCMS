@@ -28,7 +28,8 @@ require LPATH.'security.inc.php';
 if ($cfg['db_enable']) {
 	require LPATH.'sql.inc.php';
 
-	sql_connect($cfg['db_host'],$cfg['db_user'],$cfg['db_pass'],$cfg['db_name']); // Connect to SQL Server
+	// Connect to SQL Server
+	sql_connect($cfg['db_host'],$cfg['db_user'],$cfg['db_pass'],$cfg['db_name']);
 	unset($cfg['db_user'],$cfg['db_pass']); // Security Measure
 }
 
@@ -38,7 +39,8 @@ if (isset($cfg['admin']['pass'])) {
 }
 
 // Capture Referer Information
-$cfg['referer'] = isset($_SERVER['HTTP_REFERER']) ? real_escape($_SERVER['HTTP_REFERER']) : '(Direct)';
+$cfg['referer'] = isset($_SERVER['HTTP_REFERER']) ?
+					real_escape($_SERVER['HTTP_REFERER']) : '(Direct)';
 
 // Re-sets "X-Powered-By" header with CMS Version
 // This helps override some servers' PHP Disclosure settings
