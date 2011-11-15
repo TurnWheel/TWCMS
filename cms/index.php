@@ -26,7 +26,7 @@ require 'process.inc.php';
 foreach ($cfg['t_css'] AS $file) {
 	if (!is_string($file) || empty($file)) continue;
 	print '
-	<link rel="stylesheet" type="text/css" href="/css/'.$file.'" media="screen,projection" />';
+	<link rel="stylesheet" type="text/css" href="/css/'.$file.'" media="screen" />';
 }
 ?>
 
@@ -88,7 +88,9 @@ foreach ($cfg['t_js'] AS $file) {
 					$linkname = root_url2name($name);
 
 					// Display link if it matches current URL (checks for trailing slash as well)
-					if ($url !== $currurl && $url.'/' !== $currurl) print '<a href="'.$url.'">'.$linkname.'</a> &gt; ';
+					if ($url !== $currurl && $url.'/' !== $currurl) {
+						print '<a href="'.$url.'">'.$linkname.'</a> &gt; ';
+					}
 					else print '<strong>'.$linkname.'</strong>';
 				}
 
@@ -97,7 +99,9 @@ foreach ($cfg['t_js'] AS $file) {
 			}
 
 			// Print out header and content variables
-			if (isset($header) && $header !== '') print '<h2><a href="'.$currurl.'">'.$header.'</a></h2>';
+			if (isset($header) && $header !== '') {
+				print '<h2><a href="'.$currurl.'">'.$header.'</a></h2>';
+			}
 			print '<div>'.$content.'</div>'."\n";
 			?>
 			</div>
@@ -136,13 +140,16 @@ foreach ($cfg['t_js'] AS $file) {
 				<a href="#google" rel="external" class="google"><b>Google Local</b></a>
 			</div>
 			<p class="copyright">
-				&copy; Copyright <?php print date('Y', NOW); ?> SomeWebsite.com &mdash; All Rights Reserved<br />
+				&copy; Copyright <?php print date('Y', NOW); ?>
+				SomeWebsite.com &mdash; All Rights Reserved<br />
+
 				Website by <a href="http://turnwheel.com" rel="external">TurnWheel Web Designs</a>
 			</p>
 		</div>
 	</div>
 <?php
-print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s; Queries: '.$cfg['sql']['count'].' -->';
+print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s -->';
+print '<!-- SQL #: '.$cfg['sql']['count'].' -->';
 ?>
 </body>
 </html>

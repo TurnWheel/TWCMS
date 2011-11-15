@@ -32,7 +32,9 @@ else {
 			<p>
 				'.nl2br(truncate_html2(utf8_encode($data['post_content']),$limit)).'
 			</p>
-			<p style="float:right;"><a href="'.$data['guid'].'">Continue reading &raquo;</a></p>
+			<p style="float:right;">
+				<a href="'.$data['guid'].'">Continue reading &raquo;</a>
+			</p>
 		</div>';
 	}
 }
@@ -50,7 +52,8 @@ else {
 * @param boolean $considerHtml If true, HTML tags would be handled correctly
 * @return string Trimmed string.
 */
-function truncate_html2($text, $length = 100, $ending = '&#133;', $exact = false, $considerHtml = true) {
+function truncate_html2($text, $length = 100, $ending = '&#133;',
+					$exact = false, $considerHtml = true) {
     if ($considerHtml) {
         // if the plain text is shorter than the maximum length, return the whole text
         if (strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {

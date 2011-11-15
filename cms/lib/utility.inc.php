@@ -74,14 +74,15 @@ function check_flaglist($text,$compare,$incFlag = TRUE) {
 
 /*
  * Validate Passwords
+ *
+ * Restrictions:
+ * Must be atleast 6 chars
+ * Must have at least 1 letter
+ * Must have at least 1 number
  */
 function valid_pass($pass) {
-	// Restrictions:
-	// Must be atleast 6 chars
-	// Must have at least 1 letter
-	// Must have at least 1 number
-	if (preg_match('/^.*(?=.{6,})(?=.*\d)(?=.*[a-zA-Z]).*$/',$pass) === FALSE) return FALSE; // Invalid Password
-	return TRUE; // Valid Password
+	return preg_match('/^.*(?=.{6,})(?=.*\d)(?=.*[a-zA-Z]).*$/', $pass) === FALSE
+			? FALSE : TRUE;
 }
 
 /*
@@ -118,7 +119,8 @@ function format_phone($phone) {
 		return preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $phone);
 	}
 	elseif (strlen($phone) === 10) {
-		return preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $phone);
+		return preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/',
+			'($1) $2-$3', $phone);
 	}
 
 	else return $phone;
@@ -186,8 +188,13 @@ function google_latlng($addr, &$status) {
 		else {
 			$split = split(',',$csv);
 			$status = $split[0];
-			if (strcmp($status, '200') == 0) return array($split[2],$split[3], (int) $split[1]); // Return array(lat,lng,acc)
-			elseif (strcmp($status,'620') == 0 || strcmp($status,'403') == 0) $delay += 100000; // Sent geocodes too fast
+			if (strcmp($status, '200') == 0) {
+				// Return array(lat,lng,acc)
+				return array($split[2],$split[3], (int) $split[1]);
+			}
+			elseif (strcmp($status,'620') == 0 || strcmp($status,'403') == 0) {
+				$delay += 100000; // Sent geocodes too fast
+			}
 			else return FALSE; // Failure to geocode
 		}
 
@@ -227,14 +234,19 @@ function img_resize($type, $orig, $new, $size, $quality = 75) {
 	}
 	// Resize otherwise
 	else {
-		if ($width && ($width_orig < $height_orig)) $width = ($height/$height_orig)*$width_orig;
+		if ($width && ($width_orig < $height_orig)) {
+			$width = ($height/$height_orig)*$width_orig;
+		}
 		else $height = ($width/$width_orig)*$height_orig;
 
 		$image_p = imagecreatetruecolor($width,$height);
 		$image = call_user_func('imagecreatefrom'.$type,$orig);
-		imagecopyresampled($image_p,$image,0,0,0,0,$width,$height,$width_orig,$height_orig);
+		imagecopyresampled($image_p,$image,0,0,0,0,$width,
+							$height,$width_orig,$height_orig);
 
-		if ($type === 'jpeg') call_user_func('image'.$type,$image_p,$new,$quality);
+		if ($type === 'jpeg') {
+			call_user_func('image'.$type,$image_p,$new,$quality);
+		}
 		else call_user_func('image'.$type,$image_p,$new);
 	}
 
@@ -278,13 +290,23 @@ function truncate($st, $max, $ext = '&#8230;') {
 // $long = TRUE will produce full words (like Kilobytes)
 // By Default (FALSE) it returns 'MB' and 'KB'
 function bytes2num($bytes, $long = FALSE) {
-	$size = $bytes / 1024;
+	$size = $bytes/1024;
 
-	if ($size < 1024) $size = number_format($size, 2).' '.($long ? 'Kilobytes' : 'KB');
+	if ($size < 1024) {
+		$size = number_format($size, 2).' '.($long ? 'Kilobytes' : 'KB');
+	}
 	else  {
-		if ($size / 1024 < 1024) $size = number_format($size / 1024, 2).' '.($long ? 'Megabytes' : 'MB');
-		elseif ($size / 1024 / 1024 < 1024)  $size = number_format($size / 1024 / 1024, 2).' '.($long ? 'Gigabytes' : 'GB');
-		else $size = number_format($bytes/1024).' '.($long ? 'Bytes' : 'B');
+		if ($size / 1024 < 1024) {
+			$size = number_format($size / 1024, 2).
+					' '.($long ? 'Megabytes' : 'MB');
+		}
+		elseif ($size / 1024 / 1024 < 1024) {
+			$size = number_format($size / 1024 / 1024, 2).
+					' '.($long ? 'Gigabytes' : 'GB');
+		}
+		else {
+			$size = number_format($bytes/1024).' '.($long ? 'Bytes' : 'B');
+		}
 	}
 
 	return $size; 
@@ -339,10 +361,16 @@ function secs2str($secs, $long = FALSE) {
 	}
 
 	// Build the pretty time string in an ugly way (pluralization and all that)
-	$time_string  = isset($t['hours']) ? $t['hours'].$str_hours.(intval($t['hours']) === 1 ? '' : 's') : '';
+	$time_string  = isset($t['hours']) ? $t['hours'].$str_hours.
+						(intval($t['hours']) === 1 ? '' : 's') : '';
+
 	$time_string .= isset($t['mins']) ? (isset($t['hours']) ? ', ' : '') : '';
-	$time_string .= isset($t['mins']) ? $t['mins'].$str_mins.(intval($t['mins']) === 1 ? '' : 's') : '';
-	$time_string .= isset($t['secs']) ? ', '.$t['secs'].$str_secs.(intval($t['secs']) === 1 ? '' : 's') : '';
+
+	$time_string .= isset($t['mins']) ? $t['mins'].$str_mins.
+						(intval($t['mins']) === 1 ? '' : 's') : '';
+
+	$time_string .= isset($t['secs']) ? ', '.$t['secs'].$str_secs.
+						(intval($t['secs']) === 1 ? '' : 's') : '';
 
 	return empty($time_string) ? 0 : $time_string;
 }
@@ -414,7 +442,9 @@ function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
 
 		foreach ($map AS $key => $col) {
 			if (isset($line[$key])) {
-				if (!isset($data[$col])) $data[$col][0] = NULL; // Set 0 as empty set
+				// Set 0 as empty set
+				if (!isset($data[$col])) $data[$col][0] = NULL;
+
 				$data[$col][] = $line[$key];
 			}
 		}
@@ -439,7 +469,8 @@ function calculate_mileage($lat1, $lat2, $lon1, $lon2) {
 	$delta_lon = $lon2 - $lon1;
 
 	// Find the Great Circle distance
-	$temp = pow(sin($delta_lat/2.0),2) + cos($lat1) * cos($lat2) * pow(sin($delta_lon/2.0),2);
+	$temp = pow(sin($delta_lat/2.0),2) + cos($lat1)
+			* cos($lat2) * pow(sin($delta_lon/2.0),2);
 	$distance = 3956 * 2 * atan2(sqrt($temp),sqrt(1-$temp));
 
 	return $distance;
@@ -528,11 +559,11 @@ function sanitize($text = '') {
 # $Revision: 5039 $
 #
 
-##################################################################################
+###################################################################
 function is_rfc3696_valid_email_address($email) {
 
 
-	####################################################################################
+	#############################################################################
 	#
 	# NO-WS-CTL       =       %d1-8 /         ; US-ASCII control characters
 	#                         %d11 /          ;  that do not include the
@@ -550,7 +581,7 @@ function is_rfc3696_valid_email_address($email) {
 	$crlf		= "(?:$cr$lf)";
 
 
-	####################################################################################
+	#############################################################################
 	#
 	# obs-char        =       %d0-9 / %d11 /          ; %d0-127 except CR and
 	#                         %d12 / %d14-127         ;  LF
@@ -579,7 +610,7 @@ function is_rfc3696_valid_email_address($email) {
 	$quoted_pair	= "(?:\\x5c$text|$obs_qp)";
 
 
-	####################################################################################
+	##############################################################################
 	#
 	# obs-FWS         =       1*WSP *(CRLF 1*WSP)
 	# FWS             =       ([*WSP CRLF] 1*WSP) /   ; Folding white space
@@ -614,12 +645,13 @@ function is_rfc3696_valid_email_address($email) {
 	# we stop.
 	#
 
-	$outer_ccontent_dull	= "(?:$fws?$ctext|$quoted_pair)";
-	$outer_ccontent_nest	= "(?:$fws?$comment)";
-	$outer_comment		= "(?:\\x28$outer_ccontent_dull*(?:$outer_ccontent_nest$outer_ccontent_dull*)+$fws?\\x29)";
+	$outer_ccontent_dull = "(?:$fws?$ctext|$quoted_pair)";
+	$outer_ccontent_nest = "(?:$fws?$comment)";
+	$outer_comment = "(?:\\x28$outer_ccontent_dull*(?:$outer_ccontent_nest".
+						"$outer_ccontent_dull*)+$fws?\\x29)";
 
 
-	####################################################################################
+	##############################################################################
 	#
 	# atext           =       ALPHA / DIGIT / ; Any character except controls,
 	#                         "!" / "#" /     ;  SP, and specials.
@@ -634,11 +666,12 @@ function is_rfc3696_valid_email_address($email) {
 	#                         "~"
 	# atom            =       [CFWS] 1*atext [CFWS]
 
-	$atext		= "(?:$alpha|$digit|[\\x21\\x23-\\x27\\x2a\\x2b\\x2d\\x2f\\x3d\\x3f\\x5e\\x5f\\x60\\x7b-\\x7e])";
+	$atext		= "(?:$alpha|$digit|[\\x21\\x23-\\x27\\x2a\\x2b\\x2d".
+					"\\x2f\\x3d\\x3f\\x5e\\x5f\\x60\\x7b-\\x7e])";
 	$atom		= "(?:$cfws?(?:$atext)+$cfws?)";
 
 
-	####################################################################################
+	###############################################################################
 	#
 	# qtext           =       NO-WS-CTL /     ; Non white space controls
 	#                         %d33 /          ; The rest of the US-ASCII
@@ -662,7 +695,7 @@ function is_rfc3696_valid_email_address($email) {
 	$word		= "(?:$atom|$quoted_string)";
 
 
-	####################################################################################
+	#############################################################################
 	#
 	# obs-local-part  =       word *("." word)
 	# obs-domain      =       atom *("." atom)
@@ -671,7 +704,7 @@ function is_rfc3696_valid_email_address($email) {
 	$obs_domain	= "(?:$atom(?:\\x2e$atom)*)";
 
 
-	####################################################################################
+	#############################################################################
 	#
 	# dot-atom-text   =       1*atext *("." 1*atext)
 	# dot-atom        =       [CFWS] dot-atom-text [CFWS]
@@ -680,7 +713,7 @@ function is_rfc3696_valid_email_address($email) {
 	$dot_atom	= "(?:$cfws?$dot_atom_text$cfws?)";
 
 
-	####################################################################################
+	##############################################################################
 	#
 	# domain-literal  =       [CFWS] "[" *([FWS] dcontent) [FWS] "]" [CFWS]
 	# dcontent        =       dtext / quoted-pair
@@ -695,7 +728,7 @@ function is_rfc3696_valid_email_address($email) {
 	$domain_literal	= "(?:$cfws?\\x5b(?:$fws?$dcontent)*$fws?\\x5d$cfws?)";
 
 
-	####################################################################################
+	###############################################################################
 	#
 	# local-part      =       dot-atom / quoted-string / obs-local-part
 	# domain          =       dot-atom / domain-literal / obs-domain
@@ -708,14 +741,16 @@ function is_rfc3696_valid_email_address($email) {
 
 
 	#
-	# see http://www.dominicsayers.com/isemail/ for details, but this should probably be 254
+	# see http://www.dominicsayers.com/isemail/ for details,
+	# but this should probably be 254
 	#
 
 	if (strlen($email) > 256) return FALSE;
 
 
 	#
-	# we need to strip nested comments first - we replace them with a simple comment
+	# we need to strip nested comments first -
+	# we replace them with a simple comment
 	#
 
 	$email = rfc3696_strip_comments($outer_comment, $email, "(x)");
@@ -779,7 +814,8 @@ function is_rfc3696_valid_email_address($email) {
 		$IPv6v4_full = "IPv6\:$IPv6_hex(?:\:$IPv6_hex){5}\:$IPv4_address_literal";
 
 		$IPv6v4_comp_part = "$IPv6_hex(?:\:$IPv6_hex){0,3}";
-		$IPv6v4_comp = "IPv6\:((?:$IPv6v4_comp_part)?\:\:(?:$IPv6v4_comp_part\:)?)$IPv4_address_literal";
+		$IPv6v4_comp = "IPv6\:((?:$IPv6v4_comp_part)?\:\:".
+						"(?:$IPv6v4_comp_part\:)?)$IPv4_address_literal";
 
 
 		#
@@ -820,9 +856,12 @@ function is_rfc3696_valid_email_address($email) {
 
 				if (preg_match("!^\[$IPv6v4_comp\]$!", $bits['domain'], $m)) {
 					list($a, $b) = explode('::', $m[1]);
-					$b = substr($b, 0, -1); # remove the trailing colon before the IPv4 address
+
+					# remove the trailing colon before the IPv4 address
+					$b = substr($b, 0, -1); 
 					$folded = (strlen($a) && strlen($b)) ? "$a:$b" : "$a$b";
 					$groups = explode(':', $folded);
+
 					if (count($groups) > 4) return FALSE;
 					break;
 				}
@@ -840,8 +879,9 @@ function is_rfc3696_valid_email_address($email) {
 		$labels = explode('.', $bits['domain']);
 
 		#
-		# this is allowed by both dot-atom and obs-domain, but is un-routeable on the
-		# public internet, so we'll fail it (e.g. user@localhost)
+		# this is allowed by both dot-atom and obs-domain, but is
+		# un-routeable on the public internet, so we'll fail it
+		# (e.g. user@localhost)
 		#
 		if (count($labels) == 1) return FALSE;
 
@@ -873,6 +913,5 @@ function rfc3696_strip_comments($comment, $email, $replace='') {
 		$email = $new;
 	}
 }
-
 
 // EOF

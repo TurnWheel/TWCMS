@@ -21,8 +21,13 @@ if (empty($headers) || !isset($headers[0])) $headers = array('a');
  */
 foreach ($headers AS $num => $key) {
 	// Handle first param with special condition (defaults to index)
-	if ($num === 0) $_GET[$key] = isset($_GET[$key]) && !empty($_GET[$key]) ? path_escape($_GET[$key]) : 'index';
-	else $_GET[$key] = isset($_GET[$key]) ? path_escape($_GET[$key]) : '';
+	if ($num === 0) {
+		$_GET[$key] = isset($_GET[$key]) && !empty($_GET[$key])
+					? path_escape($_GET[$key]) : 'index';
+	}
+	else {
+		$_GET[$key] = isset($_GET[$key]) ? path_escape($_GET[$key]) : '';
+	}
 }
 
 // Find current URL
@@ -41,9 +46,14 @@ foreach ($headers AS $num => $key) {
 	if ($_GET[$key] !== '') $pages[] = $_GET[$key]; // Page array
 }
 
-$page = implode('_',$pages); // String of page for URL's using _ format (used for file lookup)
-$numpages = sizeof($pages); // Number of sub-pages loading
-$bcrumbs = array(); // For tracking breadcrumbs (empty on index; format <title> => $url)
+// Full page string using _ format (used for file lookup)
+$page = implode('_',$pages);
+
+// Number of sub-pages requested (nesting #)
+$numpages = sizeof($pages);
+
+// For tracking breadcrumbs (empty on index; format <title> => $url)
+$bcrumbs = array();
 
 // Generate starting bread crumbs if not on index
 if ($rootpage !== 'index') {
@@ -53,8 +63,8 @@ if ($rootpage !== 'index') {
 	$prev = '';
 	foreach ($pages AS $bcpage) {
 		// Make titles look nice (space and captialize)
-		// Also use $prev to track previous url's
-		$bcrumbs[ucwords(str_replace('_',' ',$bcpage))] = $prev = $prev.'/'.$bcpage;
+		// Use $prev to track previous url's
+		$bcrumbs[root_url2name($bcpage)] = $prev = $prev.'/'.$bcpage;
 	}
 }
 
@@ -113,7 +123,8 @@ if ($e404) {
 
     // If we can't use the 404 page, it's not good. Kill the script.
     if (!file_exists($file) || !is_readable($file)) {
-        print 'Error 404 Times TWO: A 404 error occured, then the 404 document could not be found. Please contact the administrator!';
+		print 'Error 404 Times TWO: A 404 error occured, then the 404'.
+			'document could not be found. Please contact the administrator!';
         exit;
     }
 }
@@ -127,7 +138,7 @@ if ($php) {
 	 * This simply locks you into the default layout provided
 	 */
 	$header = ''; // Sets the h2 tag in template
-	$title = ''; // Used for the <title> tag (usually same as $header, but not always)
+	$title = ''; // Used for <title> in template (usually same as $header)
 	$content = ''; // Body of your page!
 
 	include $file; // Yes, $file is safe
@@ -138,9 +149,12 @@ if ($php) {
 // NOTE: The first line of every .html file becomes the header!
 else {
 	$content = isset($content) ? $content : '';
-	$split = explode("\n", $content, 2); // Split Main Content from Header
 
-	// Check to make sure data is valid, otherwise use 404 page and post it as a 404 error
+	// Split Main Content from Header
+	$split = explode("\n", $content, 2);
+
+	// Check to make sure data is valid
+	// otherwise use 404 page and post it as a 404 error
 	if ($content === '' || empty($split)) {
 		header('HTTP/1.1 404 Not Found');
 		$data = file_get_contents(CPATH.'error.404.html');
@@ -156,8 +170,9 @@ else {
 		$header = '';
 		$content = $data;
 	}
-
-	$title = $header = strip_tags($header); // Strip out HTML from header
+	
+	// Strip out HTML from header (tends to sneak in)
+	$title = $header = strip_tags($header);
 
 	// Hard code to have no title on index
 	if ($isindex) $title = '';
@@ -188,7 +203,9 @@ if ($title !== '') {
 	$tpages = array(); // Array to hold formatted title pages
 
 	foreach (array_slice(array_reverse($pages),1) AS $val) {
-	if (is_array($val)) continue; // Skip array values to prevent errors and recursion
+		 // Skip array values to prevent errors and recursion
+		if (is_array($val)) continue;
+
 		$tpages[] = root_url2name($val);
 	}
 
@@ -205,10 +222,12 @@ $title = str_replace("\r",'',str_replace("\n",'',trim($title)));
  * sidebar.<rootpage>.(html|inc.php)
  * sidebar.default.(html|inc.php)
  */
-$sidebar =  (file_exists(CPATH.'sidebar.'.$rootpage.'.inc.php') ? CPATH.'sidebar.'.$rootpage.'.inc.php'  :
-			(file_exists(CPATH.'sidebar.'.$rootpage.'.html') ? CPATH.'sidebar.'.$rootpage.'.html' :
-			(file_exists(CPATH.'sidebar.default.inc.php') ? CPATH.'sidebar.default.inc.php' : 
-			(file_exists(CPATH.'sidebar.default.html') ? CPATH.'sidebar.default.html' : ''))));
+$sb = 'sidebar.'; // Just to make the lines smaller
+$sidebar =
+	(file_exists(CPATH.$sb.$rootpage.'.inc.php') ? CPATH.$sb.$rootpage.'.inc.php' :
+	(file_exists(CPATH.$sb.$rootpage.'.html') ? CPATH.$sb.$rootpage.'.html' :
+	(file_exists(CPATH.$sb.'default.inc.php') ? CPATH.$sb.'default.inc.php' :
+	(file_exists(CPATH.$sb.'default.html') ? CPATH.$sb.'default.html' : ''))));
 
 /*
  * Simple utility function to get CSS/JS files quickly

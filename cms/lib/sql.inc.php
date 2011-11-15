@@ -20,7 +20,8 @@ function sql_connect($host, $user, $password = '', $name = '') {
 
 	// Verify Credentials and connect
 	if (!$cfg['sql']['con'] = mysql_pconnect($host, $user, $password)) {
-		sql_error('Could not connect to MySQL Server (Host: '.$host.' | User: '.$user.').', TRUE);
+		sql_error('Could not connect to MySQL Server'
+					.' (Host: '.$host.' | User: '.$user.')', TRUE);
 	}
 
 	// Select Database
@@ -57,7 +58,8 @@ function sql_query($q) {
 
 		// Verify valid query and execute
 		if (!$cfg['sql']['id'] = mysql_query($q, $cfg['sql']['con'])) {
-			sql_error('<strong>Bad SQL Query</strong>: '.htmlentities($q).'<br /><strong>'.mysql_error().'</strong>');
+			sql_error('<strong>Bad SQL Query</strong>: '.htmlentities($q)
+						.'<br /><strong>'.mysql_error().'</strong>');
 		}
 
 		// Track time and query count
@@ -66,7 +68,8 @@ function sql_query($q) {
 
 		// Add stats if in debug mode
 		if ($cfg['debug']) {
-			$cfg['sql']['qstats'][] = htmlentities($q).'<br /><b>Querytime:</b> '.$cfg['sql']['time'];
+			$cfg['sql']['qstats'][] = htmlentities($q).'<br />'
+					.'<b>Querytime:</b> '.$cfg['sql']['time'];
 		}
 
 		// Return query reference
