@@ -148,8 +148,12 @@ foreach ($cfg['t_js'] AS $file) {
 		</div>
 	</div>
 <?php
-print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s -->';
-print '<!-- SQL #: '.$cfg['sql']['count'].' -->';
+if ($cfg['debug']) {
+	print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s -->';
+	if ($cfg['db_enable']) {
+		print '<!-- SQL #: '.$cfg['sql']['count'].' -->';
+	}
+}
 ?>
 </body>
 </html>
