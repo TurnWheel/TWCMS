@@ -9,7 +9,7 @@
 
 $cfg = array(
 	/* Script Config */
-	'debug' => FALSE, // Set to TRUE to enable "Debug" mode (Not recommended for live sites)
+	'debug' => TRUE, // Set to TRUE to enable "Debug" mode (Not recommended for live sites)
 
 	/* Database */
 	'db_enable' => TRUE, // Is DB connection even required? (Base CMS doesn't use it, but most addons will!)
