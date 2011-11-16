@@ -15,21 +15,28 @@ $_POST['email'] = isset($_POST['email']) ? real_escape($_POST['email']) : '';
 $_POST['message'] = isset($_POST['message']) ? real_escape($_POST['message']) : '';
 
 if (isset($_POST['submit'])) {
+	// Clean message from return chars
+	$_POST['message'] = str_replace('\r\n',"\n",$_POST['message']);
+
 	// Verify required fields
 	foreach ($required AS $field) {
-		if ($_POST[$field] === '' || $_POST[$field] === 0) $error[$field] = TRUE;
+		if ($_POST[$field] === '' || $_POST[$field] === 0) {
+			$error[$field] = TRUE;
+		}
 	}
-	
+
 	// Verify email
 	if (!valid_email($_POST['email'])) $error['email'] = TRUE;
-	
+
 	// Check for errros
 	if (sizeof($error) > 0) {
 		// Print error message
 		print '
 		<div class="box error">
 			<p>
-				<strong>Error!</strong> There was a problem with your submission.<br />
+				<strong>Error!</strong> There was a problem
+				with your submission.<br />
+
 				Check the fields highlighted in red below.
 			</p>
 		</div>
@@ -37,22 +44,23 @@ if (isset($_POST['submit'])) {
 	}
 	else {
 		ob_end_clean(); // End buffer
-		
+
 		// Generate map of variables for email
 		$map = array(
 			'name' => $_POST['name'],
 			'email' => $_POST['email'],
-			'message' => str_replace('\r\n',"\n",$_POST['message']),
+			'message' => stripslashes('\r\n',"\n",$_POST['message']),
 			'date' => date($cfg['email_date'],NOW)
 		);
-		
+
 		// Send email to admin
 		$email = $cfg['contact_content'];
-		mail(implode(',',$cfg['contact_admin']),map_replace($map,$email['subject']),map_replace($map,$email['body']),$cfg['contact_headers']);
-		
+		mail(implode(',',$cfg['contact_admin']),map_replace($map,$email['subject']),
+				map_replace($map,$email['body']),$cfg['contact_headers']);
+
 		// Redirect
 		header('Location: /contact/thankyou');
-		
+
 		return TRUE; // Skip rest of file
 	}
 }
@@ -62,7 +70,8 @@ if (sizeof($error) === 0) {
 
 
 	<p>
-		If you would like to know more about our products and wish to contact us directly, <br />
+		If you would like to know more about our
+		services and wish to contact us directly, <br />
 		please call us or fill out the form below to send us an email.
 	</p><br />
 
@@ -79,20 +88,20 @@ foreach ($_POST AS $key => $value) {
 <form method="post" action="/contact">
 <fieldset>
 	<legend>Contact Us</legend>
-	<div style="width:500px; margin-bottom:15px; float: left;">
+	<div>
 		<table cellspacing="0">
 			<tr>
 				<td><label for="contact-name"<?php print isset($error['name']) ? ' class="error"' : ''; ?>>Name</label></td>
-				<td><input style="width: 255px;" type="text" name="name" id="contact-name" value="<?php print $_POST['name']; ?>" /></td>
+				<td><input type="text" name="name" id="contact-name" value="<?php print $_POST['name']; ?>" /></td>
 			</tr>
 			<tr>
 				<td><label for="contact-email"<?php print isset($error['email']) ? ' class="error"' : ''; ?>>Email</label></td>
-				<td><input style="width: 255px;" type="text" name="email" id="contact-email" value="<?php print $_POST['email']; ?>" /></td>
+				<td><input type="text" name="email" id="contact-email" value="<?php print $_POST['email']; ?>" /></td>
 			</tr>
 			<tr>
 				<td><label for="contact-message"<?php print isset($error['message']) ? ' class="error"' : ''; ?>>Message</label></td>
 				<td>
-					<textarea style="width:255px;border:1px solid #482670;" name="message" id="contact-message" cols="30" rows="10"><?php print $_POST['message']; ?></textarea>
+					<textarea name="message" id="contact-message" cols="30" rows="10"><?php print stripslashes($_POST['message']); ?></textarea>
 				</td>
 			</tr>
 			<tr>
