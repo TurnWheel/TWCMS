@@ -170,7 +170,7 @@ else {
 		$header = '';
 		$content = $data;
 	}
-	
+
 	// Strip out HTML from header (tends to sneak in)
 	$title = $header = strip_tags($header);
 
