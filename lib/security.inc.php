@@ -12,6 +12,25 @@ if (!defined('SECURITY')) exit;
 
 /*
  * <TWCMS>
+ * Escape headers for general use.
+ */
+function real_escape($v) {
+	global $cfg;
+	return $cfg['db_enable'] ? mysql_real_escape_string($v)
+		: htmlspecialchars($v);
+}
+
+/*
+ * <TWCMS>
+ * Escape headers for use in includes,
+ * and any file-based function
+ */
+function path_escape($v) {
+	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/','', $v);
+}
+
+/*
+ * <TWCMS>
  * Hashes a string based on config
  * settings, set in config.inc.php
  *
