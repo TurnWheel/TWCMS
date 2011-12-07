@@ -19,12 +19,12 @@ $cfg = array(
 	 ****/
 
 	/*
-	 * Resource Parent Check
+	 * Checks root name for resources
 	 * If FALSE, it will not load parent resources for subpages
 	 * Ex: on page /about/history, it will not check for about.css
 	 * Default is TRUE, so both about.js & about_history.js will be loaded
 	 */
-	'res_checkParent' => TRUE,
+	'res_checkRoot' => TRUE,
 
 	/*
 	 * Resource Recursive Check
@@ -32,9 +32,9 @@ $cfg = array(
 	 * If TRUE, in case of /about/some/person;
 	 * about.js, about_some.js, and about_some_person.js would loaded
 	 * If FALSE, just about.js and about_some_person.js
-	 * unless res_checkParent is FALSE
+	 * unless res_checkRoot is FALSE
 	 */
-	'res_recursive' => TRUE,
+	'res_recursive' => FALSE,
 
 	/* Database Settings */
 	'db_enable' => TRUE, // Is DB connection even required?

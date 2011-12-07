@@ -254,7 +254,7 @@ if ($page !== 'index') {
 
 // Load root page CSS file
 // if checking parent, or if there is no parent
-if ($cfg['res_checkParent'] || $rootpage === $page) {
+if ($cfg['res_checkRoot'] || $rootpage === $page) {
 	$cfg['t_css'][] = get_exfile('css',$rootpage.'.css');
 }
 
@@ -276,7 +276,7 @@ if ($page !== 'index') {
 
 // Load root page JS file
 // if checking parent, or if there is no parent
-if ($cfg['res_checkParent'] || $rootpage === $page) {
+if ($cfg['res_checkRoot'] || $rootpage === $page) {
 	$cfg['t_js'][] = get_exfile('js',$rootpage.'.js');
 }
 
@@ -291,19 +291,22 @@ if ($rootpage !== $page) {
  * First Make sure environment is sane
  * 1: Check if enabled
  * 2: Check if on a subpage
- * 3: Not if res_checkParent is TRUE && num pages is 2
+ * 3: Not if res_checkRoot is TRUE && num pages is 2
  */
 if ($cfg['res_recursive']) {
 
-	if ($rootpage !== $page && !($cfg['res_checkParent'] && $numpages === 2)) {
+	if ($rootpage !== $page && !($cfg['res_checkRoot'] && $numpages === 2)) {
 
 		// Check all pages
 		$track = array();
 		foreach ($pages AS $k => $cp) {
 			$track[] = $cp;
 
-			// Skip first (rootpage) and last (currpage)
-			if ($k === 0 || $k === ($numpages-1)) continue;
+			// Skip rootpage if checkRoot is TRUE (first item)
+			// and skip current page (last item)
+			if ($k === ($numpages-1) || ($cfg['res_checkRoot'] && $k === 0)) {
+				continue;
+			}
 
 			$curr = implode($track, '_');
 			$cfg['t_css'][] = get_exfile('css', $curr.'.css');
