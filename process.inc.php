@@ -1,7 +1,7 @@
 <?php
 /*
  * TWCMS 0.9-Beta
- * 
+ *
  * This file processes page headers
  * and then searches content directory for the appropriate page.
  * Returns variables such as header, title, content, breadcrumbs, etc.

@@ -71,7 +71,7 @@ foreach ($cfg['t_js'] AS $file) {
 		<div id="content">
 			<div id="content_inner">
 			<?php
-			// Display bread crumbs
+			/* Display bread crumbs */
 			if (!empty($bcrumbs)) {
 				print '
 				<div id="breadcrumbs">'."\n";
@@ -86,7 +86,8 @@ foreach ($cfg['t_js'] AS $file) {
 					// Printable name
 					$linkname = root_url2name($name);
 
-					// Display link if it matches current URL (checks for trailing slash as well)
+					// Display link if it matches current URL
+					// (checks for trailing slash as well)
 					if ($url !== $currurl && $url.'/' !== $currurl) {
 						print '<a href="'.$url.'">'.$linkname.'</a> &gt; ';
 					}
