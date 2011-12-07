@@ -20,7 +20,7 @@ html, body {
 }
 body {
 	background: transparent url(/images/bg.jpg) repeat;
-	color: #3c3c3c;
+	color: #3C3C3C;
 	margin: 0;
 	padding: 0;
 	letter-spacing: .5px;
@@ -205,7 +205,8 @@ td {
 }
 #menu li {
 	list-style: none;
-	position: absolute;
+	float: left;
+	margin-left: 30px;
 	top: 0;
 }
 #menu a {
@@ -223,7 +224,7 @@ td {
 }
 #menu a:hover {
 	color: #FFF;
-	text-shadow:0px 0px 4px #FFF;
+	text-shadow: 0px 0px 4px #FFF;
 }
 #content {
 	width: 970px;
