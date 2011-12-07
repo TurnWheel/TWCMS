@@ -20,5 +20,5 @@
 
 				<p>&nbsp;</p>
 
-				<h2>Something Else</h2>
-				<p>I dunno</p>
+				<h2>DEBUG</h2>
+				<p>Good area for debug code</p>

@@ -253,11 +253,15 @@ if ($page !== 'index') {
 }
 
 // Load root page CSS file
-$cfg['t_css'][] = get_exfile('css',$rootpage.'.css');
+// if checking parent, or if there is no parent
+if ($cfg['res_checkParent'] || $rootpage === $page) {
+	$cfg['t_css'][] = get_exfile('css',$rootpage.'.css');
+}
 
-// Check for subpage CSS (if not same as root)
+// Check for current page CSS
+// if current page different from root
 if ($rootpage !== $page) {
-	$cfg['t_css'][] = get_exfile('css',$rootpage.'_'.$page.'.css');
+	$cfg['t_css'][] = get_exfile('css',$page.'.css');
 }
 
 /* Find JS Files */
@@ -271,11 +275,41 @@ if ($page !== 'index') {
 }
 
 // Load root page JS file
-$cfg['t_js'][] = get_exfile('js',$rootpage.'.js');
+// if checking parent, or if there is no parent
+if ($cfg['res_checkParent'] || $rootpage === $page) {
+	$cfg['t_js'][] = get_exfile('js',$rootpage.'.js');
+}
 
-// Check for subpage JS (if not same as root)
+// Check for current page JS
+// if current page different from root
 if ($rootpage !== $page) {
-	$cfg['t_js'][] = get_exfile('js',$rootpage.'_'.$page.'.js');
+	$cfg['t_js'][] = get_exfile('js',$page.'.js');
+}
+
+/* Recursive Resource Checks
+ * (Applies to both css & js)
+ * First Make sure environment is sane
+ * 1: Check if enabled
+ * 2: Check if on a subpage
+ * 3: Not if res_checkParent is TRUE && num pages is 2
+ */
+if ($cfg['res_recursive']) {
+
+	if ($rootpage !== $page && !($cfg['res_checkParent'] && $numpages === 2)) {
+
+		// Check all pages
+		$track = array();
+		foreach ($pages AS $k => $cp) {
+			$track[] = $cp;
+
+			// Skip first (rootpage) and last (currpage)
+			if ($k === 0 || $k === ($numpages-1)) continue;
+
+			$curr = implode($track, '_');
+			$cfg['t_css'][] = get_exfile('css', $curr.'.css');
+			$cfg['t_js'][] = get_exfile('js', $curr.'.js');
+		}
+	}
 }
 
 // End of processing
