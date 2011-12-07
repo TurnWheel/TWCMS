@@ -48,8 +48,11 @@ function sql_close() {
 }
 
 // Process Queries
-function sql_query($q) {
+function sql_query($q, $vals = array()) {
 	global $cfg;
+
+	// Generate full query using inputed array
+	if (!empty($vals)) vprintf($q, $vals);
 
 	$cfg['sql']['id'] = 0; // Unset existing ID
 

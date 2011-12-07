@@ -1,9 +1,9 @@
 <?php
 /*
  * TurnWheel CMS
- * Incredibly disorganized set of utility functions. 
+ * Incredibly disorganized set of utility functions.
  * They are rather random, so easy to just throw them in here.
- * 
+ *
  * If the func is denoted with <TWCMS>
  * this means it is vital to the CMS internals
  * Otherwise, it is just a useful function
@@ -12,30 +12,6 @@
 if (!defined('SECURITY')) exit;
 
 /*
- * <TWCMS>
- * Escape headers for use in includes,
- * and any file-based function
- */
-function path_escape($v) {
-	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/','', $v);
-}
-
-/*
- * <TWCMS>
- * Escape headers for use in SQL queries.
- *
- * Requires $cfg['db_enable'] = TRUE
- *
- * Essential mysql_real_escape_string
- * but it handles if magic_quotes is set or not.
- */
-function real_escape($v) {
-	if (get_magic_quotes_gpc() === 1) $v = stripslashes($v);
-
-	return mysql_real_escape_string($v);
-}
-
-/* 
  * <TWCMS>
  * Root URL's into their full name
  */
@@ -255,7 +231,7 @@ function img_resize($type, $orig, $new, $size, $quality = 75) {
 	return TRUE;
 }
 
-/* 
+/*
  * Generate random unique receipt #
  * based on ID of entry;
  * Ex: gen_receipt(24);
@@ -309,7 +285,7 @@ function bytes2num($bytes, $long = FALSE) {
 		}
 	}
 
-	return $size; 
+	return $size;
 }
 
 // Convert hour time (HH:MM:SS) to seconds
@@ -718,7 +694,7 @@ function is_rfc3696_valid_email_address($email) {
 	# domain-literal  =       [CFWS] "[" *([FWS] dcontent) [FWS] "]" [CFWS]
 	# dcontent        =       dtext / quoted-pair
 	# dtext           =       NO-WS-CTL /     ; Non white space controls
-	# 
+	#
 	#                         %d33-90 /       ; The rest of the US-ASCII
 	#                         %d94-126        ;  characters not including "[",
 	#                                         ;  "]", or "\"
@@ -858,7 +834,7 @@ function is_rfc3696_valid_email_address($email) {
 					list($a, $b) = explode('::', $m[1]);
 
 					# remove the trailing colon before the IPv4 address
-					$b = substr($b, 0, -1); 
+					$b = substr($b, 0, -1);
 					$folded = (strlen($a) && strlen($b)) ? "$a:$b" : "$a$b";
 					$groups = explode(':', $folded);
 
