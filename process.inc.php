@@ -286,7 +286,8 @@ if ($rootpage !== $page) {
 	$cfg['t_js'][] = get_exfile('js',$page.'.js');
 }
 
-/* Recursive Resource Checks
+/*
+ * Recursive Resource Checks
  * (Applies to both css & js)
  * First Make sure environment is sane
  * 1: Check if enabled
@@ -302,8 +303,8 @@ if ($cfg['res_recursive']) {
 		foreach ($pages AS $k => $cp) {
 			$track[] = $cp;
 
-			// Skip rootpage if checkRoot is TRUE (first item)
-			// and skip current page (last item)
+			// Skip current page (last item)
+			// and rootpage if checkRoot is TRUE (first item)
 			if ($k === ($numpages-1) || ($cfg['res_checkRoot'] && $k === 0)) {
 				continue;
 			}

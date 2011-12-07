@@ -28,11 +28,14 @@ $cfg = array(
 
 	/*
 	 * Resource Recursive Check
-	 * Default: False
+	 * Default: FALSE
 	 * If TRUE, in case of /about/some/person;
 	 * about.js, about_some.js, and about_some_person.js would loaded
 	 * If FALSE, just about.js and about_some_person.js
 	 * unless res_checkRoot is FALSE
+	 *
+	 * Recommended to keep off unless really needed,
+	 * as it can be inefficient for large menu tress.
 	 */
 	'res_recursive' => FALSE,
 
