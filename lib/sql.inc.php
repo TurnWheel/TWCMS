@@ -48,7 +48,7 @@ function sql_close() {
 }
 
 // Process Queries
-function sql_query($q. $vals = array()) {
+function sql_query($q, $vals = array()) {
 	global $cfg;
 
 	// Generate full query using inputed array
