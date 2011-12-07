@@ -30,7 +30,7 @@ body {
 	font-family: 'Arial', sans-serif;
 }
 a {
-	color: #006FAE;
+	color: #FF7100;
 	text-decoration: underline;
 }
 a:hover {
@@ -125,10 +125,10 @@ legend {
 	font-size: 1em;
 	font-family: sans-serif;
 	letter-spacing: 1.5px;
-	background: #805292;
+	background: #2A4580;
 	padding: 3px;
 	margin: 5px 0px 8px 0px;
-	border: 1px solid #D6AEE3;
+	border: 1px solid #6C8DD5;
 	color: #FFF;
 	font-weight: 700;
 }
