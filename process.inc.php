@@ -129,6 +129,10 @@ if ($e404) {
     }
 }
 
+// Setup CSS/JS Template variables
+$cfg['t_css'] = array();
+$cfg['t_js'] = array();
+
 if ($php) {
 	/*
 	 * Set the variables allowed by scripts
@@ -245,7 +249,7 @@ function get_exfile($dir, $name) {
 /* Find CSS files */
 
 // Array of CSS files to load (managed by template)
-$cfg['t_css'] = array(get_exfile('css','global.css'));
+$cfg['t_css'][] = get_exfile('css','global.css');
 
 // Load Sub Page CSS file (if its not index page)
 if ($page !== 'index') {
@@ -267,7 +271,7 @@ if ($rootpage !== $page) {
 /* Find JS Files */
 
 // Array of JS files to load (managed by template)
-$cfg['t_js'] = array(get_exfile('js','global.js'));
+$cfg['t_js'][] = get_exfile('js','global.js');
 
 // Load Sub Page JS file (if its not index page)
 if ($page !== 'index') {
