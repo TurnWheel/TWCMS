@@ -1,6 +1,6 @@
 <?php
 // Set header/title
-$title = $header = 'Contact Us';
+$_t['title'] = $_t['header'] = 'Contact Us';
 
 // Start output buffer
 ob_start();
@@ -118,7 +118,7 @@ foreach ($_POST AS $key => $value) {
 
 <?php
 // Store output buffer and flush
-$content = ob_get_contents();
+$_t['content'] = ob_get_contents();
 ob_end_clean();
 
 // End of file
