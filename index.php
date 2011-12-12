@@ -26,7 +26,7 @@ $content = isset($_t['content']) ? $_t['content'] : '';
  * separated by $sep
  */
 function t_bcrumbs($bcrumbs, $sep = '&gt;') {
-	// If no input, just return empty
+	// If no input, just return empty string
 	if (empty($bcrumbs)) return '';
 
 	// Set current url to VAR for purpose of this function
@@ -184,5 +184,6 @@ if ($cfg['debug']) {
 	}
 }
 ?>
+
 </body>
 </html>
