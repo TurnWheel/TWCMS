@@ -22,10 +22,10 @@ $content = isset($_t['content']) ? $_t['content'] : '';
  * There isn't a better place to put this currently,
  * but I should figure out something later.
  *
- * Simple: Call with $_t['bcrumbs'] array:
- * 
+ * Simple: Call with $_t['bcrumbs'] array
+ * separated by $sep
  */
-function t_bcrumbs($bcrumbs, $sep = '&gt;', $wrap = '') {
+function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 	// If no input, just return empty
 	if (empty($bcrumbs)) return '';
 
@@ -95,9 +95,12 @@ foreach ($_t['js'] AS $file) {
 	_gaq.push(['_trackPageview']);
 
 	(function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+			'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
 	})();
 	//-->
 	</script>
