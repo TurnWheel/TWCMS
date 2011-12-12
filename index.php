@@ -36,12 +36,6 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 	<div id="breadcrumbs">'."\n";
 
 	foreach ($bcrumbs AS $name => $url) {
-		// Handle 'error' name in special case to only show 'Error'
-		if (strpos($url,'error.') !== FALSE) {
-			$name = 'error';
-			$currurl = $url;
-		}
-
 		// Printable name
 		$linkname = root_url2name($name);
 
