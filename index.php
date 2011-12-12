@@ -11,19 +11,67 @@ $headers = array('a','b','c');
 
 // Process headers and get page details
 require 'process.inc.php';
+
+// Proccess main template variables
+$title = isset($_t['title']) ? $_t['title'] : '';
+$header = isset($_t['header']) ? $_t['header'] : '';
+$content = isset($_t['content']) ? $_t['content'] : '';
+
+/*
+ * Breadcrumb function
+ * There isn't a better place to put this currently,
+ * but I should figure out something later.
+ *
+ * Simple: Call with $_t['bcrumbs'] array:
+ * 
+ */
+function t_bcrumbs($bcrumbs, $sep = '&gt;', $wrap = '') {
+	// If no input, just return empty
+	if (empty($bcrumbs)) return '';
+
+	$ret = '
+	<div id="breadcrumbs">'."\n";
+
+	foreach ($bcrumbs AS $name => $url) {
+		// Handle 'error' name in special case to only show 'Error'
+		if (strpos($url,'error.') !== FALSE) {
+			$name = 'error';
+			$currurl = $url;
+		}
+
+		// Printable name
+		$linkname = root_url2name($name);
+
+		// Display link if does not match current URL
+		// (checks for trailing slash as well)
+		if ($url !== $currurl && $url.'/' !== $currurl) {
+			$ret .= '<a href="'.$url.'">'.$linkname.'</a> &gt; ';
+		}
+		// Display current url as bold
+		else $ret .= '<strong>'.$linkname.'</strong>';
+	}
+
+	$ret .= '
+	</div>'."\n";
+
+	return $ret;
+}
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<title><?php print isset($title) && $title !== '' ? $title : 'Home'; ?> :: Misc. Demo Site</title>
+	<title>
+	<?php print $title === '' ? 'Home' : $title; ?>
+	:: Misc. Demo Site
+	</title>
 
 	<meta name="description" content="Enter a descrip" />
 	<meta name="keywords" content="Enter keywords" />
 	<meta name="robots" content="index, follow" />
 	<link rel="shortcut icon" href="/images/fav.png" type="image/x-icon" />
 <?php
-foreach ($cfg['t_css'] AS $file) {
+foreach ($_t['css'] AS $file) {
 	if (!is_string($file) || empty($file)) continue;
 	print '
 	<link rel="stylesheet" type="text/css" href="/css/'.$file.'" media="screen" />';
@@ -33,7 +81,7 @@ foreach ($cfg['t_css'] AS $file) {
 
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/jquery.colorbox.min.js"></script><?php
-foreach ($cfg['t_js'] AS $file) {
+foreach ($_t['js'] AS $file) {
 	if (!is_string($file) || empty($file)) continue;
 	print '
 	<script src="/js/'.$file.'"></script>';
@@ -71,37 +119,17 @@ foreach ($cfg['t_js'] AS $file) {
 		<div id="content">
 			<div id="content_inner">
 			<?php
-			/* Display bread crumbs */
-			if (!empty($bcrumbs)) {
-				print '
-				<div id="breadcrumbs">'."\n";
+			// Display bread crumbs
+			print t_breadcrumbs($_t['bcrumbs'], '&gt;');
 
-				foreach ($bcrumbs AS $name => $url) {
-					// Handle 'error' name in special case to only show 'Error'
-					if (strpos($url,'error.') !== FALSE) {
-						$name = 'error';
-						$currurl = $url;
-					}
-
-					// Printable name
-					$linkname = root_url2name($name);
-
-					// Display link if it matches current URL
-					// (checks for trailing slash as well)
-					if ($url !== $currurl && $url.'/' !== $currurl) {
-						print '<a href="'.$url.'">'.$linkname.'</a> &gt; ';
-					}
-					else print '<strong>'.$linkname.'</strong>';
-				}
-
-				print '
-				</div>'."\n";
-			}
-
-			// Print out header and content variables
-			if (isset($header) && $header !== '') {
+			// Print out header as h2
+			if ($header !== '') {
+				// Prevents HTML from sneaking into header variable
+				$header = strip_tags($header);
 				print '<h2><a href="'.$currurl.'">'.$header.'</a></h2>';
 			}
+
+			// Print out content wrapped in a div
 			print '<div>'.$content.'</div>'."\n";
 			?>
 			</div>
@@ -110,13 +138,14 @@ foreach ($cfg['t_js'] AS $file) {
 			<!-- Begin content_side -->
 			<div id="content_side">
 			<?php
-			// Sidebar
-			if ($sidebar !== '') include $sidebar;
+			// Include sidebar file
+			// yes, $_t['sidebar'] is include safe
+			if ($_t['sidebar'] !== '') include $_t['sidebar'];
 			?>
 			</div>
 			<!-- End content_side -->
 
-			<div class="clear"></div> 
+			<div class="clear"></div>
 		</div>
 		<!-- End #content -->
 	</div>

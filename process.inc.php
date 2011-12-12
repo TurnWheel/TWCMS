@@ -8,6 +8,10 @@
  * The template is responsible for parsing and displaying these variables.
  */
 
+// Template Variable
+// All values the template will need should be in the $_t array.
+$_t = array();
+
 // Make sure something is set
 // Requires that there be a 0 index setting
 // 0 index is handled with special case, and can not be ommited!
@@ -52,19 +56,20 @@ $page = implode('_',$pages);
 // Number of sub-pages requested (nesting #)
 $numpages = sizeof($pages);
 
-// For tracking breadcrumbs (empty on index; format <title> => $url)
-$bcrumbs = array();
+// For tracking breadcrumbs
+// (empty on index; format <title> => $url)
+$_t['bcrumbs'] = array();
 
 // Generate starting bread crumbs if not on index
 if ($rootpage !== 'index') {
-	$bcrumbs = array('Home' => FULLURL);
+	$_t['bcrumbs'] = array('Home' => FULLURL);
 
 	// Add breadcrumbs for current page + subpages
 	$prev = '';
 	foreach ($pages AS $bcpage) {
 		// Make titles look nice (space and captialize)
 		// Use $prev to track previous url's
-		$bcrumbs[root_url2name($bcpage)] = $prev = $prev.'/'.$bcpage;
+		$_t['bcrumbs'][root_url2name($bcpage)] = $prev = $prev.'/'.$bcpage;
 	}
 }
 
@@ -106,10 +111,13 @@ while ($notFound) {
 // Set 404 error if never found
 if ($notFound) $e404 = TRUE;
 
-// Load Content if not PHP and no 404
-if (!$e404 && !$php) $content = file_get_contents($file);
+// Load file contents if not PHP and no 404
+// $file is safe thanks to path_escape (security.inc.php)
+if (!$e404 && !$php) {
+	$_t['content'] = file_get_contents($file);
+}
 
-// Index page? (Custom template tweaks for index page)
+// Is this the index page? (Bool)
 $isindex = $page === 'index' || $page === 'indexnew';
 
 // Setup for 404 page
@@ -119,7 +127,7 @@ if ($e404) {
     $title = '- Error: Page Not Found';
     $php = FALSE;
 
-    $bcrumbs = array('Home' => '/','Error: Page Not Found' => $currurl);
+    $_t['bcrumbs'] = array('Home' => '/','Error: Page Not Found' => $currurl);
 
     // If we can't use the 404 page, it's not good. Kill the script.
     if (!file_exists($file) || !is_readable($file)) {
@@ -130,8 +138,8 @@ if ($e404) {
 }
 
 // Setup CSS/JS Template variables
-$cfg['t_css'] = array();
-$cfg['t_js'] = array();
+$_t['css'] = array();
+$_t['js'] = array();
 
 if ($php) {
 	/*
@@ -141,25 +149,30 @@ if ($php) {
 	 * Including requesting authentication, accepting post data, etc.
 	 * This simply locks you into the default layout provided
 	 */
-	$header = ''; // Sets the h2 tag in template
-	$title = ''; // Used for <title> in template (usually same as $header)
-	$content = ''; // Body of your page!
 
-	include $file; // Yes, $file is safe
+	$_t['header'] = ''; // Sets the h2 tag in template
+	$_t['title'] = ''; // Used for <title> in template (usually same as $header)
+	$_t['content'] = ''; // Body of your page!
 
-	$header = strip_tags($header); // Strip out HTML from header
+	// Yes, $file is safe thanks to path_escape (security.inc.php)
+	include $file;
 }
-// Handle .html files
-// NOTE: The first line of every .html file becomes the header!
+
+/*
+ * Handle .html files
+ * NOTE: The first line of every .html file becomes the header!
+ * and this line is stripped of all html
+ */
 else {
-	$content = isset($content) ? $content : '';
+	// Prevents error if content was not set previously
+	$_t['content'] = isset($_t['content']) ? $_t['content'] : '';
 
 	// Split Main Content from Header
-	$split = explode("\n", $content, 2);
+	$split = explode("\n", $_t['content'], 2);
 
 	// Check to make sure data is valid
 	// otherwise use 404 page and post it as a 404 error
-	if ($content === '' || empty($split)) {
+	if ($_t['content'] === '' || empty($split)) {
 		header('HTTP/1.1 404 Not Found');
 		$data = file_get_contents(CPATH.'error.404.html');
 		$split = explode("\n", $data, 2);
@@ -167,43 +180,44 @@ else {
 
 	// Split header and content
 	if (count($split) > 1) {
-		$header = $split[0];
-		$content = $split[1];
+		$_t['header'] = $split[0];
+		$_t['content'] = $split[1];
 	}
 	else {
-		$header = '';
-		$content = $data;
+		$_t['header'] = '';
+		$_t['content'] = $data;
 	}
 
 	// Strip out HTML from header (tends to sneak in)
-	$title = $header = strip_tags($header);
+	$_t['title'] = $_t['header'] = strip_tags($_t['header']);
 
 	// Hard code to have no title on index
-	if ($isindex) $title = '';
+	// uses default instead (defined in template)
+	if ($isindex) $_t['title'] = '';
 }
 
 // Swap bread crumbs for full title (only if this isnt already set)
-if ($header  !== '' && $page !== strtolower($header)) {
-	foreach ($bcrumbs AS $name => $url) {
+if ($_t['header']  !== '' && $page !== strtolower($_t['header'])) {
+	foreach ($_t['bcrumbs'] AS $name => $url) {
 		// Locate pre-set header and remove
 		// Comparisions: /page === /page; /page/ === /page/
 		// /page/ === /page.'/'; /page === /page/
 		if ($url === $currurl || $url === $currurl.'/' ||
 				$url === substr($currurl, 0, -1)) {
-			unset($bcrumbs[$name]);
+			unset($_t['bcrumbs'][$name]);
 		}
 	}
 
 	// Set new header for this URL (if not already set)
-	if (!isset($bcrumbs[$header])) {
-		$bcrumbs[$header] = $currurl;
+	if (!isset($_t['bcrumbs'][$_t['header']])) {
+		$_t['bcrumbs'][$_t['header']] = $currurl;
 	}
 }
 
 // Add previous pages to title format
 // make sure to exclude the current page
 // which should already be set
-if ($title !== '') {
+if ($_t['title'] !== '') {
 	$tpages = array(); // Array to hold formatted title pages
 
 	foreach (array_slice(array_reverse($pages),1) AS $val) {
@@ -214,11 +228,16 @@ if ($title !== '') {
 	}
 
 	// Add to title (make sure its not empty)
-	if (sizeof($tpages) > 0) $title .= ' :: '.implode(' > ',$tpages);
+	if (sizeof($tpages) > 0) {
+		$_t['title'] .= ' :: '.implode(' > ',$tpages);
+	}
 }
 
 // Remove any left-over characters from title
-$title = str_replace("\r",'',str_replace("\n",'',trim($title)));
+$_t['title'] =
+	str_replace("\r",'',
+		str_replace("\n",'',trim($_t['title']))
+	);
 
 /*
  * Figure out which sidebar to load
@@ -226,21 +245,21 @@ $title = str_replace("\r",'',str_replace("\n",'',trim($title)));
  * sidebar.<rootpage>.(html|inc.php)
  * sidebar.default.(html|inc.php)
  */
-$sb = 'sidebar.'; // Just to make the lines smaller
-$sidebar =
+$sb = 'sidebar.'; // String justs helps make the lines smaller
+$_t['sidebar'] =
 	(file_exists(CPATH.$sb.$rootpage.'.inc.php') ? CPATH.$sb.$rootpage.'.inc.php' :
 	(file_exists(CPATH.$sb.$rootpage.'.html') ? CPATH.$sb.$rootpage.'.html' :
 	(file_exists(CPATH.$sb.'default.inc.php') ? CPATH.$sb.'default.inc.php' :
 	(file_exists(CPATH.$sb.'default.html') ? CPATH.$sb.'default.html' : ''))));
 
 /*
- * Simple utility function to get CSS/JS files quickly
+ * Simple processing function to get CSS/JS files quickly
  * Filename Format: dir/PREFIX.file.ext?timestamp
  * ****
  * Sample: get_exfile('css','subpage.css');
  * File Name Returned: css/<PREFIX>.subpage.css?_=12343425;
 */
-function get_exfile($dir, $name) {
+function p_exfile($dir, $name) {
 	return file_exists($dir.'/'.PREFIX.'.'.$name) ?
 			PREFIX.'.'.$name.'?_='.filemtime($dir.'/'.PREFIX.'.'.$name)
 			: FALSE;
@@ -249,45 +268,45 @@ function get_exfile($dir, $name) {
 /* Find CSS files */
 
 // Array of CSS files to load (managed by template)
-$cfg['t_css'][] = get_exfile('css','global.css');
+$_t['css'][] = p_exfile('css','global.css');
 
 // Load Sub Page CSS file (if its not index page)
 if ($page !== 'index') {
-	$cfg['t_css'][] = get_exfile('css','subpage.css');
+	$_t['css'][] = p_exfile('css','subpage.css');
 }
 
 // Load root page CSS file
 // if checking parent, or if there is no parent
 if ($cfg['res_checkRoot'] || $rootpage === $page) {
-	$cfg['t_css'][] = get_exfile('css',$rootpage.'.css');
+	$_t['css'][] = p_exfile('css',$rootpage.'.css');
 }
 
 // Check for current page CSS
 // if current page different from root
 if ($rootpage !== $page) {
-	$cfg['t_css'][] = get_exfile('css',$page.'.css');
+	$_t['css'][] = p_exfile('css',$page.'.css');
 }
 
 /* Find JS Files */
 
 // Array of JS files to load (managed by template)
-$cfg['t_js'][] = get_exfile('js','global.js');
+$_t['js'][] = p_exfile('js','global.js');
 
 // Load Sub Page JS file (if its not index page)
 if ($page !== 'index') {
-	$cfg['t_js'][] = get_exfile('js','subpage.js');
+	$_t['js'][] = p_exfile('js','subpage.js');
 }
 
 // Load root page JS file
 // if checking parent, or if there is no parent
 if ($cfg['res_checkRoot'] || $rootpage === $page) {
-	$cfg['t_js'][] = get_exfile('js',$rootpage.'.js');
+	$_t['js'][] = p_exfile('js',$rootpage.'.js');
 }
 
 // Check for current page JS
 // if current page different from root
 if ($rootpage !== $page) {
-	$cfg['t_js'][] = get_exfile('js',$page.'.js');
+	$_t['js'][] = p_exfile('js',$page.'.js');
 }
 
 /*
@@ -314,8 +333,8 @@ if ($cfg['res_recursive']) {
 			}
 
 			$curr = implode($track, '_');
-			$cfg['t_css'][] = get_exfile('css', $curr.'.css');
-			$cfg['t_js'][] = get_exfile('js', $curr.'.js');
+			$_t['css'][] = p_exfile('css', $curr.'.css');
+			$_t['js'][] = p_exfile('js', $curr.'.js');
 		}
 	}
 }
