@@ -41,7 +41,7 @@ $currurl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 $surl = parse_url($currurl);
 
 // Define current URL as a constant
-define('CURRURL', $surl['path'] !== $currurl ? $surl['path'] : $currurl)
+define('CURRURL', $surl['path'] !== $currurl ? $surl['path'] : $currurl);
 
 $rootpage = ''; // Main page (first root in the chain)
 
