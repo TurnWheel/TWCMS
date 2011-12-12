@@ -123,7 +123,7 @@ foreach ($_t['js'] AS $file) {
 			<div id="content_inner">
 			<?php
 			// Display bread crumbs
-			print t_breadcrumbs($_t['bcrumbs'], '&gt;');
+			print t_bcrumbs($_t['bcrumbs'], '&gt;');
 
 			// Print out header as h2
 			if ($header !== '') {
