@@ -29,6 +29,9 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 	// If no input, just return empty
 	if (empty($bcrumbs)) return '';
 
+	// Set current url to VAR for purpose of this function
+	$currurl = CURRURL;
+
 	$ret = '
 	<div id="breadcrumbs">'."\n";
 
@@ -129,7 +132,7 @@ foreach ($_t['js'] AS $file) {
 			if ($header !== '') {
 				// Prevents HTML from sneaking into header variable
 				$header = strip_tags($header);
-				print '<h2><a href="'.$currurl.'">'.$header.'</a></h2>';
+				print '<h2><a href="'.CURRURL.'">'.$header.'</a></h2>';
 			}
 
 			// Print out content wrapped in a div

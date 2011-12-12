@@ -39,15 +39,20 @@ $currurl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 
 // Remove any query strings/anchors from the url
 $surl = parse_url($currurl);
-$currurl = $surl['path'] !== $currurl ? $surl['path'] : $currurl;
+
+// Define current URL as a constant
+define('CURRURL', $surl['path'] !== $currurl ? $surl['path'] : $currurl)
 
 $rootpage = ''; // Main page (first root in the chain)
 
 // Dynamically adds all roots to array
 $pages = array(); // Array of active roots
 foreach ($headers AS $num => $key) {
-	if ($num === 0) $rootpage = $_GET[$key]; // Set root page (first name found)
-	if ($_GET[$key] !== '') $pages[] = $_GET[$key]; // Page array
+	// Set root page (first name found)
+	if ($num === 0) $rootpage = $_GET[$key];
+
+	// Add to array of pages if set
+	if ($_GET[$key] !== '') $pages[] = $_GET[$key];
 }
 
 // Full page string using _ format (used for file lookup)
@@ -127,7 +132,10 @@ if ($e404) {
     $title = '- Error: Page Not Found';
     $php = FALSE;
 
-    $_t['bcrumbs'] = array('Home' => '/','Error: Page Not Found' => $currurl);
+	$_t['bcrumbs'] = array(
+		'Home' => '/',
+		'Error: Page Not Found' => CURRURL
+	);
 
     // If we can't use the 404 page, it's not good. Kill the script.
     if (!file_exists($file) || !is_readable($file)) {
@@ -202,15 +210,15 @@ if ($_t['header']  !== '' && $page !== strtolower($_t['header'])) {
 		// Locate pre-set header and remove
 		// Comparisions: /page === /page; /page/ === /page/
 		// /page/ === /page.'/'; /page === /page/
-		if ($url === $currurl || $url === $currurl.'/' ||
-				$url === substr($currurl, 0, -1)) {
+		if ($url === CURRURL || $url === CURRURL.'/' ||
+				$url === substr(CURRURL, 0, -1)) {
 			unset($_t['bcrumbs'][$name]);
 		}
 	}
 
 	// Set new header for this URL (if not already set)
 	if (!isset($_t['bcrumbs'][$_t['header']])) {
-		$_t['bcrumbs'][$_t['header']] = $currurl;
+		$_t['bcrumbs'][$_t['header']] = CURRURL;
 	}
 }
 
