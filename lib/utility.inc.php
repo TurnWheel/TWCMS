@@ -35,7 +35,7 @@ function check_flag($flag,$val) {
  * $compare = flag to test against
  * if $incFlag = TRUE: returns Array ([0] => flag, [1] => text)
  * else returns text
-*/
+ */
 function check_flaglist($text,$compare,$incFlag = TRUE) {
 	$result = '';
 
@@ -91,13 +91,19 @@ function valid_email($email)  {
 	return is_rfc3696_valid_email_address($email);
 }
 
-/* Validate Phone Numbers */
+/*
+ * Validate Phone Numbers
+ * Supports formats:
+ * (555) 555-12345
+ * 555-12345
+ */
 function valid_phone($pn, $useareacode = TRUE) {
 	if ($pn === '') return FALSE;
 
-	if (preg_match('/^[ ]*[(]{0,1}[ ]*[0-9]{3,3}[ ]*[)]{0,1}[-]{0,1}[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/',$pn)
-		|| (preg_match('/^[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/',$pn)
-		&& !$useareacode)) {
+	if (preg_match('/^[ ]*[(]{0,1}[ ]*[0-9]{3,3}[ ]*[)]{0,1}[-]{0,1}[ ]*[0-9]{3,3}'
+			.'[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/',$pn)
+		|| (!$useareacode &&
+		preg_match('/^[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/',$pn))) {
 		return eregi_replace('[^0-9]', '', $pn);
 	}
 
@@ -123,9 +129,11 @@ function format_phone($phone) {
 	else return $phone;
 }
 
-// Simple array -> Replace mapping function
-// Ex: print map_replace(array('foo' => 'bar'), '{foo} stuff')
-// -> bar stuff
+/*
+ * Simple array -> Replace mapping function
+ * Ex: print map_replace(array('foo' => 'bar'), '{foo} stuff')
+ * -> bar stuff
+ */
 function map_replace($map, $text) {
 	foreach ($map AS $find => $replace) {
 		$text = str_replace('{'.$find.'}', $replace, $text);
@@ -134,14 +142,14 @@ function map_replace($map, $text) {
 	return $text;
 }
 
-// file_put_contents from PHP 5.3
-// for servers running older PHP versions
+/*
+ * file_put_contents from PHP 5.3
+ * for servers running older PHP versions
+ */
 if (!function_exists('file_put_contents')) {
 	function file_put_contents($filename, $data) {
 		$f = @fopen($filename, 'w');
-		if (!$f) {
-			return FALSE;
-		}
+		if (!$f) return FALSE;
 		else {
 			$bytes = fwrite($f, $data);
 			fclose($f);
@@ -150,11 +158,13 @@ if (!function_exists('file_put_contents')) {
 	}
 }
 
-// Delete file or directory recursively
+/*
+ * Delete file or directory recursively
+ * Obviously requires proper permissions
+ * **USE WITH CAUTION**
+ */
 function recursiveDelete($str) {
-	if (is_file($str)) {
-		return unlink($str);
-	}
+	if (is_file($str)) return unlink($str);
 	elseif (is_dir($str)) {
 		$scan = glob(rtrim($str, '/').'/*');
 
@@ -166,8 +176,10 @@ function recursiveDelete($str) {
 	}
 }
 
-// Get lat/lng from google based on address
-// MAPS_HOST and MAPS_KEY are defined in config
+/*
+ * Get lat/lng from google based on address
+ * MAPS_HOST and MAPS_KEY are defined in config
+ */
 function google_latlng($addr, &$status) {
 	if ($addr == '') return FALSE;
 
@@ -262,15 +274,19 @@ function gen_receipt($id) {
 	return str_pad($id,5,'0',STR_PAD_LEFT).'-'.substr(sha1(uniqid('',TRUE)),0,8);
 }
 
-// ISO-81601 Date Format for PHP 4
-// PHP5: date('c')
+/*
+ * ISO-81601 Date Format for PHP 4
+ * PHP5: date('c')
+ */
 function iso_8601($t) {
 	$z = date('O',$t);
 	return date('Y-m-d\TH:i:s',$t).substr($z,0,3).':'.substr($z,3,2);
 }
 
-// Truncate String
-// Common ext: &#8230;
+/*
+ * Truncate String
+ * Common ext: &#8230;
+ */
 function truncate($st, $max, $ext = '&#8230;') {
 	// Set the replacement for the "string break" in the wordwrap function
 	$marker = '&#133;';
@@ -283,9 +299,11 @@ function truncate($st, $max, $ext = '&#8230;') {
 	return $st;
 }
 
-// Convert bytes to human-readable number
-// $long = TRUE will produce full words (like Kilobytes)
-// By Default (FALSE) it returns 'MB' and 'KB'
+/*
+ * Convert bytes to human-readable number
+ * $long = TRUE will produce full words (like Kilobytes)
+ * By Default (FALSE) it returns 'MB' and 'KB'
+ */
 function bytes2num($bytes, $long = FALSE) {
 	$size = $bytes/1024;
 
@@ -309,16 +327,19 @@ function bytes2num($bytes, $long = FALSE) {
 	return $size;
 }
 
-// Convert hour time (HH:MM:SS) to seconds
-// Ex: time2sec(01:55:22) -> 6922
+/*
+ * Convert hour time (HH:MM:SS) to seconds
+ * Ex: time2sec(01:55:22) -> 6922
+ */
 function time2secs($time) {
 	$s = explode(':',$time);
 	return (int) ((intval($s[0])*60)*60)+(intval($s[1])*60)+intval($s[2]);
 }
 
-// Convert seconds to a string
-// Ex: secs2str(6922) -> 1hr, 55min, 22secs
-// Ex: secs2str(6922, TRUE) -> 1 hour, 55 minutes, 22 seconds
+/* Convert seconds to a string
+ * Ex: secs2str(6922) -> 1hr, 55min, 22secs
+ * Ex: secs2str(6922, TRUE) -> 1 hour, 55 minutes, 22 seconds
+ */
 function secs2str($secs, $long = FALSE) {
 	// Reset hours, mins, and secs we'll be using
 	$hours = 0;
@@ -407,7 +428,9 @@ function time_since($time, $showdate = TRUE) {
 	return $num.' '.$name.($num === 1 ? '' : 's').' ago';
 }
 
-// Parse CSV File by Row
+/*
+ * Parse CSV File by Row
+ */
 function parse_csv_row($file, $longest = 0, $delimiter = ',') {
 	if (!file_exists($file)) return FALSE;
 
@@ -423,7 +446,9 @@ function parse_csv_row($file, $longest = 0, $delimiter = ',') {
 	return $data;
 }
 
-// Parse CSV file by column
+/*
+ * Parse CSV file by column
+ */
 function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
 	if (!file_exists($file)) return FALSE;
 
@@ -452,8 +477,10 @@ function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
 	return $data;
 }
 
-// Calculates distance in miles from one set
-// of coordinates to another
+/*
+ * Calculates distance in miles from one set
+ * of coordinates to another
+ */
 function calculate_mileage($lat1, $lat2, $lon1, $lon2) {
 	// Convert lattitude/longitude (degrees) to radians for calculations
 	$lat1 = deg2rad($lat1);
@@ -473,8 +500,10 @@ function calculate_mileage($lat1, $lat2, $lon1, $lon2) {
 	return $distance;
 }
 
-// Sanitize characters from Windows-1252 (Microsoft Word)
-// Doesn't get all of them, but at least the major ones
+/*
+ * Sanitize characters from Windows-1252 (Microsoft Word)
+ * Doesn't get all of them, but at least the major ones
+ */
 function sanitize($text = '') {
 	$chars = array(
 		128 => '&euro;', // Euro Sign

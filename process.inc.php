@@ -229,7 +229,7 @@ if ($_t['title'] !== '') {
 	$tpages = array(); // Array to hold formatted title pages
 
 	foreach (array_slice(array_reverse($pages),1) AS $val) {
-		 // Skip array values to prevent errors and recursion
+		// Skip array values to prevent errors and recursion
 		if (is_array($val)) continue;
 
 		$tpages[] = root_url2name($val);
