@@ -127,22 +127,22 @@ $isindex = $page === 'index' || $page === 'indexnew';
 
 // Setup for 404 page
 if ($e404) {
-    header('HTTP/1.1 404 Not Found');
-    $file = CPATH.'error.404.html';
-    $title = '- Error: Page Not Found';
-    $php = FALSE;
+	header('HTTP/1.1 404 Not Found');
+	$file = CPATH.'error.404.html';
+	$title = '- Error: Page Not Found';
+	$php = FALSE;
 
 	$_t['bcrumbs'] = array(
 		'Home' => '/',
 		'Error: Page Not Found' => CURRURL
 	);
 
-    // If we can't use the 404 page, it's not good. Kill the script.
-    if (!file_exists($file) || !is_readable($file)) {
+	// If we can't use the 404 page, it's not good. Kill the script.
+	if (!file_exists($file) || !is_readable($file)) {
 		print 'Error 404 Times TWO: A 404 error occured, then the 404'.
 			'document could not be found. Please contact the administrator!';
-        exit;
-    }
+		exit;
+	}
 }
 
 // Setup CSS/JS Template variables
