@@ -49,6 +49,27 @@ function check_flaglist($text,$compare,$incFlag = TRUE) {
 }
 
 /*
+ * Cleans up string of all weird characters for use in URL
+ */
+function string2url($string) {
+	$url = str_replace("'", '', $string);
+	$url = str_replace('%20', ' ', $url);
+
+	// Substitutes anything but letters, numbers and '_' with separator
+	$url = preg_replace('~[^\\pL0-9_]+~u', '-', $url);
+	$url = trim($url, '-');
+
+	// You may opt for your own custom character map for encoding.
+	$url = iconv('utf-8', 'us-ascii//TRANSLIT', $url);
+	$url = strtolower($url);
+
+	// Keep only letters, numbers, '_' and separator
+	$url = preg_replace('~[^-a-z0-9_]+~', '', $url);
+
+	return $url;
+}
+
+/*
  * Validate Passwords
  *
  * Restrictions:
@@ -541,13 +562,13 @@ function is_rfc3696_valid_email_address($email) {
 
 	#############################################################################
 	#
-	# NO-WS-CTL       =       %d1-8 /         ; US-ASCII control characters
-	#                         %d11 /          ;  that do not include the
-	#                         %d12 /          ;  carriage return, line feed,
-	#                         %d14-31 /       ;  and white space characters
-	#                         %d127
-	# ALPHA          =  %x41-5A / %x61-7A   ; A-Z / a-z
-	# DIGIT          =  %x30-39
+	# NO-WS-CTL		  =		  %d1-8 /		  ; US-ASCII control characters
+	#						  %d11 /		  ;  that do not include the
+	#						  %d12 /		  ;  carriage return, line feed,
+	#						  %d14-31 /		  ;  and white space characters
+	#						  %d127
+	# ALPHA			 =	%x41-5A / %x61-7A	; A-Z / a-z
+	# DIGIT			 =	%x30-39
 
 	$no_ws_ctl	= "[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]";
 	$alpha		= "[\\x41-\\x5a\\x61-\\x7a]";
@@ -559,16 +580,16 @@ function is_rfc3696_valid_email_address($email) {
 
 	#############################################################################
 	#
-	# obs-char        =       %d0-9 / %d11 /          ; %d0-127 except CR and
-	#                         %d12 / %d14-127         ;  LF
-	# obs-text        =       *LF *CR *(obs-char *LF *CR)
-	# text            =       %d1-9 /         ; Characters excluding CR and LF
-	#                         %d11 /
-	#                         %d12 /
-	#                         %d14-127 /
-	#                         obs-text
-	# obs-qp          =       "\" (%d0-127)
-	# quoted-pair     =       ("\" text) / obs-qp
+	# obs-char		  =		  %d0-9 / %d11 /		  ; %d0-127 except CR and
+	#						  %d12 / %d14-127		  ;  LF
+	# obs-text		  =		  *LF *CR *(obs-char *LF *CR)
+	# text			  =		  %d1-9 /		  ; Characters excluding CR and LF
+	#						  %d11 /
+	#						  %d12 /
+	#						  %d14-127 /
+	#						  obs-text
+	# obs-qp		  =		  "\" (%d0-127)
+	# quoted-pair	  =		  ("\" text) / obs-qp
 
 	$obs_char	= "[\\x00-\\x09\\x0b\\x0c\\x0e-\\x7f]";
 	$obs_text	= "(?:$lf*$cr*(?:$obs_char$lf*$cr*)*)";
@@ -588,16 +609,16 @@ function is_rfc3696_valid_email_address($email) {
 
 	##############################################################################
 	#
-	# obs-FWS         =       1*WSP *(CRLF 1*WSP)
-	# FWS             =       ([*WSP CRLF] 1*WSP) /   ; Folding white space
-	#                         obs-FWS
-	# ctext           =       NO-WS-CTL /     ; Non white space controls
-	#                         %d33-39 /       ; The rest of the US-ASCII
-	#                         %d42-91 /       ;  characters not including "(",
-	#                         %d93-126        ;  ")", or "\"
-	# ccontent        =       ctext / quoted-pair / comment
-	# comment         =       "(" *([FWS] ccontent) [FWS] ")"
-	# CFWS            =       *([FWS] comment) (([FWS] comment) / FWS)
+	# obs-FWS		  =		  1*WSP *(CRLF 1*WSP)
+	# FWS			  =		  ([*WSP CRLF] 1*WSP) /   ; Folding white space
+	#						  obs-FWS
+	# ctext			  =		  NO-WS-CTL /	  ; Non white space controls
+	#						  %d33-39 /		  ; The rest of the US-ASCII
+	#						  %d42-91 /		  ;  characters not including "(",
+	#						  %d93-126		  ;  ")", or "\"
+	# ccontent		  =		  ctext / quoted-pair / comment
+	# comment		  =		  "(" *([FWS] ccontent) [FWS] ")"
+	# CFWS			  =		  *([FWS] comment) (([FWS] comment) / FWS)
 
 	#
 	# note: we translate ccontent only partially to avoid an infinite loop
@@ -629,18 +650,18 @@ function is_rfc3696_valid_email_address($email) {
 
 	##############################################################################
 	#
-	# atext           =       ALPHA / DIGIT / ; Any character except controls,
-	#                         "!" / "#" /     ;  SP, and specials.
-	#                         "$" / "%" /     ;  Used for atoms
-	#                         "&" / "'" /
-	#                         "*" / "+" /
-	#                         "-" / "/" /
-	#                         "=" / "?" /
-	#                         "^" / "_" /
-	#                         "`" / "{" /
-	#                         "|" / "}" /
-	#                         "~"
-	# atom            =       [CFWS] 1*atext [CFWS]
+	# atext			  =		  ALPHA / DIGIT / ; Any character except controls,
+	#						  "!" / "#" /	  ;  SP, and specials.
+	#						  "$" / "%" /	  ;  Used for atoms
+	#						  "&" / "'" /
+	#						  "*" / "+" /
+	#						  "-" / "/" /
+	#						  "=" / "?" /
+	#						  "^" / "_" /
+	#						  "`" / "{" /
+	#						  "|" / "}" /
+	#						  "~"
+	# atom			  =		  [CFWS] 1*atext [CFWS]
 
 	$atext		= "(?:$alpha|$digit|[\\x21\\x23-\\x27\\x2a\\x2b\\x2d".
 					"\\x2f\\x3d\\x3f\\x5e\\x5f\\x60\\x7b-\\x7e])";
@@ -649,15 +670,15 @@ function is_rfc3696_valid_email_address($email) {
 
 	###############################################################################
 	#
-	# qtext           =       NO-WS-CTL /     ; Non white space controls
-	#                         %d33 /          ; The rest of the US-ASCII
-	#                         %d35-91 /       ;  characters not including "\"
-	#                         %d93-126        ;  or the quote character
-	# qcontent        =       qtext / quoted-pair
-	# quoted-string   =       [CFWS]
-	#                         DQUOTE *([FWS] qcontent) [FWS] DQUOTE
-	#                         [CFWS]
-	# word            =       atom / quoted-string
+	# qtext			  =		  NO-WS-CTL /	  ; Non white space controls
+	#						  %d33 /		  ; The rest of the US-ASCII
+	#						  %d35-91 /		  ;  characters not including "\"
+	#						  %d93-126		  ;  or the quote character
+	# qcontent		  =		  qtext / quoted-pair
+	# quoted-string   =		  [CFWS]
+	#						  DQUOTE *([FWS] qcontent) [FWS] DQUOTE
+	#						  [CFWS]
+	# word			  =		  atom / quoted-string
 
 	$qtext		= "(?:$no_ws_ctl|[\\x21\\x23-\\x5b\\x5d-\\x7e])";
 	$qcontent	= "(?:$qtext|$quoted_pair)";
@@ -673,8 +694,8 @@ function is_rfc3696_valid_email_address($email) {
 
 	#############################################################################
 	#
-	# obs-local-part  =       word *("." word)
-	# obs-domain      =       atom *("." atom)
+	# obs-local-part  =		  word *("." word)
+	# obs-domain	  =		  atom *("." atom)
 
 	$obs_local_part	= "(?:$word(?:\\x2e$word)*)";
 	$obs_domain	= "(?:$atom(?:\\x2e$atom)*)";
@@ -682,8 +703,8 @@ function is_rfc3696_valid_email_address($email) {
 
 	#############################################################################
 	#
-	# dot-atom-text   =       1*atext *("." 1*atext)
-	# dot-atom        =       [CFWS] dot-atom-text [CFWS]
+	# dot-atom-text   =		  1*atext *("." 1*atext)
+	# dot-atom		  =		  [CFWS] dot-atom-text [CFWS]
 
 	$dot_atom_text	= "(?:$atext+(?:\\x2e$atext+)*)";
 	$dot_atom	= "(?:$cfws?$dot_atom_text$cfws?)";
@@ -691,13 +712,13 @@ function is_rfc3696_valid_email_address($email) {
 
 	##############################################################################
 	#
-	# domain-literal  =       [CFWS] "[" *([FWS] dcontent) [FWS] "]" [CFWS]
-	# dcontent        =       dtext / quoted-pair
-	# dtext           =       NO-WS-CTL /     ; Non white space controls
+	# domain-literal  =		  [CFWS] "[" *([FWS] dcontent) [FWS] "]" [CFWS]
+	# dcontent		  =		  dtext / quoted-pair
+	# dtext			  =		  NO-WS-CTL /	  ; Non white space controls
 	#
-	#                         %d33-90 /       ; The rest of the US-ASCII
-	#                         %d94-126        ;  characters not including "[",
-	#                                         ;  "]", or "\"
+	#						  %d33-90 /		  ; The rest of the US-ASCII
+	#						  %d94-126		  ;  characters not including "[",
+	#										  ;  "]", or "\"
 
 	$dtext		= "(?:$no_ws_ctl|[\\x21-\\x5a\\x5e-\\x7e])";
 	$dcontent	= "(?:$dtext|$quoted_pair)";
@@ -706,9 +727,9 @@ function is_rfc3696_valid_email_address($email) {
 
 	###############################################################################
 	#
-	# local-part      =       dot-atom / quoted-string / obs-local-part
-	# domain          =       dot-atom / domain-literal / obs-domain
-	# addr-spec       =       local-part "@" domain
+	# local-part	  =		  dot-atom / quoted-string / obs-local-part
+	# domain		  =		  dot-atom / domain-literal / obs-domain
+	# addr-spec		  =		  local-part "@" domain
 
 	$local_part	= "(($dot_atom)|($quoted_string)|($obs_local_part))";
 	$domain		= "(($dot_atom)|($domain_literal)|($obs_domain))";
