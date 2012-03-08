@@ -36,9 +36,8 @@ function path_escape($v) {
  *
  * Returns computed hash string
  * $salt_str returns the salt by ref
- * Must be called with &$salt_str
  */
-function tw_genhash($input, $salt = FALSE, $salt_str = '') {
+function tw_genhash($input, $salt = FALSE, &$salt_str = '') {
 	global $cfg;
 
 	// Add salt encryption
@@ -101,6 +100,38 @@ function tw_dec($input) {
 	$block = mcrypt_get_block_size($cfg['enc_algo'], 'ecb');
 	$pad = ord($input[($len = strlen($input)) - 1]);
 	return substr($input, 0, strlen($input) - $pad);
+}
+
+/*
+ * <TWCMS>
+ * Loads any error page in CPATH/error.<num>.html
+ */
+function tw_showerror($num) {
+	global $cfg, $_t;
+
+	$num = path_escape($num);
+	$file = CPATH.'error.'.$num.'.html';
+
+	if (!isset($cfg['httpCodes'][$num])) return FALSE;
+	if (!file_exists($file)) return FALSE;
+
+	header('HTTP/1.1 '.$cfg['httpCodes'][$num]);
+
+	// Split out header from body (first line is header)
+	$_t['content'] = file_get_contents($file);
+	$split = explode("\n", $_t['content'], 2);
+
+	// Split header and content
+	if (count($split) > 1) {
+		$_t['header'] = $split[0];
+		$_t['content'] = $split[1];
+	}
+	else $_t['header'] = '';
+
+	// Strip out HTML from header (tends to sneak in)
+	$_t['title'] = $_t['header'] = strip_tags($_t['header']);
+
+	return TRUE;
 }
 
 /*
