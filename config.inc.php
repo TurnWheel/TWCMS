@@ -39,14 +39,30 @@ $cfg = array(
 	 */
 	'res_recursive' => FALSE,
 
+	/*
+	 * Module Settings
+	 *
+	 * mods_avail just passes the names onto
+	 * tw_loadmod in lib/security.inc.php
+	 * They can be disabled with <mod>_enable => FALSE flag
+	 *
+	 * For custom mods, just add it to the list with
+	 * the proper naming convention.
+	 *
+	 * <mod>_onload function is called during library init
+	 */
+	'mods_avail' => array(
+		'sql'
+	),
+
 	/* Database Settings */
-	'db_enable' => TRUE, // Is DB connection even required?
+	'sql_enable' => TRUE, // Is DB connection even required?
 	// Host name for SQL Database ('localhost' works for most installations)
-	'db_host' => 'localhost',
+	'sql_host' => 'localhost',
 	// Username for SQL login (Recommend you do NOT use root)
-	'db_user' => 'somewebsite',
-	'db_pass' => 'SQLPass123', // Password for SQL user
-	'db_name' => 'somewebsite', // MySQL Database name
+	'sql_user' => 'somewebsite',
+	'sql_pass' => 'SQLPass123', // Password for SQL user
+	'sql_name' => 'somewebsite', // MySQL Database name
 
 	/* Encryption Settings */
 	// Algorithm for generating one-way hashes

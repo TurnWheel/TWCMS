@@ -19,23 +19,19 @@ $_starttime = microtime(TRUE);
 // Start session tracking
 session_start();
 
-// Files
+// Load base libraries
 require dirname(__FILE__).'/config.inc.php';
 require LPATH.'utility.inc.php';
 require LPATH.'security.inc.php';
 
-// Load SQL if db is enabled
-if ($cfg['db_enable']) {
-	require LPATH.'sql.inc.php';
-
-	// Connect to SQL Server
-	sql_connect($cfg['db_host'],$cfg['db_user'],$cfg['db_pass'],$cfg['db_name']);
-	unset($cfg['db_user'],$cfg['db_pass']); // Security Measure
-}
-
-// Encrypt admin pass so it's not stored in plain text
+// Encrypt admin pass so it's not stored as plain text
 if (isset($cfg['admin']['pass'])) {
 	$cfg['admin']['pass'] = tw_genhash($cfg['admin']['pass']);
+}
+
+// Load available modules
+foreach ($cfg['mods_avail'] AS $mod) {
+	tw_loadmod($mod);
 }
 
 // Capture Referer Information

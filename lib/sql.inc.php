@@ -14,6 +14,23 @@ $cfg['sql'] = array(
 	'qstats' => array() // Keeps record of stats (DEBUG MODE ONLY)
 );
 
+/*
+ * Constructor
+ * Simply calls sql_connect with proper cfg params
+ */
+function sql_onload() {
+	global $cfg;
+
+	// Connect to SQL Server
+	sql_connect($cfg['sql_host'], $cfg['sql_user'],
+		$cfg['sql_pass'],$cfg['sql_name']);
+
+	// Security Measure: Don't keep user/pass set
+	unset($cfg['sql_user'],$cfg['sql_pass']);
+
+	return TRUE;
+}
+
 // Creates MySQL Connection
 function sql_connect($host, $user, $password = '', $name = '') {
 	global $cfg;

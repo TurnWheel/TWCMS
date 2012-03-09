@@ -16,7 +16,8 @@ if (!defined('SECURITY')) exit;
  */
 function real_escape($v) {
 	global $cfg;
-	return $cfg['db_enable'] ? mysql_real_escape_string($v)
+
+	return $cfg['sql_enable'] ? mysql_real_escape_string($v)
 		: htmlspecialchars($v);
 }
 
@@ -28,6 +29,41 @@ function real_escape($v) {
 function path_escape($v) {
 	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/','', $v);
 }
+
+/*
+ * <TWCMS>
+ * Loads specified TWCMS module (if enabled),
+ * and calls initial load function
+ */
+function tw_loadmod($mod) {
+	global $cfg;
+
+	// Escape $mod name for paths just in case
+	$mod = path_escape($mod);
+
+	// If _enable flag is available, and it is FALSE, do not load
+	// If no _enable flag is present, it proceeds as if it were TRUE
+	if (isset($cfg[$mod.'_enable') && !$cfg[$mod.'_enable'])  {
+		return FALSE;
+	}
+
+	$file = LPATH.$mod.'.inc.php';
+
+	// Check if library file exists
+	if (!file_exists($file)) return FALSE;
+
+	// Include library
+	// SECURITY: $file should be include safe
+	require $file;
+
+	// Look for onload function
+	if (function_exists($mod.'_onload')) {
+		return call_user_func($mod.'_onload');
+	}
+
+	return TRUE;
+}
+
 
 /*
  * <TWCMS>
