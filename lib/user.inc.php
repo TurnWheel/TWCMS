@@ -211,9 +211,12 @@ function user_register($data, $pass) {
 	// Remove raw pass from memory
 	unset($pass);
 
+	// Set flags to U_DEFAULT if not specified
+	$flags = isset($data['flags']) ? (int) $data['flags'] : U_DEFAULT;
+
 	sql_query('INSERT INTO user SET
 				password = "'.$hash.'", salt = "'.$salt.'",
-				date = "'.NOW.'"');
+				date = "'.NOW.'", flags = "'.$flags.'"');
 
 	$userid = sql_insert_id();
 	return $userid;
@@ -229,11 +232,11 @@ function user_hasperm($perm) {
 }
 
 /*
- * Restricts users from specific area
+ * Restricts users from specific areas
  * unless they have specified permission flag
  *
  * If not logged in, it shows built in login form
- * on FALSE, a proper restriction message should be displayed
+ * Otherwise a 403 error is thrown (error.403.html)
  */
 function user_restrict($perm) {
 	global $T;

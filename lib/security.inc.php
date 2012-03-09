@@ -207,8 +207,9 @@ function check_auth($user) {
  * <TWCMS>
  * Prints a false 404 page
  * Intended to match the 404 page of Apache almost
- * byte for byte (including headers). To prevent
- * the revelation of buried files
+ * byte for byte (including headers).
+ *
+ * Prevents dynamic files from being discovered
  */
 function print404() {
 	header('HTTP/1.1 404 Not Found');
