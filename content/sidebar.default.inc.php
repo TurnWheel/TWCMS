@@ -3,7 +3,7 @@
 if (ISUSER) {
 	print '
 	<div>
-		<p>Welcome, <strong>'.$cfg['user']['firstname'].'</strong></p>
+		<p>Welcome, <strong>'.$U['firstname'].'</strong></p>
 		<p><a href="/logout">Logout</a></p>
 	</div>';
 }

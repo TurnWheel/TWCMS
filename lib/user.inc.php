@@ -15,10 +15,10 @@ if (!defined('SECURITY')) exit;
  * Needs to be called onload when user.inc.php is first included
  */
 function user_onload() {
-	global $cfg;
+	global $U;
 
-	$cfg['isuser'] = FALSE; // Default to no user until verified
-	$cfg['user'] = array(); // Empty setting for user prefs
+	$isuser = FALSE; // Default to no user until verified
+	$U = array(); // Empty setting for user prefs
 
 	// Login user if POST was sent
 	if (isset($_POST['login'])) {
@@ -26,15 +26,14 @@ function user_onload() {
 		$pass = isset($_POST['password']) ? real_escape($_POST['password']) : '';
 
 		// Login user if login is value
-		if (user_login($cfg['user'], $email, $pass)) {
-			$cfg['isuser'] = TRUE;
-		}
+		if (user_login($U, $email, $pass)) $isuser = TRUE;
+
 		// Set constant on failure so that content will be
 		// replaced with proper error
 		else define('LOGINFAILED', TRUE);
 
 		// Set isuser flag as constant
-		define('ISUSER', $cfg['isuser']);
+		define('ISUSER', $isuser);
 
 		return;
 	}
@@ -48,22 +47,22 @@ function user_onload() {
 	// If both of these credentials cotain some information, process them
 	// otherwise isuer stays FALSE
 	if ($c_email !== '' && $c_pass !== '') {
-		$cfg['isuser'] = user_verify($cfg['user'], $c_email, $c_pass);
+		$isuser = user_verify($U, $c_email, $c_pass);
 	}
 
 	// Set isuser flag as constant
-	define('ISUSER', $cfg['isuser']);
+	define('ISUSER', $isuser);
 
 	// Set guest variables if not user
 	if (!ISUSER) {
-		$cfg['user']['flags'] = U_GUEST;
+		$U['flags'] = U_GUEST;
 		return;
 	}
 
 	// Set userid as a integer if available
 	// usually comes out as string, integer is easier for comparisons
-	if (isset($cfg['user']['userid'])) {
-		$cfg['user']['userid'] = (int) $cfg['user']['userid'];
+	if (isset($U['userid'])) {
+		$U['userid'] = (int) $U['userid'];
 	}
 }
 
