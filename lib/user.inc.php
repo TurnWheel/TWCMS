@@ -226,8 +226,8 @@ function user_register($data, $pass) {
  * Ex: user_hasperm(U_ADMIN)
  */
 function user_hasperm($perm) {
-	global $cfg;
-	return check_flag($perm, $cfg['user']['flags']);
+	global $U;
+	return check_flag($perm, $U['flags']);
 }
 
 /*
