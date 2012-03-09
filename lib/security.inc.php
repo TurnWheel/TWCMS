@@ -43,7 +43,7 @@ function tw_loadmod($mod) {
 
 	// If _enable flag is available, and it is FALSE, do not load
 	// If no _enable flag is present, it proceeds as if it were TRUE
-	if (isset($cfg[$mod.'_enable') && !$cfg[$mod.'_enable'])  {
+	if (isset($cfg[$mod.'_enable']) && !$cfg[$mod.'_enable'])  {
 		return FALSE;
 	}
 

@@ -52,7 +52,7 @@ $cfg = array(
 	 * <mod>_onload function is called during library init
 	 */
 	'mods_avail' => array(
-		'sql'
+		'sql', 'user'
 	),
 
 	/* Database Settings */
@@ -75,6 +75,13 @@ $cfg = array(
 
 	// Seed key for enc_algo (NOTE: CHANGE ONLY DURING INITIAL INSTALL)
 	'enc_key' => 'CHANGE ME ONCE',
+
+	/* User Settings */
+	// Enable user login and registration systems
+	// requires that sql_enable = TRUE and user table has been created
+	'user_enable' => TRUE,
+	// Seconds until cookies expire (default 604800, or 1 month)
+	'user_expire' => 604800,
 
 	/* Contact Page Settings */
 	// List of emails to send contact requests to
@@ -135,15 +142,27 @@ define('MAPS_KEY', 'ABQIAAAAZReS-Ex4akb7OZJr5kruGxQCvPwXk464zndFkQpy_L80v-esWBSE
 // dev.somewebsite.com
 //define('MAPS_KEY', 'ABQIAAAAZReS-Ex4akb7OZJr5kruGxTOYl9STBTHMd_HDDjgXxc08qZ7wBRvNiTUXiXoGUcFgP0pf4mTJPAfcw');
 
-
 /*
  * Define Bit Flags
  * Do not edit unless you know
  * what you are doing!
  */
 
-define('T_APPROVE', 1); // JUST A SAMPLE
+/* User Flags (Permissions) */
+if ($cfg['user_enable']) {
+	define('U_LOGIN', 1); // Basic login privledges
+	define('U_EDITOR', 2); // (Optional)
+	define('U_ADMIN', 4);
 
+	// Default perms for new accounts
+	define('U_DEFAULT', 1);
+
+	// Default perms for guests
+	define('U_GUEST', 0);
+}
+
+/* Other Flags [CUSTOM] */
+define('T_APPROVE', 1); // JUST A SAMPLE
 
 /*
  * Do Not Edit Below This Line
