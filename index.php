@@ -179,7 +179,7 @@ foreach ($T['js'] AS $file) {
 <?php
 if ($cfg['debug']) {
 	print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s -->';
-	if ($cfg['db_enable']) {
+	if ($cfg['sql_enable']) {
 		print "\n".'<!-- SQL #: '.$cfg['sql']['count'].' -->';
 	}
 }
