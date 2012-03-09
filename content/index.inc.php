@@ -1,5 +1,5 @@
 <?php
-$_t['header'] = 'This is your home page!';
+$T['header'] = 'This is your home page!';
 
 ob_start();
 ?>
@@ -20,6 +20,6 @@ ob_start();
 </div>
 
 <?php
-$_t['content'] = ob_get_contents();
+$T['content'] = ob_get_contents();
 ob_end_clean();
 ?>

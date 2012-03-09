@@ -13,16 +13,16 @@ $headers = array('a','b','c');
 require 'process.inc.php';
 
 // Proccess main template variables
-$title = isset($_t['title']) ? $_t['title'] : '';
-$header = isset($_t['header']) ? $_t['header'] : '';
-$content = isset($_t['content']) ? $_t['content'] : '';
+$title = isset($T['title']) ? $T['title'] : '';
+$header = isset($T['header']) ? $T['header'] : '';
+$content = isset($T['content']) ? $T['content'] : '';
 
 /*
  * Breadcrumb function
  * There isn't a better place to put this currently,
  * but I should figure out something later.
  *
- * Simple: Call with $_t['bcrumbs'] array
+ * Simple: Call with $T['bcrumbs'] array
  * separated by $sep
  */
 function t_bcrumbs($bcrumbs, $sep = '&gt;') {
@@ -68,7 +68,7 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 	<meta name="robots" content="index, follow" />
 	<link rel="shortcut icon" href="/images/fav.png" type="image/x-icon" />
 <?php
-foreach ($_t['css'] AS $file) {
+foreach ($T['css'] AS $file) {
 	if (!is_string($file) || empty($file)) continue;
 	print '
 	<link rel="stylesheet" type="text/css" href="/css/'.$file.'" media="screen" />';
@@ -78,7 +78,7 @@ foreach ($_t['css'] AS $file) {
 
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/jquery.colorbox.min.js"></script><?php
-foreach ($_t['js'] AS $file) {
+foreach ($T['js'] AS $file) {
 	if (!is_string($file) || empty($file)) continue;
 	print '
 	<script src="/js/'.$file.'"></script>';
@@ -120,7 +120,7 @@ foreach ($_t['js'] AS $file) {
 			<div id="content_inner">
 			<?php
 			// Display bread crumbs
-			print t_bcrumbs($_t['bcrumbs'], '&gt;');
+			print t_bcrumbs($T['bcrumbs'], '&gt;');
 
 			// Print out header as h2
 			if ($header !== '') {
@@ -139,8 +139,8 @@ foreach ($_t['js'] AS $file) {
 			<div id="content_side">
 			<?php
 			// Include sidebar file
-			// yes, $_t['sidebar'] is include safe
-			if ($_t['sidebar'] !== '') include $_t['sidebar'];
+			// yes, $T['sidebar'] is include safe
+			if ($T['sidebar'] !== '') include $T['sidebar'];
 			?>
 			</div>
 			<!-- End content_side -->

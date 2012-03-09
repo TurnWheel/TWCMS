@@ -107,7 +107,7 @@ function tw_dec($input) {
  * Loads any error page in CPATH/error.<num>.html
  */
 function tw_showerror($num) {
-	global $cfg, $_t;
+	global $cfg, $T;
 
 	$num = path_escape($num);
 	$file = CPATH.'error.'.$num.'.html';
@@ -118,18 +118,18 @@ function tw_showerror($num) {
 	header('HTTP/1.1 '.$cfg['httpCodes'][$num]);
 
 	// Split out header from body (first line is header)
-	$_t['content'] = file_get_contents($file);
-	$split = explode("\n", $_t['content'], 2);
+	$T['content'] = file_get_contents($file);
+	$split = explode("\n", $T['content'], 2);
 
 	// Split header and content
 	if (count($split) > 1) {
-		$_t['header'] = $split[0];
-		$_t['content'] = $split[1];
+		$T['header'] = $split[0];
+		$T['content'] = $split[1];
 	}
-	else $_t['header'] = '';
+	else $T['header'] = '';
 
 	// Strip out HTML from header (tends to sneak in)
-	$_t['title'] = $_t['header'] = strip_tags($_t['header']);
+	$T['title'] = $T['header'] = strip_tags($T['header']);
 
 	return TRUE;
 }
