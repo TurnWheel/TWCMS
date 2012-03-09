@@ -63,7 +63,7 @@ $numpages = sizeof($pages);
 
 // For tracking breadcrumbs
 // (empty on index; format <title> => $url)
-$t['bcrumbs'] = array();
+$T['bcrumbs'] = array();
 
 // Generate starting bread crumbs if not on index
 if ($rootpage !== 'index') {
