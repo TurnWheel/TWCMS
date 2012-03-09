@@ -26,7 +26,7 @@ function sql_onload() {
 		$cfg['sql_pass'],$cfg['sql_name']);
 
 	// Security Measure: Don't keep user/pass set
-	unset($cfg['sql_user'],$cfg['sql_pass']);
+	unset($cfg['sql_user'], $cfg['sql_pass']);
 
 	return TRUE;
 }
