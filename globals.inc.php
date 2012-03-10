@@ -36,7 +36,7 @@ foreach ($cfg['mods_avail'] AS $mod) {
 
 // Capture Referer Information
 $cfg['referer'] = isset($_SERVER['HTTP_REFERER']) ?
-					real_escape($_SERVER['HTTP_REFERER']) : '(Direct)';
+					escape($_SERVER['HTTP_REFERER']) : '(Direct)';
 
 // Re-sets "X-Powered-By" header with CMS Version
 // This helps override some servers' PHP Disclosure settings

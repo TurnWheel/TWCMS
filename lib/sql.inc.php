@@ -64,12 +64,33 @@ function sql_close() {
 	else return FALSE;
 }
 
+// Prepare sql statement
+function sql_prepare($q, $vals) {
+	// Escape vals if it is a string or array
+	if (is_string($vals) || is_array($vals)) {
+		$vals = escape($vals);
+	}
+
+	if (is_array($vals)) {
+		// Replace "$keys" var with keys of $vals array
+		$q = str_replace('$keys', implode(array_keys($vals),', '), $q);
+
+		// Replace "$vals" var with %s's as a easy shortcut
+		$q = str_replace('$vals', '"%s"'.str_repeat(',"%s"', count($vals)-1), $q);
+
+		$q = vsprintf($q, $vals);
+	}
+	else $q = sprintf($q, $vals);
+
+	return $q;
+}
+
 // Process Queries
 function sql_query($q, $vals = array()) {
 	global $cfg;
 
 	// Generate full query using inputed array
-	if (!empty($vals)) vprintf($q, $vals);
+	if (!empty($vals)) $q = sql_prepare($q, $vals);
 
 	$cfg['sql']['id'] = 0; // Unset existing ID
 

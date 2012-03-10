@@ -14,8 +14,17 @@ if (!defined('SECURITY')) exit;
  * <TWCMS>
  * Escape headers for general use.
  */
-function real_escape($v) {
+function escape($v) {
 	global $cfg;
+
+	// Handle arrays recursively
+	if (is_array($v)) {
+		foreach ($v AS $k => $aval) {
+			$v[$k] = escape($aval);
+		}
+
+		return $v;
+	}
 
 	return $cfg['sql_enable'] ? mysql_real_escape_string($v)
 		: htmlspecialchars($v);

@@ -22,8 +22,8 @@ function user_onload() {
 
 	// Login user if POST was sent
 	if (isset($_POST['login'])) {
-		$email = isset($_POST['email']) ? real_escape($_POST['email']) : '';
-		$pass = isset($_POST['password']) ? real_escape($_POST['password']) : '';
+		$email = isset($_POST['email']) ? escape($_POST['email']) : '';
+		$pass = isset($_POST['password']) ? escape($_POST['password']) : '';
 
 		// Login user if login is value
 		if (user_login($U, $email, $pass)) $isuser = TRUE;
@@ -40,9 +40,9 @@ function user_onload() {
 
 	// User login checking
 	$c_email = isset($_COOKIE[PREFIX.'_email']) ?
-					real_escape($_COOKIE[PREFIX.'_email']) : '';
+					escape($_COOKIE[PREFIX.'_email']) : '';
 	$c_pass = isset($_COOKIE[PREFIX.'_hash']) ?
-					real_escape($_COOKIE[PREFIX.'_hash']) : '';
+					escape($_COOKIE[PREFIX.'_hash']) : '';
 
 	// If both of these credentials cotain some information, process them
 	// otherwise isuer stays FALSE
@@ -136,7 +136,7 @@ function user_showlogin($error = TRUE) {
 function user_verify(&$user, $email, $pass, $salt = FALSE) {
 	if ($email === '' || $pass === '') return FALSE;
 
-	sql_query('SELECT * FROM user WHERE email = "'.$email.'" LIMIT 1');
+	sql_query('SELECT * FROM user WHERE email = "%s" LIMIT 1', $email);
 	$user = sql_fetch_array();
 
 	// Validates email address
@@ -213,9 +213,13 @@ function user_register($data, $pass) {
 	// Set flags to U_DEFAULT if not specified
 	$flags = isset($data['flags']) ? (int) $data['flags'] : U_DEFAULT;
 
-	sql_query('INSERT INTO user SET
-				password = "'.$hash.'", salt = "'.$salt.'",
-				date = "'.NOW.'", flags = "'.$flags.'"');
+	sql_query('INSERT INTO user ($keys) VALUES($vals)',
+				array(
+					'password' => $hash,
+					'salt' => $salt,
+					'date' => NOW,
+					'flags' => $flags
+				));
 
 	$userid = sql_insert_id();
 	return $userid;

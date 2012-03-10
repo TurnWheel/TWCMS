@@ -10,9 +10,9 @@ $error = array(); // Array of form errors
 $required = array('name','email','message'); // Array of required fields
 
 // Headers
-$_POST['name'] = isset($_POST['name']) ? real_escape($_POST['name']) : '';
-$_POST['email'] = isset($_POST['email']) ? real_escape($_POST['email']) : '';
-$_POST['message'] = isset($_POST['message']) ? real_escape($_POST['message']) : '';
+$_POST['name'] = isset($_POST['name']) ? escape($_POST['name']) : '';
+$_POST['email'] = isset($_POST['email']) ? escape($_POST['email']) : '';
+$_POST['message'] = isset($_POST['message']) ? escape($_POST['message']) : '';
 
 if (isset($_POST['submit'])) {
 	// Clean message from return chars
