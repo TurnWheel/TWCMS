@@ -326,9 +326,7 @@ if ($rootpage !== $page) {
  * 3: Not if res_checkRoot is TRUE && num pages is 2
  */
 if ($cfg['res_recursive']) {
-
 	if ($rootpage !== $page && !($cfg['res_checkRoot'] && $numpages === 2)) {
-
 		// Check all pages
 		$track = array();
 		foreach ($pages AS $k => $cp) {
