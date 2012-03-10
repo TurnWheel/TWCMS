@@ -17,7 +17,7 @@ if ($_GET['id'] !== 0) {
 	$T['header'] = 'Viewing Entry #'.$_GET['id'];
 
 	// Get entry data from DB
-	sql_query('SELECT entryid,data,name,date FROM formdata
+	sql_query('SELECT entryid,data,name,date FROM forms
 					WHERE entryid = "%d" LIMIT 1', $_GET['id']);
 
 	$info = sql_fetch_array();
@@ -88,7 +88,7 @@ if ($fname === '') {
 	<h3>Select Which Form Data to view</h3>
 	<ul>';
 
-	sql_query('SELECT name FROM formdata GROUP BY name');
+	sql_query('SELECT name FROM forms GROUP BY name');
 	while ($r = sql_fetch_array()) {
 		print '
 		<li><a href="/formdata?form='.$r['name'].'">'.$r['name'].'</a></li>';
@@ -112,7 +112,7 @@ $header .= ': "'.$fname.'"';
 print '
 <p><a href="/formdata">&lt;&lt; Select Different Form</a></p>';
 
-sql_query('SELECT entryid AS id,data,name,date FROM formdata
+sql_query('SELECT entryid AS id,data,name,date FROM forms
 			WHERE name = "%s"
 			ORDER BY date DESC', $fname);
 ?>
