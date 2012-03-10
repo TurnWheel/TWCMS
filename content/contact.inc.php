@@ -1,37 +1,17 @@
 <?php
 // Set header/title
 $T['title'] = $T['header'] = 'Contact Us';
-
-// Start output buffer
-ob_start();
+$T['content'] = '';
 
 // Form Variables
-$error = array(); // Array of form errors
-$required = array('name','email','message'); // Array of required fields
+$error = array();
+$data = form_process('contact', $error);
 
-// Headers
-$_POST['name'] = isset($_POST['name']) ? escape($_POST['name']) : '';
-$_POST['email'] = isset($_POST['email']) ? escape($_POST['email']) : '';
-$_POST['message'] = isset($_POST['message']) ? escape($_POST['message']) : '';
-
+// Only process if form was submitted
 if (isset($_POST['submit'])) {
-	// Clean message from return chars
-	$_POST['message'] = str_replace('\r\n',"\n",$_POST['message']);
-
-	// Verify required fields
-	foreach ($required AS $field) {
-		if ($_POST[$field] === '' || $_POST[$field] === 0) {
-			$error[$field] = TRUE;
-		}
-	}
-
-	// Verify email
-	if (!valid_email($_POST['email'])) $error['email'] = TRUE;
-
-	// Check for errros
-	if (sizeof($error) > 0) {
-		// Print error message
-		print '
+	// Check for failure and display error
+	if (sizeof($error) !== 0) {
+		$T['content'] = '
 		<div class="box error">
 			<p>
 				<strong>Error!</strong> There was a problem
@@ -39,32 +19,26 @@ if (isset($_POST['submit'])) {
 
 				Check the fields highlighted in red below.
 			</p>
-		</div>
-		';
+		</div>';
 	}
+	// Otherwise display success
+	// if $cfg['forms']['redirect'] is set, this will never display
 	else {
-		ob_end_clean(); // End buffer
-
-		// Generate map of variables for email
-		$map = array(
-			'name' => $_POST['name'],
-			'email' => $_POST['email'],
-			'message' => stripslashes('\r\n',"\n",$_POST['message']),
-			'date' => date($cfg['email_date'],NOW)
-		);
-
-		// Send email to admin
-		$email = $cfg['contact_content'];
-		mail(implode(',',$cfg['contact_admin']),map_replace($map,$email['subject']),
-				map_replace($map,$email['body']),$cfg['contact_headers']);
-
-		// Redirect
-		header('Location: /contact/thankyou');
-
-		return TRUE; // Skip rest of file
+		$T['content'] = '
+		<div class="box success">
+			<p>
+				<strong>Success!</strong> Your message has been sent.
+				Thank you for contacting us. We will respond shortly.
+			</p>
+		</div>';
 	}
 }
 
+// Start output buffer
+ob_start();
+
+// Display a welcome message
+// as long as there are no form errors to display
 if (sizeof($error) === 0) {
 ?>
 
@@ -78,12 +52,7 @@ if (sizeof($error) === 0) {
 <?php
 }
 
-// Escape all post values
-foreach ($_POST AS $key => $value) {
-	$_POST[$key] = htmlspecialchars($_POST[$key]);
-}
 ?>
-
 
 <form method="post" action="/contact">
 <fieldset>
@@ -92,16 +61,16 @@ foreach ($_POST AS $key => $value) {
 		<table cellspacing="0">
 			<tr>
 				<td><label for="contact-name"<?php print isset($error['name']) ? ' class="error"' : ''; ?>>Name</label></td>
-				<td><input type="text" name="name" id="contact-name" value="<?php print $_POST['name']; ?>" /></td>
+				<td><input type="text" name="name" id="contact-name" value="<?php print $data['name']; ?>" /></td>
 			</tr>
 			<tr>
 				<td><label for="contact-email"<?php print isset($error['email']) ? ' class="error"' : ''; ?>>Email</label></td>
-				<td><input type="text" name="email" id="contact-email" value="<?php print $_POST['email']; ?>" /></td>
+				<td><input type="text" name="email" id="contact-email" value="<?php print $data['email']; ?>" /></td>
 			</tr>
 			<tr>
 				<td><label for="contact-message"<?php print isset($error['message']) ? ' class="error"' : ''; ?>>Message</label></td>
 				<td>
-					<textarea name="message" id="contact-message" cols="30" rows="10"><?php print stripslashes($_POST['message']); ?></textarea>
+					<textarea name="message" id="contact-message" cols="30" rows="10"><?php print stripslashes($data['message']); ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -118,7 +87,7 @@ foreach ($_POST AS $key => $value) {
 
 <?php
 // Store output buffer and flush
-$T['content'] = ob_get_contents();
+$T['content'] .= ob_get_contents();
 ob_end_clean();
 
 // End of file

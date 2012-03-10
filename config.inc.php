@@ -11,7 +11,6 @@ $cfg = array(
 	/* Script Config */
 	// Set to TRUE to enable "Debug" mode (Not recommended for live sites)
 	'debug' => TRUE,
-	'email_date' => 'g:ia T \o\n F j, Y', // Email date format
 
 	/****
 	 * Processing Config
@@ -39,6 +38,26 @@ $cfg = array(
 	 */
 	'res_recursive' => FALSE,
 
+	/* Encryption Settings */
+	// Algorithm for generating one-way hashes
+	// (Default: sha512); see php.net/hash_algos for options
+	'hash_algo' => 'sha512',
+
+	// Algorithm for generating two-way enc keys
+	// (Default: MCRYPT_3DES); see mcrypt.ciphers for options
+	'enc_algo' => 'tripledes',
+
+	// Seed key for enc_algo (NOTE: CHANGE ONLY DURING INITIAL INSTALL)
+	'enc_key' => 'CHANGE ME ONCE',
+
+	// Admin Login
+	'admin' => array('user' => 'admin','pass' => 'somedude'),
+
+	// Image Upload Settings (if needed)
+	'image_types' => array('png','jpg','jpeg'),
+	'image_size' => 600, // Size determines length of largest side
+	'image_size_th' => 150, // Size of thumbnail
+
 	/*
 	 * Module Settings
 	 *
@@ -52,7 +71,7 @@ $cfg = array(
 	 * <mod>_onload function is called during library init
 	 */
 	'mods_avail' => array(
-		'sql', 'user'
+		'sql', 'forms', 'user', 'mailchimp'
 	),
 
 	/* Database Settings */
@@ -64,17 +83,71 @@ $cfg = array(
 	'sql_pass' => 'SQLPass123', // Password for SQL user
 	'sql_name' => 'somewebsite', // MySQL Database name
 
-	/* Encryption Settings */
-	// Algorithm for generating one-way hashes
-	// (Default: sha512); see php.net/hash_algos for options
-	'hash_algo' => 'sha512',
+	/* Form Settings */
+	// Array of form settings (Key is its name)
+	'forms' => array(
+		'contact' => array(
+			// Array of field names to process
+			'fields' => array('name', 'email', 'message'),
 
-	// Algorithm for generating two-way enc keys
-	// (Default: MCRYPT_3DES); see mcrypt.ciphers for options
-	'enc_algo' => 'tripledes',
+			// Array of required fields
+			'required' => array('name', 'email', 'message'),
 
-	// Seed key for enc_algo (NOTE: CHANGE ONLY DURING INITIAL INSTALL)
-	'enc_key' => 'CHANGE ME ONCE',
+			// Save received data to DB?
+			// Requires 'sql' module to be enabled
+			'savedb' => FALSE,
+
+			// Redirect to page after submission?
+			// If FALSE, not redirect happens.
+			// If a string, it uses string as destination URL
+			'redirect' => '/contact/thankyou',
+
+			// ** Email Configurations **
+
+			// Format of dates in emails
+			'email_date' => 'g:ia T \o\n F j, Y',
+
+			// "admin" and "user" are static options
+			'emails' => array(
+				'admin' => array(
+					'enable' => TRUE,
+
+					// Array of emails to send to
+					// For admin only. For user is must be a fieldname
+					'to' => array('yourname@example.com'),
+
+					// Subject of email
+					'subject' => 'Contacted by {name}',
+
+					// Additional email headers (optional)
+					// From: and Reply-To: are most common
+					// You can enter in {field} to use data here
+					// Example: From: {name}<{email}>
+					'headers' => 'From: {name}<{email}>',
+
+					// Body of email with {} for var replacements
+					// {date} is provided by the library
+					// Tabs (\t) are automatically stripped
+					'body' => '{name} has contacted you through SomeWebsite.com:
+
+					{message}
+
+					------
+					Replies to this email go to {email}
+					Message Sent @ {date}
+					Automated Email Sent By SomeWebsite.com'
+				),
+				'user' => array(
+					'enable' => FALSE,
+					// Field name to grab "to" email from
+					'to' => 'email',
+					'subject' => 'Contacted by {name}',
+					'headers' => 'From: SomeWebsite<contact@somewebsite.com>',
+					'body' => ''
+				),
+			),
+		),
+	),
 
 	/* User Settings */
 	// Enable user login and registration systems
@@ -83,37 +156,12 @@ $cfg = array(
 	// Seconds until cookies expire (default 604800, or 1 month)
 	'user_expire' => 604800,
 
-	/* Contact Page Settings */
-	// List of emails to send contact requests to
-	'contact_admin' => array('yourname@example.com'),
-	// Headers used in emails
-	'contact_headers' => 'From: SomeWesbite<contact@somewebsite.com>',
-	'contact_content' => array('subject' => 'Contacted by {name}',
-'body' => '{name} has contacted you through SomeWebsite.com:
-
-{message}
-
-------
-Replies to this email go to {email}
-Message Sent @ {date}
-Automated Email Sent By SomeWebsite.com'
-	),
-
-	// Admin Login
-	'admin' => array('user' => 'admin','pass' => 'somedude'),
-
-	// Image Upload Settings (if needed)
-	'image_types' => array('png','jpg','jpeg'),
-	'image_size' => 600, // Size determines length of largest side
-	'image_size_th' => 150, // Size of thumbnail
-
-	// Mail Chimp Settings
+	/* MailChimp Settings */
 	'mc_enable' => FALSE, // Enable API
 
 	// Mail Chimp End Points (See Docs)
 	'mc_ep' => 'http://us2.api.mailchimp.com/1.3/',
-
-	'mc_key' => '{paste key}', // API Key (login to account to edit/add)
+	'mc_key' => '{paste key}', // API Key (account login)
 	'mc_listid' => 'effa235ac8', // Unique list id for list to be used
 );
 
