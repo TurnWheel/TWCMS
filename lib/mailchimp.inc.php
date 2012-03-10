@@ -21,27 +21,24 @@ if (!defined('SECURITY')) exit;
 function mc_send($data) {
 	global $cfg;
 
-	// Mail chimp must be enabled
-	// AND email must be set in $data
-	if (!isset($cfg['mc_enable']) || !$cfg['mc_enable']
-			|| empty($data) || !isset($data['email'])) {
+	// email must be set in $data
+	if (empty($data) || !isset($data['email'])) {
 		return FALSE;
 	}
 
-	// Save and unset email addr
-	$email = $data['email'];
-	unset($data['email']);
-
 	// API merge_vars
 	// See documentation for options
-	$mvars = array('FNAME' => $data['fname'], 'LNAME' => $data['lname']);
+	$mvars = array(
+		'FNAME' => $data['fname'],
+		'LNAME' => $data['lname']
+	);
 
 	// Setup main data to send
 	$url = $cfg['mc_ep'].'?method=listSubscribe';
 	$mcdata = array(
 		'apikey' => $cfg['mc_key'],
 		'id' => $cfg['mc_listid'],
-		'email_address' => $email,
+		'email_address' => $data['email'],
 		'email_type' => 'html',
 		'merge_vars' => $mvars,
 		'double_optin' => TRUE,

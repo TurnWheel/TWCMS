@@ -157,9 +157,9 @@ $cfg = array(
 	'user_expire' => 604800,
 
 	/* MailChimp Settings */
-	'mc_enable' => FALSE, // Enable API
+	'mailchimp_enable' => FALSE, // Enable API
 
-	// Mail Chimp End Points (See Docs)
+	// Mail Chimp End Points (See Mailchimp Docs For Details)
 	'mc_ep' => 'http://us2.api.mailchimp.com/1.3/',
 	'mc_key' => '{paste key}', // API Key (account login)
 	'mc_listid' => 'effa235ac8', // Unique list id for list to be used
