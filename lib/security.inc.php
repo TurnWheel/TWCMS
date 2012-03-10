@@ -50,25 +50,51 @@ function tw_loadmod($mod) {
 	// Escape $mod name for paths just in case
 	$mod = path_escape($mod);
 
-	// If _enable flag is available, and it is FALSE, do not load
-	// If no _enable flag is present, it proceeds as if it were TRUE
-	if (isset($cfg[$mod.'_enable']) && !$cfg[$mod.'_enable'])  {
-		return FALSE;
-	}
+	// Make sure mod has not already been loaded
+	if (isset($cfg['mods_loaded'][$mod])) return TRUE;
 
-	$file = LPATH.$mod.'.inc.php';
-
-	// Check if library file exists
-	if (!file_exists($file)) return FALSE;
+	// Make sure module is usable
+	if (!tw_ismod($mod)) return FALSE;
 
 	// Include library
-	// SECURITY: $file should be include safe
-	require $file;
+	// SECURITY: Should be include safe
+	require LPATH.$mod.'.inc.php';
 
 	// Look for onload function
 	if (function_exists($mod.'_onload')) {
 		return call_user_func($mod.'_onload');
 	}
+
+	// Mark module as loaded
+	$cfg['mods_loaded'][$mod] = TRUE;
+
+	return TRUE;
+}
+
+/*
+ * <TWCMS>
+ * Checks if specified module is enabled
+ * and is available for loading
+ *
+ * Important: Assumes $mod is safe
+ * Should be escaped with path_escape() before call
+ */
+function tw_ismod($mod) {
+	global $cfg;
+
+	// Makes sure it is in mods_avail
+	if (array_search($mod, $cfg['mods_avail']) === FALSE) {
+		return FALSE;
+	}
+
+	// If _enable flag is available, and it is FALSE, it is disabled
+	// If no _enable flag is present, it proceeds as if it were TRUE
+	if (isset($cfg[$mod.'_enable']) && !$cfg[$mod.'_enable'])  {
+		return FALSE;
+	}
+
+	// Make sure file exists
+	if (!file_exists(LPATH.$mod.'.inc.php')) return FALSE;
 
 	return TRUE;
 }

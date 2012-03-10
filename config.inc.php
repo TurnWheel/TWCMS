@@ -74,6 +74,9 @@ $cfg = array(
 		'sql', 'forms', 'user', 'mailchimp'
 	),
 
+	// Used internally to track which modules have been loaded
+	'mods_loaded' => array(),
+
 	/* Database Settings */
 	'sql_enable' => TRUE, // Is DB connection even required?
 	// Host name for SQL Database ('localhost' works for most installations)
