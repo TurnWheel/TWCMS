@@ -19,9 +19,17 @@ else {
 
 $T['title'] = $T['header'] = 'Restricted Area';
 
-print '
+$T['content'] = '
 <p>
 	This is a restricted area. You must have ADMIN permissions to view this page.
 </p>';
+
+// If form module is loaded, display form link
+if (isset($cfg['mods_loaded']['forms'])) {
+	$T['content'] .= '
+	<p>
+		<a href="/admin/forms">View Form Data</a>
+	</p>';
+}
 
 // EOF

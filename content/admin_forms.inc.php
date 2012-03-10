@@ -89,16 +89,22 @@ if ($fname === '') {
 	<ul>';
 
 	sql_query('SELECT name FROM forms GROUP BY name');
-	while ($r = sql_fetch_array()) {
-		print '
-		<li><a href="/formdata?form='.$r['name'].'">'.$r['name'].'</a></li>';
+
+	if (sql_num_rows() === 0) {
+		print '<li><em>No data available for viewing</em></li>';
+	}
+	else {
+		while ($r = sql_fetch_array()) {
+			print '
+			<li><a href="/formdata?form='.$r['name'].'">'.$r['name'].'</a></li>';
+		}
 	}
 
 	print '
 	</ul>';
 
 	// Save buffer to content
-	$content = ob_get_contents();
+	$T['content'] = ob_get_contents();
 	ob_end_clean();
 
 	// Finish processing
