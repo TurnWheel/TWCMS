@@ -74,7 +74,7 @@ if ($rootpage !== 'index') {
 	foreach ($pages AS $bcpage) {
 		// Make titles look nice (space and captialize)
 		// Use $prev to track previous url's
-		$T['bcrumbs'][root_url2name($bcpage)] = $prev = $prev.'/'.$bcpage;
+		$T['bcrumbs'][p_url2name($bcpage)] = $prev = $prev.'/'.$bcpage;
 	}
 }
 
@@ -85,6 +85,8 @@ $file = CPATH.$page; // File name
 
 // This checks for a .html file in CPATH;
 // If .html is not found, it looks for .inc.php
+// If not found, it will go up the path tree until
+// it finds any file it can.
 $notFound = TRUE;
 while ($notFound) {
 	// Makes sure that file exists AND is readable
@@ -113,43 +115,25 @@ while ($notFound) {
 	}
 }
 
-// Set 404 error if never found
+// Set 404 error if file is never found
 if ($notFound) $e404 = TRUE;
-
-// Load file contents if not PHP and no 404
-// $file is safe thanks to path_escape (security.inc.php)
-if (!$e404 && !$php) {
-	$T['content'] = file_get_contents($file);
-}
 
 // Is this the index page? (Bool)
 $isindex = $page === 'index' || $page === 'indexnew';
-
-// Setup for 404 page
-if ($e404) {
-	header('HTTP/1.1 404 Not Found');
-	$file = CPATH.'error.404.html';
-	$title = '- Error: Page Not Found';
-	$php = FALSE;
-
-	$T['bcrumbs'] = array(
-		'Home' => '/',
-		'Error: Page Not Found' => CURRURL
-	);
-
-	// If we can't use the 404 page, it's not good. Kill the script.
-	if (!file_exists($file) || !is_readable($file)) {
-		print 'Error 404 Times TWO: A 404 error occured, then the 404'.
-			'document could not be found. Please contact the administrator!';
-		exit;
-	}
-}
 
 // Setup CSS/JS Template variables
 $T['css'] = array();
 $T['js'] = array();
 
-if ($php) {
+// If 404 flag, use 404 functions
+if ($e404) {
+	if (!p_showerror(404)) {
+		print 'Error 404 Times TWO: A 404 error occured, then the 404'.
+			'document could not be found. Please contact the administrator!';
+		exit;
+	}
+}
+elseif ($php) {
 	/*
 	 * Set the variables allowed by scripts
 	 * These 3 variables should be over-ridden in the .inc.php scripts
@@ -165,43 +149,24 @@ if ($php) {
 	// Yes, $file is safe thanks to path_escape (security.inc.php)
 	include $file;
 }
-
-/*
- * Handle .html files
- * NOTE: The first line of every .html file becomes the header!
- * and this line is stripped of all html
- */
 else {
-	// Prevents error if content was not set previously
-	$T['content'] = isset($T['content']) ? $T['content'] : '';
+	/*
+	* Handle .html files
+	* NOTE: The first line of every .html file becomes the header
+	* and is stripped of all html
+	 */
 
-	// Split Main Content from Header
-	$split = explode("\n", $T['content'], 2);
-
-	// Check to make sure data is valid
-	// otherwise use 404 page and post it as a 404 error
-	if ($T['content'] === '' || empty($split)) {
-		header('HTTP/1.1 404 Not Found');
-		$data = file_get_contents(CPATH.'error.404.html');
-		$split = explode("\n", $data, 2);
+	// p_htmlfile returns array with header and content
+	// $file is include safe
+	$html = p_htmlfile($file);
+	if (!$html && !p_showerror(404)) {
+		print 'Error 404 Times TWO: A 404-1 error occured, then the 404'.
+			'document could not be found. Please contact the administrator!';
+		exit;
 	}
 
-	// Split header and content
-	if (count($split) > 1) {
-		$T['header'] = $split[0];
-		$T['content'] = $split[1];
-	}
-	else {
-		$T['header'] = '';
-		$T['content'] = $data;
-	}
-
-	// Strip out HTML from header (tends to sneak in)
-	$T['title'] = $T['header'] = strip_tags($T['header']);
-
-	// Hard code to have no title on index
-	// uses default instead (defined in template)
-	if ($isindex) $T['title'] = '';
+	$T['content'] = $html['content'];
+	$T['title'] = $T['header'] = $html['header'];
 }
 
 // Swap bread crumbs for full title (only if this isnt already set)
@@ -232,7 +197,7 @@ if ($T['title'] !== '') {
 		// Skip array values to prevent errors and recursion
 		if (is_array($val)) continue;
 
-		$tpages[] = root_url2name($val);
+		$tpages[] = p_url2name($val);
 	}
 
 	// Add to title (make sure its not empty)
@@ -259,19 +224,6 @@ $T['sidebar'] =
 	(file_exists(CPATH.$sb.$rootpage.'.html') ? CPATH.$sb.$rootpage.'.html' :
 	(file_exists(CPATH.$sb.'default.inc.php') ? CPATH.$sb.'default.inc.php' :
 	(file_exists(CPATH.$sb.'default.html') ? CPATH.$sb.'default.html' : ''))));
-
-/*
- * Simple processing function to get CSS/JS files quickly
- * Filename Format: dir/PREFIX.file.ext?timestamp
- * ****
- * Sample: get_exfile('css','subpage.css');
- * File Name Returned: css/<PREFIX>.subpage.css?_=12343425;
-*/
-function p_exfile($dir, $name) {
-	return file_exists($dir.'/'.PREFIX.'.'.$name) ?
-			PREFIX.'.'.$name.'?_='.filemtime($dir.'/'.PREFIX.'.'.$name)
-			: FALSE;
-}
 
 /* Find CSS files */
 

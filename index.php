@@ -36,8 +36,8 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 	<div id="breadcrumbs">'."\n";
 
 	foreach ($bcrumbs AS $name => $url) {
-		// Printable name
-		$linkname = root_url2name($name);
+		// Convert url to printable name
+		$linkname = p_url2name($name);
 
 		// Display link if does not match current URL
 		// (checks for trailing slash as well)
@@ -59,7 +59,7 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 <head>
 	<meta charset="UTF-8" />
 	<title>
-	<?php print $title === '' ? 'Home' : $title; ?>
+	<?php print $isindex ? 'Home' : $title; ?>
 	:: Misc. Demo Site
 	</title>
 

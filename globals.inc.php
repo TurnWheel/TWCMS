@@ -23,6 +23,7 @@ session_start();
 require dirname(__FILE__).'/config.inc.php';
 require LPATH.'utility.inc.php';
 require LPATH.'security.inc.php';
+require LPATH.'process.inc.php';
 
 // Encrypt admin pass so it's not stored as plain text
 if (isset($cfg['admin']['pass'])) {

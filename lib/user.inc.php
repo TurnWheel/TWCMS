@@ -251,7 +251,7 @@ function user_restrict($perm) {
 		$T['title'] = $T['header'] = 'User Login';
 		$T['content'] = user_showlogin();
 	}
-	else tw_showerror(403);
+	else p_showerror(403);
 
 	return FALSE;
 }

@@ -175,38 +175,6 @@ function tw_dec($input) {
 
 /*
  * <TWCMS>
- * Loads any error page in CPATH/error.<num>.html
- */
-function tw_showerror($num) {
-	global $cfg, $T;
-
-	$num = path_escape($num);
-	$file = CPATH.'error.'.$num.'.html';
-
-	if (!isset($cfg['httpCodes'][$num])) return FALSE;
-	if (!file_exists($file)) return FALSE;
-
-	header('HTTP/1.1 '.$cfg['httpCodes'][$num]);
-
-	// Split out header from body (first line is header)
-	$T['content'] = file_get_contents($file);
-	$split = explode("\n", $T['content'], 2);
-
-	// Split header and content
-	if (count($split) > 1) {
-		$T['header'] = $split[0];
-		$T['content'] = $split[1];
-	}
-	else $T['header'] = '';
-
-	// Strip out HTML from header (tends to sneak in)
-	$T['title'] = $T['header'] = strip_tags($T['header']);
-
-	return TRUE;
-}
-
-/*
- * <TWCMS>
  * Request HTTP Auth
  */
 function req_auth($realm = 'Secret Realm') {

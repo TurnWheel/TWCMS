@@ -13,14 +13,6 @@ if (!defined('SECURITY')) exit;
 
 /*
  * <TWCMS>
- * Root URL's into their full name
- */
-function root_url2name($url) {
-	return ucwords(str_replace('-',' / ', str_replace('_',' ',$url)));
-}
-
-/*
- * <TWCMS>
  * Check Bit Flags
  * Usage: check_flag(F_FLAG, $flags)
  */
