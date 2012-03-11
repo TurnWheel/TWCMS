@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 0.9-Beta
+ * TWCMS 1.0
  *
  * This file processes page headers
  * and then searches content directory for the appropriate page.

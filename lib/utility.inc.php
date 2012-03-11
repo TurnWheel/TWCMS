@@ -1,6 +1,7 @@
 <?php
 /*
- * TurnWheel CMS
+ * TWCMS 1.0
+ *
  * Incredibly disorganized set of utility functions.
  * They are rather random, so easy to just throw them in here.
  *

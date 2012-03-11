@@ -1,6 +1,7 @@
 <?php
 /*
- * TurnWheel CMS
+ * TWCMS 1.0
+ *
  * Set of security functions, such as HTTP auth
  * and password encryption methods
  *

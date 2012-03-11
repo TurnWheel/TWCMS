@@ -1,12 +1,14 @@
 <?php
 /*
- * Coded by Steven Bower
- * TurnWheel Designs (cc) 2011
+ * TWCMS <Module>
  *
- * Provides simple hook for JSON based
- * mailchimp API. This is designed to be
- * super simple, and provides only ADDING
- * of people to API. For more advanced functions,
+ * Mod Version: 0.1
+ * Author: Steven Bower
+ * TurnWheel Designs (cc) 2012
+ *
+ * Provides simple hook for JSON based mailchimp API.
+ * This is designed to be super simple, and provides only
+ * ADDING of people to API. For more advanced functions,
  * please seek the mailchimp API docs.
  */
 

@@ -1,10 +1,10 @@
 <?php
 /*
- * TWCMS 0.9-Beta
+ * TWCMS 1.0
  * Global Include File
  *
  * Coded by Steven Bower
- * TurnWheel Designs (cc) 2011
+ * TurnWheel Designs (cc) 2012
  */
 
 // Config Changes

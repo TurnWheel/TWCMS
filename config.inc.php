@@ -1,10 +1,10 @@
 <?php
 /*
- * TWCMS 0.9-Beta
+ * TWCMS 1.0
  * Global Configuration File
  *
  * Coded by Steven Bower
- * TurnWheel Designs - http://turnwheel.com/
+ * TurnWheel Designs (cc) 2012
  */
 
 $cfg = array(

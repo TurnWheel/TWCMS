@@ -1,6 +1,7 @@
 <?php
 /*
- * TurnWheel CMS
+ * TWCMS 1.0
+ *
  * Functions used during process script
  * also used by other libraries
  *
@@ -8,6 +9,7 @@
  * the internals of TWCMS
  */
 
+if (!defined('SECURITY')) exit;
 
 /*
  * <TWCMS>

@@ -1,5 +1,11 @@
 <?php
 /*
+ * TWCMS <Module>
+ * 
+ * Mod Version: 0.5
+ * Author: Steven Bower
+ * TurnWheel Designs (cc) 2012
+ *
  * Useful form functions
  * Includes sending emails and saving to DB
  */
