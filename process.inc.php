@@ -100,6 +100,9 @@ while ($notFound) {
 		$notFound = FALSE;
 	}
 
+	// If tryParents is disabled, just end here
+	if (!$cfg['p_tryParents']) break;
+
 	// If still not found, try to load parent page
 	if ($notFound) {
 		// Remove last ending to find parent file

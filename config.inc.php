@@ -18,6 +18,14 @@ $cfg = array(
 	 ****/
 
 	/*
+	 * If set to TRUE, parents will be checked if page is not found.
+	 *
+	 * Example: /about/some, if about_some is not found
+	 * "about" will be checked before throwing 404 error
+	 */
+	'p_tryParents' => FALSE,
+
+	/*
 	 * Checks root name for resources
 	 * If FALSE, it will not load parent resources for subpages
 	 * Ex: on page /about/history, it will not check for about.css
