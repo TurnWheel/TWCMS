@@ -22,13 +22,17 @@ $cfg = array(
 	 *
 	 * Example: /about/some, if about_some is not found
 	 * "about" will be checked before throwing 404 error
+	 *
+	 * Default FALSE, so parent will not be checked
 	 */
 	'p_tryParents' => FALSE,
 
 	/*
-	 * Checks root name for resources
+	 * Load resources for root pages on subpages?
+	 *
 	 * If FALSE, it will not load parent resources for subpages
-	 * Ex: on page /about/history, it will not check for about.css
+	 * Ex: on page /about/history, it will not check for about.js/css
+	 *
 	 * Default is TRUE, so both about.js & about_history.js will be loaded
 	 */
 	'res_checkRoot' => TRUE,
@@ -36,10 +40,12 @@ $cfg = array(
 	/*
 	 * Resource Recursive Check
 	 * Default: FALSE
+	 *
 	 * If TRUE, in case of /about/some/person;
 	 * about.js, about_some.js, and about_some_person.js would loaded
+	 *
 	 * If FALSE, just about.js and about_some_person.js
-	 * unless res_checkRoot is FALSE
+	 * unless res_checkRoot is FALSE, then just about_some_person.js
 	 *
 	 * Recommended to keep off unless really needed,
 	 * as it can be inefficient for large menu tress.
