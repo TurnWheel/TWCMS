@@ -151,14 +151,16 @@ elseif ($php) {
 }
 else {
 	/*
-	* Handle .html files
-	* NOTE: The first line of every .html file becomes the header
-	* and is stripped of all html
+	 * Handle .html files
+	 * NOTE: The first line of every .html file becomes the header
+	 * and is stripped of all html
 	 */
 
 	// p_htmlfile returns array with header and content
 	// $file is include safe
 	$html = p_htmlfile($file);
+
+	// This should really never happen
 	if (!$html && !p_showerror(404)) {
 		print 'Error 404 Times TWO: A 404-1 error occured, then the 404'.
 			'document could not be found. Please contact the administrator!';
