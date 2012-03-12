@@ -1,10 +1,11 @@
 <?php
 /*
- * TWCMS 0.9-Beta
- * MySQL Functions
+ * TWCMS 1.0
+ *
+ * Simple MySQL Wrapper
  */
 
-if (!defined('SECURITY')) die('Security Error');
+if (!defined('SECURITY')) exit;
 
 // SQL Global Params
 $cfg['sql'] = array(

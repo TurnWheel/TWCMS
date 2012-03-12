@@ -10,6 +10,8 @@
  * Includes sending emails and saving to DB
  */
 
+if (!defined('SECURITY')) exit;
+
 /*
  * Process form data
  *
