@@ -16,43 +16,6 @@ require 'process.inc.php';
 $title = isset($T['title']) ? $T['title'] : '';
 $header = isset($T['header']) ? $T['header'] : '';
 $content = isset($T['content']) ? $T['content'] : '';
-
-/*
- * Breadcrumb function
- * There isn't a better place to put this currently,
- * but I should figure out something later.
- *
- * Simple: Call with $T['bcrumbs'] array
- * separated by $sep
- */
-function t_bcrumbs($bcrumbs, $sep = '&gt;') {
-	// If no input, just return empty string
-	if (empty($bcrumbs)) return '';
-
-	// Set current url to VAR for purpose of this function
-	$currurl = CURRURL;
-
-	$ret = '
-	<div id="breadcrumbs">'."\n";
-
-	foreach ($bcrumbs AS $name => $url) {
-		// Convert url to printable name
-		$linkname = p_url2name($name);
-
-		// Display link if does not match current URL
-		// (checks for trailing slash as well)
-		if ($url !== $currurl && $url.'/' !== $currurl) {
-			$ret .= '<a href="'.$url.'">'.$linkname.'</a> &gt; ';
-		}
-		// Display current url as bold
-		else $ret .= '<strong>'.$linkname.'</strong>';
-	}
-
-	$ret .= '
-	</div>'."\n";
-
-	return $ret;
-}
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
