@@ -28,7 +28,7 @@ function escape($v) {
 	}
 
 	return $cfg['sql_enable'] ? mysql_real_escape_string($v)
-		: htmlspecialchars($v);
+		: htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 
 /*
