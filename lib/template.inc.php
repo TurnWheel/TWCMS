@@ -54,7 +54,7 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 function t_debug() {
 	global $cfg;
 
-	$html = '<!-- Time: '.(microtime(TRUE)-$_starttime).'s -->';
+	$html = '<!-- Time: '.(microtime(TRUE)-$cfg['start_time']).'s -->';
 
 	// Display SQL debug if enabled
 	if ($cfg['sql_enable']) {

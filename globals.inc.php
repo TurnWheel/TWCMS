@@ -14,7 +14,7 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 define('SECURITY', TRUE);
 
 // For calculating page load times
-$_starttime = microtime(TRUE);
+$_start = microtime(TRUE);
 
 // Start session tracking
 session_start();
@@ -25,6 +25,9 @@ require LPATH.'utility.inc.php';
 require LPATH.'security.inc.php';
 require LPATH.'process.inc.php';
 require LPATH.'template.inc.php';
+
+// Add $_starttime to $cfg
+$cfg['start_time'] = $_start;
 
 // Encrypt admin pass so it's not stored as plain text
 if (isset($cfg['admin']['pass'])) {
