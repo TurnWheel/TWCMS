@@ -47,3 +47,19 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 
 	return $ret;
 }
+
+/*
+ * Returns debug info to template
+ */
+function t_debug() {
+	global $cfg;
+
+	$html = '<!-- Time: '.(microtime(TRUE)-$_starttime).'s -->';
+
+	// Display SQL debug if enabled
+	if ($cfg['sql_enable']) {
+		$html .= "\n".'<!-- SQL #: '.$cfg['sql']['count'].' -->';
+	}
+
+	return $html;
+}

@@ -139,13 +139,10 @@ foreach ($T['js'] AS $file) {
 			</p>
 		</div>
 	</div>
+
 <?php
-if ($cfg['debug']) {
-	print '<!-- Time: '.(microtime(TRUE)-$_starttime).'s -->';
-	if ($cfg['sql_enable']) {
-		print "\n".'<!-- SQL #: '.$cfg['sql']['count'].' -->';
-	}
-}
+// Display debug code if enabled
+if ($cfg['debug']) print t_debug();
 ?>
 
 </body>
