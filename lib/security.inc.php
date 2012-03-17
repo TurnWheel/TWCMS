@@ -59,7 +59,7 @@ function tw_loadmod($mod) {
 
 	// Include library
 	// SECURITY: Should be include safe
-	require LPATH.$mod.'.inc.php';
+	require LPATH.'mod.'.$mod.'.inc.php';
 
 	// Look for onload function
 	if (function_exists($mod.'_onload')) {
