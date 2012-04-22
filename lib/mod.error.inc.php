@@ -43,7 +43,8 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 		$err_a = array($errstr, $errno, $errfile, $errline);
 
 		sql_query('INSERT INTO error SET date = "%d",error = "%s",dump = "%s"',
-						array(NOW, serialize($err_a), $dump));
+						array(NOW, serialize($err_a), serialize($errcontext)),
+						__FILE__, __LINE__);
 
 		// Add insert id to replacement map
 		$map['error_sqlid'] = sql_insert_id();
