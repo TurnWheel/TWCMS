@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Error</title>
+
+<style>
+body {
+	font-family: Verdana, sans-serif;
+	font-size: 10pt;
+}
+h1 {
+	color: #000;
+	font-size: 14pt;
+	text-transform: uppercase;
+	text-align: center;
+}
+h2 {
+	margin: 0;
+	font-size: 8pt;
+	text-align: center;
+}
+pre {
+	margin: 0;
+	font-family: "Courier New", sans-serif;
+}
+#error {
+	border: solid 1px #000;
+	background-color: #F0F0F0;
+	margin: 0 auto;
+	width: 500px;
+}
+#dump {
+	border: solid 1px #000;
+	background-color: #F0F0F0;
+	margin: 0 auto;
+	width: 600px;
+	padding: 2px;
+	padding-left: 5px;
+}
+#dump a {
+	padding: 0;
+	margin: 0;
+	color: #000;
+}
+.array {
+	padding-left: 20px;
+	margin: 0;
+}
+</style>
+<script>
+function init() {
+	if (typeof(document.getElementsByTagName) == "undefined") return;
+
+	var a = null;
+	var elements = document.getElementsByTagName("div");
+
+	for(var i = 0; i != elements.length; ++i) {
+		if (elements[i].className != "array") continue;
+
+		a = document.createElement("a");
+		a.appendChild(document.createTextNode("Show"));
+
+		a.href = "javascript:void(0);";
+		a.onclick = function() {
+			var show = this.nextSibling.style.display == "none";
+			this.nextSibling.style.display = show ? "block" : "none";
+			this.replaceChild(document.createTextNode(show ? "Hide" : "Show"),this.firstChild);
+		};
+
+		elements[i].parentNode.insertBefore(a, elements[i]);
+		elements[i].style.display = "none";
+	}
+}
+</script>
+</head>
+<body>
+	<div>
+	<h1>Error</h1>
+		<div id="error">
+			<h2>Error Details</h2>
+			<strong>Error: </strong> {error_str}<br />
+			<strong>Errno:</strong> {error_num} ({error_name})<br />
+			<strong>File:</strong> {error_file}<br />
+			<strong>Line:</strong> {error_line}<br />
+		</div><br /><br />
+
+		<div id="dump">
+			<h2>Variable Dump</h2>
+			{htmldump}
+		</div>
+	</div>
+	<script>init();</script>
+</body>
+</html>

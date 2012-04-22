@@ -87,7 +87,7 @@ function sql_prepare($q, $vals) {
 }
 
 // Process Queries
-function sql_query($q, $vals = array()) {
+function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 	global $cfg;
 
 	// Generate full query using inputed array
@@ -100,8 +100,9 @@ function sql_query($q, $vals = array()) {
 
 		// Verify valid query and execute
 		if (!$cfg['sql']['id'] = mysql_query($q, $cfg['sql']['con'])) {
-			sql_error('<strong>Bad SQL Query</strong>: '.htmlentities($q)
-						.'<br /><strong>'.mysql_error().'</strong>');
+			sql_error('<strong>Bad SQL Query</strong> ('.$file.':'.$line.'):
+						'.htmlentities($q).'<br />
+						<strong>'.mysql_error().'</strong>');
 		}
 
 		// Track time and query count

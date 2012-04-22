@@ -16,6 +16,12 @@ define('SECURITY', TRUE);
 // For calculating page load times
 $_start = microtime(TRUE);
 
+// Unset deprecated variables that polute error reports
+// and are generally just a nuisance
+unset($HTTP_POST_VARS, $HTTP_GET_VARS, $HTTP_COOKIE_VARS,
+		$HTTP_SERVER_VARS, $HTTP_ENV_VARS, $HTTP_POST_FILES,
+		$HTTP_SESSION_VARS);
+
 // Start session tracking
 session_start();
 
@@ -26,8 +32,9 @@ require LPATH.'security.inc.php';
 require LPATH.'process.inc.php';
 require LPATH.'template.inc.php';
 
-// Add $_starttime to $cfg
+// Move $_start to $cfg
 $cfg['start_time'] = $_start;
+unset($_start);
 
 // Encrypt admin pass so it's not stored as plain text
 if (isset($cfg['admin']['pass'])) {
