@@ -136,11 +136,12 @@ function valid_phone($pn, $useareacode = TRUE) {
  * is at the bottom of this file.
  */
 function valid_email($email)  {
-	return is_rfc3696_valid_email_address($email);
+	return is_rfc822_valid_email_address($email);
 }
 
+
 #
-# RFC3696 Email Parser
+# RFC 822/2822/5322 Email Parser
 #
 # By Cal Henderson <cal@iamcal.com>
 #
@@ -148,14 +149,30 @@ function valid_email($email)  {
 # CC Attribution-ShareAlike 2.5 - http://creativecommons.org/licenses/by-sa/2.5/
 # GPLv3 - http://www.gnu.org/copyleft/gpl.html
 #
-# $Revision: 5039 $
+# $Revision$
 #
 
-###################################################################
-function is_rfc3696_valid_email_address($email) {
+##################################################################################
+
+function is_rfc822_valid_email_address($email, $options=array()){
+
+	#
+	# you can pass a few different named options as a second argument,
+	# but the defaults are usually a good choice.
+	#
+
+	$defaults = array(
+		'allow_comments'	=> true,
+		'public_internet'	=> true, # turn this off for 'strict' mode
+	);
+
+	$opts = array();
+	foreach ($defaults as $k => $v) $opts[$k] = isset($options[$k]) ? $options[$k] : $v;
+	$options = $opts;
+	
 
 
-	#############################################################################
+	####################################################################################
 	#
 	# NO-WS-CTL		  =		  %d1-8 /		  ; US-ASCII control characters
 	#						  %d11 /		  ;  that do not include the
@@ -173,7 +190,7 @@ function is_rfc3696_valid_email_address($email) {
 	$crlf		= "(?:$cr$lf)";
 
 
-	#############################################################################
+	####################################################################################
 	#
 	# obs-char		  =		  %d0-9 / %d11 /		  ; %d0-127 except CR and
 	#						  %d12 / %d14-127		  ;  LF
@@ -202,7 +219,7 @@ function is_rfc3696_valid_email_address($email) {
 	$quoted_pair	= "(?:\\x5c$text|$obs_qp)";
 
 
-	##############################################################################
+	####################################################################################
 	#
 	# obs-FWS		  =		  1*WSP *(CRLF 1*WSP)
 	# FWS			  =		  ([*WSP CRLF] 1*WSP) /   ; Folding white space
@@ -237,13 +254,12 @@ function is_rfc3696_valid_email_address($email) {
 	# we stop.
 	#
 
-	$outer_ccontent_dull = "(?:$fws?$ctext|$quoted_pair)";
-	$outer_ccontent_nest = "(?:$fws?$comment)";
-	$outer_comment = "(?:\\x28$outer_ccontent_dull*(?:$outer_ccontent_nest".
-						"$outer_ccontent_dull*)+$fws?\\x29)";
+	$outer_ccontent_dull	= "(?:$fws?$ctext|$quoted_pair)";
+	$outer_ccontent_nest	= "(?:$fws?$comment)";
+	$outer_comment		= "(?:\\x28$outer_ccontent_dull*(?:$outer_ccontent_nest$outer_ccontent_dull*)+$fws?\\x29)";
 
 
-	##############################################################################
+	####################################################################################
 	#
 	# atext			  =		  ALPHA / DIGIT / ; Any character except controls,
 	#						  "!" / "#" /	  ;  SP, and specials.
@@ -258,12 +274,11 @@ function is_rfc3696_valid_email_address($email) {
 	#						  "~"
 	# atom			  =		  [CFWS] 1*atext [CFWS]
 
-	$atext		= "(?:$alpha|$digit|[\\x21\\x23-\\x27\\x2a\\x2b\\x2d".
-					"\\x2f\\x3d\\x3f\\x5e\\x5f\\x60\\x7b-\\x7e])";
+	$atext		= "(?:$alpha|$digit|[\\x21\\x23-\\x27\\x2a\\x2b\\x2d\\x2f\\x3d\\x3f\\x5e\\x5f\\x60\\x7b-\\x7e])";
 	$atom		= "(?:$cfws?(?:$atext)+$cfws?)";
 
 
-	###############################################################################
+	####################################################################################
 	#
 	# qtext			  =		  NO-WS-CTL /	  ; Non white space controls
 	#						  %d33 /		  ; The rest of the US-ASCII
@@ -287,7 +302,7 @@ function is_rfc3696_valid_email_address($email) {
 	$word		= "(?:$atom|$quoted_string)";
 
 
-	#############################################################################
+	####################################################################################
 	#
 	# obs-local-part  =		  word *("." word)
 	# obs-domain	  =		  atom *("." atom)
@@ -296,7 +311,7 @@ function is_rfc3696_valid_email_address($email) {
 	$obs_domain	= "(?:$atom(?:\\x2e$atom)*)";
 
 
-	#############################################################################
+	####################################################################################
 	#
 	# dot-atom-text   =		  1*atext *("." 1*atext)
 	# dot-atom		  =		  [CFWS] dot-atom-text [CFWS]
@@ -305,12 +320,12 @@ function is_rfc3696_valid_email_address($email) {
 	$dot_atom	= "(?:$cfws?$dot_atom_text$cfws?)";
 
 
-	##############################################################################
+	####################################################################################
 	#
 	# domain-literal  =		  [CFWS] "[" *([FWS] dcontent) [FWS] "]" [CFWS]
 	# dcontent		  =		  dtext / quoted-pair
 	# dtext			  =		  NO-WS-CTL /	  ; Non white space controls
-	#
+	# 
 	#						  %d33-90 /		  ; The rest of the US-ASCII
 	#						  %d94-126		  ;  characters not including "[",
 	#										  ;  "]", or "\"
@@ -320,7 +335,7 @@ function is_rfc3696_valid_email_address($email) {
 	$domain_literal	= "(?:$cfws?\\x5b(?:$fws?$dcontent)*$fws?\\x5d$cfws?)";
 
 
-	###############################################################################
+	####################################################################################
 	#
 	# local-part	  =		  dot-atom / quoted-string / obs-local-part
 	# domain		  =		  dot-atom / domain-literal / obs-domain
@@ -333,28 +348,29 @@ function is_rfc3696_valid_email_address($email) {
 
 
 	#
-	# see http://www.dominicsayers.com/isemail/ for details,
-	# but this should probably be 254
+	# this was previously 256 based on RFC3696, but dominic's errata was accepted.
 	#
 
-	if (strlen($email) > 256) return FALSE;
+	if (strlen($email) > 254) return 0;
 
 
 	#
-	# we need to strip nested comments first -
-	# we replace them with a simple comment
+	# we need to strip nested comments first - we replace them with a simple comment
 	#
 
-	$email = rfc3696_strip_comments($outer_comment, $email, "(x)");
+	if ($options['allow_comments']){
+
+		$email = rfc822_strip_comments($outer_comment, $email, "(x)");
+	}
 
 
 	#
 	# now match what's left
 	#
 
-	if (!preg_match("!^$addr_spec$!", $email, $m)) {
+	if (!preg_match("!^$addr_spec$!", $email, $m)){
 
-		return FALSE;
+		return 0;
 	}
 
 	$bits = array(
@@ -371,133 +387,151 @@ function is_rfc3696_valid_email_address($email) {
 
 	#
 	# we need to now strip comments from $bits[local] and $bits[domain],
-	# since we know they're i the right place and we want them out of the
+	# since we know they're in the right place and we want them out of the
 	# way for checking IPs, label sizes, etc
 	#
 
-	$bits['local']	= rfc3696_strip_comments($comment, $bits['local']);
-	$bits['domain']	= rfc3696_strip_comments($comment, $bits['domain']);
+	if ($options['allow_comments']){
+		$bits['local']	= rfc822_strip_comments($comment, $bits['local']);
+		$bits['domain']	= rfc822_strip_comments($comment, $bits['domain']);
+	}
 
 
 	#
 	# length limits on segments
 	#
 
-	if (strlen($bits['local']) > 64) return FALSE;
-	if (strlen($bits['domain']) > 255) return FALSE;
+	if (strlen($bits['local']) > 64) return 0;
+	if (strlen($bits['domain']) > 255) return 0;
 
 
 	#
-	# restrictuions on domain-literals from RFC2821 section 4.1.3
+	# restrictions on domain-literals from RFC2821 section 4.1.3
+	#
+	# RFC4291 changed the meaning of :: in IPv6 addresses - i can mean one or
+	# more zero groups (updated from 2 or more).
 	#
 
 	if (strlen($bits['domain-literal'])){
 
-		$Snum = "(\d{1,3})";
-		$IPv4_address_literal = "$Snum\.$Snum\.$Snum\.$Snum";
+		$Snum			= "(\d{1,3})";
+		$IPv4_address_literal	= "$Snum\.$Snum\.$Snum\.$Snum";
 
-		$IPv6_hex = "(?:[0-9a-fA-F]{1,4})";
+		$IPv6_hex		= "(?:[0-9a-fA-F]{1,4})";
 
-		$IPv6_full = "IPv6\:$IPv6_hex(:?\:$IPv6_hex){7}";
+		$IPv6_full		= "IPv6\:$IPv6_hex(?:\:$IPv6_hex){7}";
 
-		$IPv6_comp_part = "(?:$IPv6_hex(?:\:$IPv6_hex){0,5})?";
-		$IPv6_comp = "IPv6\:($IPv6_comp_part\:\:$IPv6_comp_part)";
+		$IPv6_comp_part		= "(?:$IPv6_hex(?:\:$IPv6_hex){0,7})?";
+		$IPv6_comp		= "IPv6\:($IPv6_comp_part\:\:$IPv6_comp_part)";
 
-		$IPv6v4_full = "IPv6\:$IPv6_hex(?:\:$IPv6_hex){5}\:$IPv4_address_literal";
+		$IPv6v4_full		= "IPv6\:$IPv6_hex(?:\:$IPv6_hex){5}\:$IPv4_address_literal";
 
-		$IPv6v4_comp_part = "$IPv6_hex(?:\:$IPv6_hex){0,3}";
-		$IPv6v4_comp = "IPv6\:((?:$IPv6v4_comp_part)?\:\:".
-						"(?:$IPv6v4_comp_part\:)?)$IPv4_address_literal";
+		$IPv6v4_comp_part	= "$IPv6_hex(?:\:$IPv6_hex){0,5}";
+		$IPv6v4_comp		= "IPv6\:((?:$IPv6v4_comp_part)?\:\:(?:$IPv6v4_comp_part\:)?)$IPv4_address_literal";
 
 
 		#
 		# IPv4 is simple
 		#
-		if (preg_match("!^\[$IPv4_address_literal\]$!", $bits['domain'], $m)) {
-			if (intval($m[1]) > 255) return FALSE;
-			if (intval($m[2]) > 255) return FALSE;
-			if (intval($m[3]) > 255) return FALSE;
-			if (intval($m[4]) > 255) return FALSE;
-		}
-		else {
+
+		if (preg_match("!^\[$IPv4_address_literal\]$!", $bits['domain'], $m)){
+
+			if (intval($m[1]) > 255) return 0;
+			if (intval($m[2]) > 255) return 0;
+			if (intval($m[3]) > 255) return 0;
+			if (intval($m[4]) > 255) return 0;
+
+		}else{
+
 			#
 			# this should be IPv6 - a bunch of tests are needed here :)
 			#
 
-			while (1) {
+			while (1){
 
-				if (preg_match("!^\[$IPv6_full\]$!", $bits['domain'])) {
+				if (preg_match("!^\[$IPv6_full\]$!", $bits['domain'])){
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6_comp\]$!", $bits['domain'], $m)) {
+				if (preg_match("!^\[$IPv6_comp\]$!", $bits['domain'], $m)){
 					list($a, $b) = explode('::', $m[1]);
 					$folded = (strlen($a) && strlen($b)) ? "$a:$b" : "$a$b";
 					$groups = explode(':', $folded);
-					if (count($groups) > 6) return FALSE;
+					if (count($groups) > 7) return 0;
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6v4_full\]$!", $bits['domain'], $m)) {
-					if (intval($m[1]) > 255) return FALSE;
-					if (intval($m[2]) > 255) return FALSE;
-					if (intval($m[3]) > 255) return FALSE;
-					if (intval($m[4]) > 255) return FALSE;
+				if (preg_match("!^\[$IPv6v4_full\]$!", $bits['domain'], $m)){
+
+					if (intval($m[1]) > 255) return 0;
+					if (intval($m[2]) > 255) return 0;
+					if (intval($m[3]) > 255) return 0;
+					if (intval($m[4]) > 255) return 0;
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6v4_comp\]$!", $bits['domain'], $m)) {
+				if (preg_match("!^\[$IPv6v4_comp\]$!", $bits['domain'], $m)){
 					list($a, $b) = explode('::', $m[1]);
-
-					# remove the trailing colon before the IPv4 address
-					$b = substr($b, 0, -1);
+					$b = substr($b, 0, -1); # remove the trailing colon before the IPv4 address
 					$folded = (strlen($a) && strlen($b)) ? "$a:$b" : "$a$b";
 					$groups = explode(':', $folded);
-
-					if (count($groups) > 4) return FALSE;
+					if (count($groups) > 5) return 0;
 					break;
 				}
 
-				return FALSE;
+				return 0;
 			}
-		}
-	}
-	else {
+		}			
+	}else{
 
 		#
 		# the domain is either dot-atom or obs-domain - either way, it's
 		# made up of simple labels and we split on dots
 		#
+
 		$labels = explode('.', $bits['domain']);
 
+
 		#
-		# this is allowed by both dot-atom and obs-domain, but is
-		# un-routeable on the public internet, so we'll fail it
-		# (e.g. user@localhost)
+		# this is allowed by both dot-atom and obs-domain, but is un-routeable on the
+		# public internet, so we'll fail it (e.g. user@localhost)
 		#
-		if (count($labels) == 1) return FALSE;
+
+		if ($options['public_internet']){
+			if (count($labels) == 1) return 0;
+		}
+
 
 		#
 		# checks on each label
 		#
-		foreach ($labels as $label) {
-			if (strlen($label) > 63) return FALSE;
-			if (substr($label, 0, 1) == '-') return FALSE;
-			if (substr($label, -1) == '-') return FALSE;
+
+		foreach ($labels as $label){
+
+			if (strlen($label) > 63) return 0;
+			if (substr($label, 0, 1) == '-') return 0;
+			if (substr($label, -1) == '-') return 0;
 		}
+
 
 		#
 		# last label can't be all numeric
 		#
-		if (preg_match('!^[0-9]+$!', array_pop($labels))) return FALSE;
+
+		if ($options['public_internet']){
+			if (preg_match('!^[0-9]+$!', array_pop($labels))) return 0;
+		}
 	}
 
 
-	return TRUE;
+	return 1;
 }
 
-function rfc3696_strip_comments($comment, $email, $replace='') {
-	while (1) {
+##################################################################################
+
+function rfc822_strip_comments($comment, $email, $replace=''){
+
+	while (1){
 		$new = preg_replace("!$comment!", $replace, $email);
 		if (strlen($new) == strlen($email)){
 			return $email;
