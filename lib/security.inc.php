@@ -33,6 +33,14 @@ function escape($v) {
 
 /*
  * <TWCMS>
+ * Shortcut for escaping HTML
+ */
+function html_escape($v) {
+	return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+}
+
+/*
+ * <TWCMS>
  * Escape headers for use in includes,
  * and any file-based function
  */
