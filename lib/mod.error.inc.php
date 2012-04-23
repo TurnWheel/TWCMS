@@ -121,14 +121,13 @@ function error_parse_val($value) {
 	if (is_int($value) || is_float($value)) return $value;
 
 	if (is_string($value)) {
-		return '"'.htmlspecialchars(
+		return '"'.html_escape(
 				str_replace("\r", '\r',
 				str_replace("\n", '\n',
 				str_replace("\t", '\t',
 				str_replace('"', '\\"',
 				str_replace('\\', '\\\\',
-				$value))))),
-			ENT_QUOTES, 'UTF-8').'"';
+				$value)))))).'"';
 	}
 
 	if (is_object($value)) return 'Object (Not supported by error handler)';

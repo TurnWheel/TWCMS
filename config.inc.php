@@ -276,6 +276,6 @@ define('VERSION', 'TWCMS 1.0-U'); // CMS Version
 
 // Save User's IP Address as constant
 define('USERIP', isset($_SERVER['REMOTE_ADDR']) ?
-	htmlspecialchars($_SERVER['REMOTE_ADDR']) : 'N/A');
+			html_escape($_SERVER['REMOTE_ADDR']) : 'N/A');
 
 // EOF

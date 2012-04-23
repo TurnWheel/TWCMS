@@ -56,8 +56,8 @@ if ($_GET['id'] !== 0) {
 	$k = 0;
 	foreach ($data AS $key => $value) {
 		// Escape form data just to be safe
-		$key = htmlspecialchars($key);
-		$value = htmlspecialchars($value);
+		$key = html_escape($key);
+		$value = html_escape($value);
 
 		$T['content'] .= '
 		<tr class="'.($k%2).'">

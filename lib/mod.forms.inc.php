@@ -32,7 +32,7 @@ function form_process($name, &$error) {
 	// Get specified form fields
 	foreach ($fields AS $field) {
 		$data[$field] = isset($_POST[$field]) ?
-			htmlspecialchars($_POST[$field]) : '';
+			html_escape($_POST[$field]) : '';
 	}
 
 	// Check if form was even submitted at this point
@@ -73,7 +73,7 @@ function form_process($name, &$error) {
 	if ($ecfg['admin']['enable'] || $ecfg['user']['enable']) {
 		// Escape data properly for use in emails
 		foreach ($data AS $k => $v) {
-			$map[$k] = htmlspecialchars(str_replace('\r\n', "\n", $v));
+			$map[$k] = html_escape(str_replace('\r\n', "\n", $v));
 		}
 
 		$map['date'] = date($fcfg['email_date'], NOW);
