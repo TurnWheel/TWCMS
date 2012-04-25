@@ -1,11 +1,22 @@
 <?php
 /*
+ * TWCMS <Module>
+ *
+ * Part of Forms Module
  * Admin area front-end for form data
  * allows exploration of all raw formdata collected over multiple forms
  */
 
-// Require auth
-if (!check_auth($cfg['admin'])) req_auth('Restricted');
+if (!tw_isloaded('forms')) return p_showerror(403);
+
+if (tw_isloaded('user')) {
+	// Require U_ADMIN permissions or throw error
+	if (!user_restrict(U_ADMIN)) return;
+}
+else {
+	// Require admin auth
+	if (!check_auth($cfg['admin'])) req_auth('Restricted Area');
+}
 
 $T['title'] = 'Admin: Form Data';
 $T['content'] = '';

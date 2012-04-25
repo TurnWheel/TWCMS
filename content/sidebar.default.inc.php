@@ -4,7 +4,10 @@ if (ISUSER) {
 	print '
 	<div>
 		<p>Welcome, <strong>'.$U['firstname'].'</strong></p>
-		<p><a href="/logout">Logout</a></p>
+		<p>
+			<a href="/user">Manage Account</a> |
+			<a href="/logout">Logout</a>
+		</p>
 	</div>';
 }
 else {

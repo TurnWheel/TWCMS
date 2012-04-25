@@ -1,4 +1,10 @@
 <?php
+/*
+ * TWCMS <Module>
+ *
+ * Part of User Module
+ */
+
 // End session and logout
 user_logout();
 

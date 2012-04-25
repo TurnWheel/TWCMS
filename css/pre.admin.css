@@ -1,0 +1,11 @@
+/*
+ * Admin Area CSS
+ */
+
+#content_side {
+	display: none;
+}
+
+#content_inner {
+	width: 80%;
+}

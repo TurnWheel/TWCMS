@@ -64,3 +64,35 @@ function t_debug() {
 
 	return $html;
 }
+
+
+/*
+ * <TWCMS>
+ * Silly utility functions for forms
+ * Makes code more readable
+ *
+ * $err = Array of errors
+ * $key = Checks for this key inside $err
+ */
+function t_iserror($err, $key) {
+	if (isset($err[$key])) print ' class="error"';
+}
+
+/*
+ * <TWCMS>
+ * Utility function for select drop-downs
+ *
+ * $opts = array('CA' => 'California');
+ * Result: <option value="CA">California</option>
+ *
+ * $select: Which "value" to mark as selected
+ */
+function t_select($opts, $select = '') {
+	foreach ($opts AS $val => $name) {
+		print '
+		<option value="'.$val.'"'.($select === $val ? ' selected="selected"' : '')
+			.'>'.$name.'</option>';
+	}
+}
+
+// EOF

@@ -1,9 +1,23 @@
 <?php
 /*
- * TurnWheel CMS
- * Set of user function
+ * TWCMS <Module>
  *
- * Optional in most cases
+ * Mod Version: 1.0
+ * Author: Steven Bower
+ * TurnWheel Designs (cc) 2012
+ *
+ * Complete User Module
+ * Important config options in config.inc.php
+ * This module comes with additional includes other than this library
+ *
+ * ---- Additional Files ----
+ * sql/user.sql
+ * content/user.inc.php
+ * content/user_profile.inc.php
+ * content/admin_user.inc.php
+ * content/admin_user.detail.inc.php
+ * js/pre.admin_user.js
+ * ----
  */
 
 if (!defined('SECURITY')) exit;
@@ -25,7 +39,6 @@ function user_onload() {
 		$email = isset($_POST['email']) ? escape($_POST['email']) : '';
 		$pass = isset($_POST['password']) ? escape($_POST['password']) : '';
 
-		// Login user if login is value
 		if (user_login($U, $email, $pass)) $isuser = TRUE;
 
 		// Set constant on failure so that content will be
@@ -48,6 +61,10 @@ function user_onload() {
 	// otherwise isuer stays FALSE
 	if ($c_email !== '' && $c_pass !== '') {
 		$isuser = user_verify($U, $c_email, $c_pass);
+
+		// If cookies are set, and they did not validate
+		// then logout user to remove cookies and session
+		if (!$isuser) user_logout();
 	}
 
 	// Set isuser flag as constant
@@ -60,7 +77,7 @@ function user_onload() {
 	}
 
 	// Set userid as a integer if available
-	// usually comes out as string, integer is easier for comparisons
+	// usually comes out as string, integer is better for comparisons
 	if (isset($U['userid'])) {
 		$U['userid'] = (int) $U['userid'];
 	}
@@ -99,17 +116,29 @@ function user_showlogin($error = TRUE) {
 	if ($failed) {
 		$content .= '
 		<div class="box error">
-			<p>
+			<p>';
+
+		if (defined('LOGINDENIED')) {
+			$content .= '
+				<strong>Error!</strong> Your account has not
+				been activated. You are unable to login to your account
+				at this time.';
+		}
+		else {
+			$content .= '
 				<strong>Error!</strong> There was a problem with your login.
 				Please try entering your credentials again. Passwords are
-				case sensitive.
+				case sensitive.';
+		}
+
+		$content .= '
 			</p>
 		</div><br />';
 	}
 
 	// Generate HTML form
 	$content .= '
-	<form method="post" action="'.(REQUESTURL === '/login' ? '/' : REQUESTURL).'">
+	<form method="post" action="'.REQUESTURL.'">
 	<fieldset>
 		<legend>User Login</legend>
 		<div>
@@ -142,17 +171,26 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
 	// Validates email address
 	if ($user === FALSE) return FALSE;
 
+	// Verify the user has login permissions
+	if (!check_flag(U_LOGIN, $user['flags'])) {
+		define('LOGINDENIED', TRUE);
+		return FALSE;
+	}
+
 	// Validates password (real or cookie hash)
 	if ($salt) {
-		if (!tw_chkhash($pass, $user['password'], $user['salt'])) return FALSE;
+		if (!tw_chkhash($pass, $user['password'], $user['salt'])) {
+			unset($pass);
+			return FALSE;
+		}
 	}
 	else {
-		if ($user['password'] === $pass) return TRUE;
+		if ($user['password'] !== $pass) return FALSE;
 		/* TODO: Add session validation through IP checking to prevent hijacks */
 	}
 
 	// Unset sensitive variables
-	unset($user['pass'], $user['salt']);
+	unset($pass);
 
 	return TRUE;
 }
@@ -184,10 +222,13 @@ function user_login(&$user, $email, $pass) {
  * Logout user by resetting cookies and destroying current sessiona
  */
 function user_logout() {
+	// Delete cookies
 	setcookie(PREFIX.'_email', '', NOW-3360, BASEURL);
 	setcookie(PREFIX.'_hash', '', NOW-3360, BASEURL);
 
+	// Destroy session and start a new one 
 	session_destroy();
+	session_start();
 
 	return TRUE;
 }
@@ -197,31 +238,78 @@ function user_logout() {
  * Creates a new user account with the provided params
  *
  * $data is just a hash table with row => value data
- * $pass is the raw password, to be encrypted
+ * Required fields: email, password
+ * flags will be set to U_DEFAULT unless specified otherwise
  *
  * Returns FALSE on failure (bool)
  * Returns USERID on success (int)
  */
-function user_register($data, $pass) {
-	// Create password
-	$salt = '';
-	$hash = tw_genhash($pass, TRUE, $salt);
+function user_register($data) {
+	global $cfg;
 
-	// Remove raw pass from memory
-	unset($pass);
+	// Verify data
+	if (!isset($data['password']) || !isset($data['email'])) {
+		return FALSE;
+	}
+
+	// Generate password hash
+	$salt = '';
+	$data['password'] = tw_genhash($data['password'], TRUE, $salt);
 
 	// Set flags to U_DEFAULT if not specified
 	$flags = isset($data['flags']) ? (int) $data['flags'] : U_DEFAULT;
 
+	// Save user registration information to DB
 	sql_query('INSERT INTO user ($keys) VALUES($vals)',
-				array(
-					'password' => $hash,
+				array_merge($data,array(
 					'salt' => $salt,
 					'date' => NOW,
 					'flags' => $flags
-				));
+				)));
 
 	$userid = sql_insert_id();
+
+	// Remove password from $data
+	// so that it does not end up in emails
+	unset($data['password']);
+
+	/* Email Notifications */
+	// Extra variables used for map_replace inside emails
+	$map = $data; // Use all fields as the starting of map
+	$map['date'] = date($cfg['user_emails']['date'], NOW);
+	$map['sslurl'] = SSLURL;
+	$map['wwwurl'] = WWWURL;
+	$map['userid'] = $userid;
+
+	// List all POST feilds in one map variable
+	$map['fields'] = '';
+	foreach ($data AS $name => $value) {
+		$name = ucwords(str_replace('_',' ',$name));
+		$map['fields'] .= $name.': '.$value."\n";
+	}
+
+	// Send Out User Email?
+	$email = FALSE;
+	if ($cfg['user_modreg']) $email = $cfg['user_emails']['modreg'];
+	elseif ($cfg['user_regnotify']) $email = $cfg['user_emails']['regnotify'];
+
+	if ($email !== FALSE) {
+		$to = implode(',',$email['to']);
+		$subject = map_replace($map, $email['subject']);
+		$body = map_replace($map, str_replace("\t", '', $email['body']));
+
+		mail($to, $subject, $body, $email['headers']);
+	}
+
+	// Should we send user a welcome message?
+	if ($cfg['user_welcome']) {
+		$email = $cfg['user_emails']['welcome'];
+		$subject = map_replace($map, $email['subject']);
+		$body = map_replace($map, str_replace("\t", '', $email['body']));
+
+		mail($data['email'], $subject, $body, $email['headers']);
+	}
+
 	return $userid;
 }
 

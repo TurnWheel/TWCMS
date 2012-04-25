@@ -1,14 +1,15 @@
 <?php
+/*
+ * TWCMS <Module>
+ *
+ * Part of User Module
+ */
+
 $T['title'] = $T['header'] = 'User Login';
 
 if (ISUSER) {
-	$T['content'] = '
-	<div class="box notice">
-		You are already logged in as <strong>'.$cfg['user']['firstname'].'</strong>.
-		Please <a href="/logout">logout</a> if this is not your account.
-	</div>';
-
-	return FALSE; // Skip rest of file
+	header('Location: /');
+	return; // Skip rest of file
 }
 
 $T['content'] = '

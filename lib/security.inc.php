@@ -69,15 +69,28 @@ function tw_loadmod($mod) {
 	// SECURITY: Should be include safe
 	require LPATH.'mod.'.$mod.'.inc.php';
 
+	// Mark module as loaded
+	$cfg['mods_loaded'][$mod] = TRUE;
+
 	// Look for onload function
 	if (function_exists($mod.'_onload')) {
 		return call_user_func($mod.'_onload');
 	}
 
-	// Mark module as loaded
-	$cfg['mods_loaded'][$mod] = TRUE;
-
 	return TRUE;
+}
+
+/*
+ * <TWCMS>
+ * Check if mod is loaded
+ *
+ * Really, this just check $cfg['mods_loaded']
+ * but it makes for a sensible shortcut
+ */
+function tw_isloaded($mod) {
+	global $cfg;
+
+	return isset($cfg['mods_loaded'][$mod]);
 }
 
 /*

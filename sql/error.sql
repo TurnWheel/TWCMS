@@ -6,4 +6,4 @@ CREATE TABLE error (
 	date int(10) NOT NULL, -- Date of error (Unix timestamp)
 	flags int(10) NOT NULL, -- Misc. Flags
 	PRIMARY KEY (eid)
-) TYPE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

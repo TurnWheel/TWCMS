@@ -142,7 +142,6 @@ tr.table1 {
 	background-color: transparent;
 }
 td {
-	min-width: 150px;
 	padding: 3px;
 	vertical-align: top;
 }
@@ -336,6 +335,9 @@ td {
 }
 .error, .red {
 	color: #FF0000;
+}
+.green {
+	color: #629632;
 }
 .hidden {
 	display: none;

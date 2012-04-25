@@ -154,7 +154,7 @@ function valid_email($email)  {
 
 ##################################################################################
 
-function is_rfc822_valid_email_address($email, $options=array()){
+function is_rfc822_valid_email_address($email, $options = array()) {
 
 	#
 	# you can pass a few different named options as a second argument,
@@ -167,12 +167,14 @@ function is_rfc822_valid_email_address($email, $options=array()){
 	);
 
 	$opts = array();
-	foreach ($defaults as $k => $v) $opts[$k] = isset($options[$k]) ? $options[$k] : $v;
+	foreach ($defaults as $k => $v) {
+		$opts[$k] = isset($options[$k]) ? $options[$k] : $v;
+	}
 	$options = $opts;
-	
 
 
-	####################################################################################
+
+	################################################################################
 	#
 	# NO-WS-CTL		  =		  %d1-8 /		  ; US-ASCII control characters
 	#						  %d11 /		  ;  that do not include the
@@ -190,7 +192,7 @@ function is_rfc822_valid_email_address($email, $options=array()){
 	$crlf		= "(?:$cr$lf)";
 
 
-	####################################################################################
+	################################################################################
 	#
 	# obs-char		  =		  %d0-9 / %d11 /		  ; %d0-127 except CR and
 	#						  %d12 / %d14-127		  ;  LF
@@ -219,7 +221,7 @@ function is_rfc822_valid_email_address($email, $options=array()){
 	$quoted_pair	= "(?:\\x5c$text|$obs_qp)";
 
 
-	####################################################################################
+	################################################################################
 	#
 	# obs-FWS		  =		  1*WSP *(CRLF 1*WSP)
 	# FWS			  =		  ([*WSP CRLF] 1*WSP) /   ; Folding white space
@@ -256,10 +258,11 @@ function is_rfc822_valid_email_address($email, $options=array()){
 
 	$outer_ccontent_dull	= "(?:$fws?$ctext|$quoted_pair)";
 	$outer_ccontent_nest	= "(?:$fws?$comment)";
-	$outer_comment		= "(?:\\x28$outer_ccontent_dull*(?:$outer_ccontent_nest$outer_ccontent_dull*)+$fws?\\x29)";
+	$outer_comment		= "(?:\\x28$outer_ccontent_dull*(?:$outer_ccontent_nest".
+								"$outer_ccontent_dull*)+$fws?\\x29)";
 
 
-	####################################################################################
+	################################################################################
 	#
 	# atext			  =		  ALPHA / DIGIT / ; Any character except controls,
 	#						  "!" / "#" /	  ;  SP, and specials.
@@ -274,11 +277,12 @@ function is_rfc822_valid_email_address($email, $options=array()){
 	#						  "~"
 	# atom			  =		  [CFWS] 1*atext [CFWS]
 
-	$atext		= "(?:$alpha|$digit|[\\x21\\x23-\\x27\\x2a\\x2b\\x2d\\x2f\\x3d\\x3f\\x5e\\x5f\\x60\\x7b-\\x7e])";
+	$atext		= "(?:$alpha|$digit|[\\x21\\x23-\\x27\\x2a\\x2b\\x2d\\x2f\\x3d\\x3f"
+						."\\x5e\\x5f\\x60\\x7b-\\x7e])";
 	$atom		= "(?:$cfws?(?:$atext)+$cfws?)";
 
 
-	####################################################################################
+	################################################################################
 	#
 	# qtext			  =		  NO-WS-CTL /	  ; Non white space controls
 	#						  %d33 /		  ; The rest of the US-ASCII
@@ -302,7 +306,7 @@ function is_rfc822_valid_email_address($email, $options=array()){
 	$word		= "(?:$atom|$quoted_string)";
 
 
-	####################################################################################
+	################################################################################
 	#
 	# obs-local-part  =		  word *("." word)
 	# obs-domain	  =		  atom *("." atom)
@@ -311,7 +315,7 @@ function is_rfc822_valid_email_address($email, $options=array()){
 	$obs_domain	= "(?:$atom(?:\\x2e$atom)*)";
 
 
-	####################################################################################
+	################################################################################
 	#
 	# dot-atom-text   =		  1*atext *("." 1*atext)
 	# dot-atom		  =		  [CFWS] dot-atom-text [CFWS]
@@ -320,12 +324,12 @@ function is_rfc822_valid_email_address($email, $options=array()){
 	$dot_atom	= "(?:$cfws?$dot_atom_text$cfws?)";
 
 
-	####################################################################################
+	################################################################################
 	#
 	# domain-literal  =		  [CFWS] "[" *([FWS] dcontent) [FWS] "]" [CFWS]
 	# dcontent		  =		  dtext / quoted-pair
 	# dtext			  =		  NO-WS-CTL /	  ; Non white space controls
-	# 
+	#
 	#						  %d33-90 /		  ; The rest of the US-ASCII
 	#						  %d94-126		  ;  characters not including "[",
 	#										  ;  "]", or "\"
@@ -335,7 +339,7 @@ function is_rfc822_valid_email_address($email, $options=array()){
 	$domain_literal	= "(?:$cfws?\\x5b(?:$fws?$dcontent)*$fws?\\x5d$cfws?)";
 
 
-	####################################################################################
+	################################################################################
 	#
 	# local-part	  =		  dot-atom / quoted-string / obs-local-part
 	# domain		  =		  dot-atom / domain-literal / obs-domain
@@ -424,36 +428,38 @@ function is_rfc822_valid_email_address($email, $options=array()){
 		$IPv6_comp_part		= "(?:$IPv6_hex(?:\:$IPv6_hex){0,7})?";
 		$IPv6_comp		= "IPv6\:($IPv6_comp_part\:\:$IPv6_comp_part)";
 
-		$IPv6v4_full		= "IPv6\:$IPv6_hex(?:\:$IPv6_hex){5}\:$IPv4_address_literal";
+		$IPv6v4_full		= "IPv6\:$IPv6_hex(?:\:$IPv6_hex){5}\:".
+								$IPv4_address_literal;
 
 		$IPv6v4_comp_part	= "$IPv6_hex(?:\:$IPv6_hex){0,5}";
-		$IPv6v4_comp		= "IPv6\:((?:$IPv6v4_comp_part)?\:\:(?:$IPv6v4_comp_part\:)?)$IPv4_address_literal";
+		$IPv6v4_comp		= "IPv6\:((?:$IPv6v4_comp_part)?\:\:(?:".
+								"$IPv6v4_comp_part\:)?)$IPv4_address_literal";
 
 
 		#
 		# IPv4 is simple
 		#
 
-		if (preg_match("!^\[$IPv4_address_literal\]$!", $bits['domain'], $m)){
+		if (preg_match("!^\[$IPv4_address_literal\]$!", $bits['domain'], $m)) {
 
 			if (intval($m[1]) > 255) return 0;
 			if (intval($m[2]) > 255) return 0;
 			if (intval($m[3]) > 255) return 0;
 			if (intval($m[4]) > 255) return 0;
 
-		}else{
+		} else {
 
 			#
 			# this should be IPv6 - a bunch of tests are needed here :)
 			#
 
-			while (1){
+			while (1) {
 
-				if (preg_match("!^\[$IPv6_full\]$!", $bits['domain'])){
+				if (preg_match("!^\[$IPv6_full\]$!", $bits['domain'])) {
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6_comp\]$!", $bits['domain'], $m)){
+				if (preg_match("!^\[$IPv6_comp\]$!", $bits['domain'], $m)) {
 					list($a, $b) = explode('::', $m[1]);
 					$folded = (strlen($a) && strlen($b)) ? "$a:$b" : "$a$b";
 					$groups = explode(':', $folded);
@@ -461,7 +467,7 @@ function is_rfc822_valid_email_address($email, $options=array()){
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6v4_full\]$!", $bits['domain'], $m)){
+				if (preg_match("!^\[$IPv6v4_full\]$!", $bits['domain'], $m)) {
 
 					if (intval($m[1]) > 255) return 0;
 					if (intval($m[2]) > 255) return 0;
@@ -470,9 +476,10 @@ function is_rfc822_valid_email_address($email, $options=array()){
 					break;
 				}
 
-				if (preg_match("!^\[$IPv6v4_comp\]$!", $bits['domain'], $m)){
+				if (preg_match("!^\[$IPv6v4_comp\]$!", $bits['domain'], $m)) {
 					list($a, $b) = explode('::', $m[1]);
-					$b = substr($b, 0, -1); # remove the trailing colon before the IPv4 address
+					# remove the trailing colon before the IPv4 address
+					$b = substr($b, 0, -1);
 					$folded = (strlen($a) && strlen($b)) ? "$a:$b" : "$a$b";
 					$groups = explode(':', $folded);
 					if (count($groups) > 5) return 0;
@@ -481,8 +488,8 @@ function is_rfc822_valid_email_address($email, $options=array()){
 
 				return 0;
 			}
-		}			
-	}else{
+		}
+	} else {
 
 		#
 		# the domain is either dot-atom or obs-domain - either way, it's

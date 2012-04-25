@@ -12,4 +12,13 @@ CREATE TABLE user (
 	flags int(10) NOT NULL, -- Flags used for permissions, etc.
 	PRIMARY KEY (userid),
 	UNIQUE (email)
-) DEFAULT CHARSET=utf8 ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Password Recovery Temp Table
+CREATE TABLE user_pass (
+	recoverid int(10) NOT NULL auto_increment, -- Unique ID String
+	hash varchar(200) NOT NULL, -- Unqiue HASH string used in URL
+	userid int(10) NOT NULL, -- References user.userid
+	date int(10) NOT NULL, -- Date of recovery
+	PRIMARY KEY (recoverid)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
