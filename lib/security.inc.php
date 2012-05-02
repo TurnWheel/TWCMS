@@ -39,13 +39,22 @@ function html_escape($v) {
 	return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 
+
 /*
  * <TWCMS>
- * Escape headers for use in includes,
- * and any file-based function
+ * Shortcut for escaping HTML
+ * Includes support for array input, which will
+ * escape each VALUE of all arrays (recursively)
  */
-function path_escape($v) {
-	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/','', $v);
+function html_escape($v) {
+	if (is_array($v)) {
+		foreach ($v AS $key => $val) {
+			$v[$key] = html_escape($val);
+		}
+
+		return $v;
+	}
+	else return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 
 /*
