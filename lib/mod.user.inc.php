@@ -40,13 +40,14 @@ function user_onload() {
 		$pass = isset($_POST['password']) ? escape($_POST['password']) : '';
 
 		if (user_login($U, $email, $pass)) $isuser = TRUE;
-
 		// Set constant on failure so that content will be
 		// replaced with proper error
 		else define('LOGINFAILED', TRUE);
 
 		// Set isuser flag as constant
 		define('ISUSER', $isuser);
+
+		if (!ISUSER) $U = array('flags' => U_GUEST);
 
 		return;
 	}
@@ -71,14 +72,10 @@ function user_onload() {
 	define('ISUSER', $isuser);
 
 	// Set guest variables if not user
-	if (!ISUSER) {
-		$U['flags'] = U_GUEST;
-		return;
-	}
-
+	if (!ISUSER) $U = array('flags' => U_GUEST);
 	// Set userid as a integer if available
 	// usually comes out as string, integer is better for comparisons
-	if (isset($U['userid'])) {
+	elseif (isset($U['userid'])) {
 		$U['userid'] = (int) $U['userid'];
 	}
 }
