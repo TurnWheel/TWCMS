@@ -33,12 +33,12 @@ function escape($v) {
 
 /*
  * <TWCMS>
- * Shortcut for escaping HTML
+ * Escape headers for use in includes,
+ * and any file-based function
  */
-function html_escape($v) {
-	return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+function path_escape($v) {
+	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/','', $v);
 }
-
 
 /*
  * <TWCMS>
