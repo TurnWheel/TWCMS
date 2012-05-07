@@ -466,6 +466,27 @@ function calculate_mileage($lat1, $lat2, $lon1, $lon2) {
 }
 
 /*
+ * Cleans up string of all weird characters for use in URL
+ */
+function url_clean($string) {
+    $url = str_replace("'", '', $string);
+	$url = str_replace('%20', ' ', $url);
+
+	// Substitutes anything but letters, numbers and '_' with separator
+	$url = preg_replace('~[^\\pL0-9_]+~u', '-', $url);
+	$url = trim($url, '-');
+
+	// you may opt for your own custom character map for encoding.
+	$url = iconv('utf-8', 'us-ascii//TRANSLIT', $url);
+	$url = strtolower($url);
+
+	 // keep only letters, numbers, '_' and separator
+	$url = preg_replace('~[^-a-z0-9_]+~', '', $url);
+
+	return $url;
+}
+
+/*
  * Sanitize characters from Windows-1252 (Microsoft Word)
  * Doesn't get all of them, but at least the major ones
  */

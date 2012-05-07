@@ -60,9 +60,9 @@ function form_process($name, &$error) {
 	if ($fcfg['savedb'] && $cfg['sql_enable']) {
 		// Process form data
 		$sqldata = serialize($data);
-		sql_query('INSERT INTO formdata
+		sql_query('INSERT INTO forms
 					SET data = "%s", date = "%d", name = "%s"',
-						array(serialize($data), NOW, $formname));
+						array(serialize($data), NOW, $name));
 	}
 
 	/* Handle emailing */

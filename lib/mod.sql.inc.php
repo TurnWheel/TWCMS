@@ -73,8 +73,15 @@ function sql_prepare($q, $vals) {
 	}
 
 	if (is_array($vals)) {
+		$keys = array_keys($vals);
+
+		// Add backticks to keys
+		foreach ($keys AS $k => $v) {
+			$keys[$k] = '`'.$v.'`';
+		}
+
 		// Replace "$keys" var with keys of $vals array
-		$q = str_replace('$keys', implode(array_keys($vals),', '), $q);
+		$q = str_replace('$keys', implode($keys, ', '), $q);
 
 		// Replace "$vals" var with %s's as a easy shortcut
 		$q = str_replace('$vals', '"%s"'.str_repeat(',"%s"', count($vals)-1), $q);
