@@ -7,6 +7,8 @@
  * TurnWheel Designs (cc) 2012
  */
 
+if (!defined('SECURITY')) exit;
+
 $cfg = array(
 	/* Script Config */
 	// Set to TRUE to enable "Debug" mode
@@ -374,8 +376,7 @@ define('MAPS_KEY', 'ABQIAAAAZReS-Ex4akb7OZJr5kruGxQCvPwXk464zndFkQpy_L80v-esWBSE
 
 /*
  * Define Bit Flags
- * Do not edit unless you know
- * what you are doing!
+ * Do not edit unless you know what you are doing!
  */
 
 /* User Flags (Permissions) */
