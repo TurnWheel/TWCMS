@@ -12,10 +12,15 @@
 // All values the template will need should be in the $T array.
 $T = array();
 
+// Process Variable
+// All values key to processing will be in the $P array.
+$P = array();
+
 // Make sure something is set
 // Requires that there be a 0 index setting
 // 0 index is handled with special case, and can not be ommited!
 if (empty($headers) || !isset($headers[0])) $headers = array('a');
+$P['headers'] = $headers;
 
 /*
  * Get Header Variables
@@ -23,14 +28,15 @@ if (empty($headers) || !isset($headers[0])) $headers = array('a');
  * <a>/<b>/<c>/<d>
  * Maps to content file: CPATH/<a>_(<b>_(<c>_(<d>))).(html|inc.php)
  */
-foreach ($headers AS $num => $key) {
+$P['get'] = array();
+foreach ($P['headers'] AS $num => $key) {
 	// Handle first param with special condition (defaults to index)
 	if ($num === 0) {
-		$_GET[$key] = isset($_GET[$key]) && !empty($_GET[$key])
+		$P['get'][$key] = isset($_GET[$key]) && !empty($_GET[$key])
 					? path_escape($_GET[$key]) : 'index';
 	}
 	else {
-		$_GET[$key] = isset($_GET[$key]) ? path_escape($_GET[$key]) : '';
+		$P['get'][$key] = isset($_GET[$key]) ? path_escape($_GET[$key]) : '';
 	}
 }
 
@@ -40,38 +46,32 @@ $currurl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 // Remove any query strings/anchors from the url
 $surl = parse_url($currurl);
 
-// Define current URL as a constant
-define('CURRURL', $surl['path'] !== $currurl ? $surl['path'] : $currurl);
+// Define current URL as a constant without strings and achors
+define('CURRURL', $surl['path']);
 
-$rootpage = ''; // Main page (first root in the chain)
+$P['root'] = ''; // Main page (first root in the chain)
 
 // Dynamically adds all roots to array
-$pages = array(); // Array of active roots
-foreach ($headers AS $num => $key) {
+$P['pages'] = array(); // Array of active roots
+foreach ($P['headers'] AS $num => $key) {
 	// Set root page (first name found)
-	if ($num === 0) $rootpage = $_GET[$key];
+	if ($num === 0) $P['root'] = $P['get'][$key];
 
 	// Add to array of pages if set
-	if ($_GET[$key] !== '') $pages[] = $_GET[$key];
+	if ($P['get'][$key] !== '') $P['pages'][] = $P['get'][$key];
 }
-
-// Full page string using _ format (used for file lookup)
-$page = implode('_',$pages);
-
-// Number of sub-pages requested (nesting #)
-$numpages = sizeof($pages);
 
 // For tracking breadcrumbs
 // (empty on index; format <title> => $url)
 $T['bcrumbs'] = array();
 
 // Generate starting bread crumbs if not on index
-if ($rootpage !== 'index') {
+if ($P['root'] !== 'index') {
 	$T['bcrumbs'] = array('Home' => FULLURL);
 
 	// Add breadcrumbs for current page + subpages
 	$prev = '';
-	foreach ($pages AS $bcpage) {
+	foreach ($P['pages'] AS $bcpage) {
 		// Make titles look nice (space and captialize)
 		// Use $prev to track previous url's
 		$T['bcrumbs'][p_url2name($bcpage)] = $prev = $prev.'/'.$bcpage;
@@ -79,9 +79,15 @@ if ($rootpage !== 'index') {
 }
 
 /** Start file tracking **/
-$e404 = FALSE; // Bool to determine if a 404 error needs to be thrown
-$php = FALSE; // Determines if include file is PHP or HTML
-$file = CPATH.$page; // File name
+// Full page string using _ format (used for file lookup)
+$P['page'] = implode('_', $P['pages']);
+// Full page URL based on pages array (no beginning /)
+$P['pageurl'] = implode('/', $P['pages']);
+
+$P['404'] = FALSE; // Bool to determine if a 404 error needs to be thrown
+$P['php'] = FALSE; // Determines if include file is PHP or HTML
+$P['file'] = CPATH.$P['page']; // File name
+$P['num'] = sizeof($P['pages']); // Number of sub-pages requested (nesting #)
 
 // This checks for a .html file in CPATH;
 // If .html is not found, it looks for .inc.php
@@ -90,13 +96,13 @@ $file = CPATH.$page; // File name
 $notFound = TRUE;
 while ($notFound) {
 	// Makes sure that file exists AND is readable
-	if (is_readable($file.'.html')) {
-		$file .= '.html';
+	if (is_readable($P['file'].'.html')) {
+		$P['file'] .= '.html';
 		$notFound = FALSE;
 	}
-	elseif (is_readable($file.'.inc.php')) {
-		$file .= '.inc.php';
-		$php = TRUE;
+	elseif (is_readable($P['file'].'.inc.php')) {
+		$P['file'] .= '.inc.php';
+		$P['php'] = TRUE;
 		$notFound = FALSE;
 	}
 
@@ -106,7 +112,7 @@ while ($notFound) {
 	// If still not found, try to load parent page
 	if ($notFound) {
 		// Remove last ending to find parent file
-		$split = explode('_',$file);
+		$split = explode('_', $P['file']);
 		$sizeof = sizeof($split);
 
 		// Break out of loop, file still not found
@@ -114,29 +120,32 @@ while ($notFound) {
 
 		// Create new file string
 		array_pop($split);
-		$file = implode('_',$split);
+		$P['file'] = implode('_', $split);
 	}
 }
 
 // Set 404 error if file is never found
-if ($notFound) $e404 = TRUE;
+if ($notFound) $P['404'] = TRUE;
 
 // Is this the index page? (Bool)
-$isindex = $page === 'index' || $page === 'indexnew';
+define('ISINDEX', ($P['page'] === 'index' || $P['page'] === 'indexnew'));
 
 // Setup CSS/JS Template variables
 $T['css'] = array();
 $T['js'] = array();
 
+// Run module event ('beforeProcess')
+p_runEvent('beforeProcess');
+
 // If 404 flag, use 404 functions
-if ($e404) {
+if ($P['404']) {
 	if (!p_showerror(404)) {
 		print 'Error 404 Times TWO: A 404 error occured, then the 404'.
 			'document could not be found. Please contact the administrator!';
 		exit;
 	}
 }
-elseif ($php) {
+elseif ($P['php']) {
 	/*
 	 * Set the variables allowed by scripts
 	 * These 3 variables should be over-ridden in the .inc.php scripts
@@ -149,8 +158,8 @@ elseif ($php) {
 	$T['title'] = ''; // Used for <title> in template (usually same as $header)
 	$T['content'] = ''; // Body of your page!
 
-	// Yes, $file is safe thanks to path_escape (security.inc.php)
-	include $file;
+	// Yes, $P['file'] is safe thanks to path_escape (security.inc.php)
+	include $P['file'];
 }
 else {
 	/*
@@ -161,10 +170,10 @@ else {
 
 	// p_htmlfile returns array with header and content
 	// $file is include safe
-	$html = p_htmlfile($file);
+	$html = p_htmlfile($P['file']);
 
-	// This should really never happen
 	if (!$html && !p_showerror(404)) {
+		// This should really never happen
 		print 'Error 404 Times TWO: A 404-1 error occured, then the 404'.
 			'document could not be found. Please contact the administrator!';
 		exit;
@@ -174,8 +183,11 @@ else {
 	$T['title'] = $T['header'] = $html['header'];
 }
 
+// Run module event ('beforeProcess')
+p_runEvent('duringProcess');
+
 // Swap bread crumbs for full title (only if this isnt already set)
-if ($T['header']  !== '' && $page !== strtolower($T['header'])) {
+if ($T['header']  !== '' && $P['page'] !== strtolower($T['header'])) {
 	foreach ($T['bcrumbs'] AS $name => $url) {
 		// Locate pre-set header and remove
 		// Comparisions: /page === /page; /page/ === /page/
@@ -198,7 +210,7 @@ if ($T['header']  !== '' && $page !== strtolower($T['header'])) {
 if ($T['title'] !== '') {
 	$tpages = array(); // Array to hold formatted title pages
 
-	foreach (array_slice(array_reverse($pages),1) AS $val) {
+	foreach (array_slice(array_reverse($P['pages']),1) AS $val) {
 		// Skip array values to prevent errors and recursion
 		if (is_array($val)) continue;
 
@@ -212,10 +224,12 @@ if ($T['title'] !== '') {
 }
 
 // Remove any left-over characters from title
-$T['title'] =
-	str_replace("\r",'',
-		str_replace("\n",'',trim($T['title']))
-	);
+$T['title'] = str_replace("\r",'',str_replace("\n",'',trim($T['title'])));
+
+// Exception for indexnew (dev/debug)
+if ($P['page'] === 'indexnew') {
+	$P['root'] = $P['page'] = 'index';
+}
 
 /*
  * Figure out which sidebar to load
@@ -225,8 +239,8 @@ $T['title'] =
  */
 $sb = 'sidebar.'; // String justs helps make the lines smaller
 $T['sidebar'] =
-	(file_exists(CPATH.$sb.$rootpage.'.inc.php') ? CPATH.$sb.$rootpage.'.inc.php' :
-	(file_exists(CPATH.$sb.$rootpage.'.html') ? CPATH.$sb.$rootpage.'.html' :
+	(file_exists(CPATH.$sb.$P['root'].'.inc.php') ? CPATH.$sb.$P['root'].'.inc.php' :
+	(file_exists(CPATH.$sb.$P['root'].'.html') ? CPATH.$sb.$P['root'].'.html' :
 	(file_exists(CPATH.$sb.'default.inc.php') ? CPATH.$sb.'default.inc.php' :
 	(file_exists(CPATH.$sb.'default.html') ? CPATH.$sb.'default.html' : ''))));
 
@@ -234,22 +248,23 @@ $T['sidebar'] =
 
 // Array of CSS files to load (managed by template)
 $T['css'][] = p_exfile('css','global.css');
+$T['css'][] = p_exfile('css','navigation.css');
 
 // Load Sub Page CSS file (if its not index page)
-if ($page !== 'index') {
+if (!ISINDEX) {
 	$T['css'][] = p_exfile('css','subpage.css');
 }
 
 // Load root page CSS file
 // if checking parent, or if there is no parent
-if ($cfg['res_checkRoot'] || $rootpage === $page) {
-	$T['css'][] = p_exfile('css',$rootpage.'.css');
+if ($cfg['res_checkRoot'] || $P['root'] === $P['page']) {
+	$T['css'][] = p_exfile('css',$P['root'].'.css');
 }
 
 // Check for current page CSS
 // if current page different from root
-if ($rootpage !== $page) {
-	$T['css'][] = p_exfile('css',$page.'.css');
+if ($P['root'] !== $P['page']) {
+	$T['css'][] = p_exfile('css',$P['page'].'.css');
 }
 
 /* Find JS Files */
@@ -258,20 +273,20 @@ if ($rootpage !== $page) {
 $T['js'][] = p_exfile('js','global.js');
 
 // Load Sub Page JS file (if its not index page)
-if ($page !== 'index') {
+if (!ISINDEX) {
 	$T['js'][] = p_exfile('js','subpage.js');
 }
 
 // Load root page JS file
 // if checking parent, or if there is no parent
-if ($cfg['res_checkRoot'] || $rootpage === $page) {
-	$T['js'][] = p_exfile('js',$rootpage.'.js');
+if ($cfg['res_checkRoot'] || $P['root'] === $P['page']) {
+	$T['js'][] = p_exfile('js',$P['root'].'.js');
 }
 
 // Check for current page JS
 // if current page different from root
-if ($rootpage !== $page) {
-	$T['js'][] = p_exfile('js',$page.'.js');
+if ($P['root'] !== $P['page']) {
+	$T['js'][] = p_exfile('js',$P['page'].'.js');
 }
 
 /*
@@ -283,15 +298,16 @@ if ($rootpage !== $page) {
  * 3: Not if res_checkRoot is TRUE && num pages is 2
  */
 if ($cfg['res_recursive']) {
-	if ($rootpage !== $page && !($cfg['res_checkRoot'] && $numpages === 2)) {
+	if ($P['root'] !== $P['page'] &&
+			!($cfg['res_checkRoot'] && $P['num'] === 2)) {
 		// Check all pages
 		$track = array();
-		foreach ($pages AS $k => $cp) {
+		foreach ($P['pages'] AS $k => $cp) {
 			$track[] = $cp;
 
 			// Skip current page (last item)
 			// and rootpage if checkRoot is TRUE (first item)
-			if ($k === ($numpages-1) || ($cfg['res_checkRoot'] && $k === 0)) {
+			if ($k === ($P['num']-1) || ($cfg['res_checkRoot'] && $k === 0)) {
 				continue;
 			}
 
@@ -301,5 +317,8 @@ if ($cfg['res_recursive']) {
 		}
 	}
 }
+
+// Run module event ('afterProcess')
+p_runEvent('afterProcess');
 
 // End of processing
