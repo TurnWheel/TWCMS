@@ -183,7 +183,7 @@ else {
 	$T['title'] = $T['header'] = $html['header'];
 }
 
-// Run module event ('beforeProcess')
+// Run module event ('duringProcess')
 p_runEvent('duringProcess');
 
 // Swap bread crumbs for full title (only if this isnt already set)
