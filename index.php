@@ -21,10 +21,7 @@ $content = isset($T['content']) ? $T['content'] : '';
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<title>
-	<?php print $isindex ? 'Home' : $title; ?>
-	:: Misc. Demo Site
-	</title>
+	<title><?php print ISINDEX ? 'Home' : $title; ?> :: Misc. Demo Site</title>
 
 	<meta name="description" content="Enter a descrip" />
 	<meta name="keywords" content="Enter keywords" />
