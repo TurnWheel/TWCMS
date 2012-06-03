@@ -119,8 +119,8 @@ function tw_loadmod($mod) {
  */
 function tw_loadcfg($mod) {
 	// Load config file for this module
-	if (file_exists(MPATH.$mod.'.cfg.php')) {
-		require MPATH.$mod.'.cfg.php';
+	if (file_exists(MPATH.$mod.'/'.$mod.'.cfg.php')) {
+		require MPATH.$mod.'/'.$mod.'.cfg.php';
 		return $cfg;
 	}
 
