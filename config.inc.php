@@ -366,9 +366,9 @@ define('BASEURL', '/');
 // Additional Directories
 define('IMGPATH', RPATH.'uploads/'); // Image upload directory (full path)
 define('IMGURL', BASEURL.'uploads/'); // Image upload URL (relative path)
-define('CPATH', RPATH.'content/'); // Path to content directory
-define('LPATH', RPATH.'lib/');
-define('MPATH', RPATH.'mods/');
+define('LPATH', RPATH.'lib/'); // Path to main lib files
+define('MPATH', RPATH.'mods/'); // Path to module files
+define('CPATH', RPATH.'content/'); // Path to content files
 define('SSLURL', 'https://'.DOMAIN.'/'); // Path to SSL server
 define('WWWURL', 'http://'.DOMAIN.'/'); // Path to main website
 
