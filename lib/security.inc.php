@@ -97,18 +97,34 @@ function tw_loadmod($mod) {
 	// SECURITY: Should be include safe
 	require MPATH.$mod.'/'.$mod.'.inc.php';
 
-	// Load config file for this module
-	if (file_exists(MPATH.$mod.'.cfg.php')) {
-		require MPATH.$mod.'.cfg.php';
-	}
-
 	// Mark module as loaded
 	$cfg['mods_loaded'][$mod] = TRUE;
+
+	// Load config file and merge config into global cfg
+	$ncfg = tw_loadcfg($mod);
+	if ($ncfg !== FALSE) {
+		$cfg = array_merge($cfg, $ncfg);
+	}
 
 	// Call onLoad event functions
 	tw_runEvent('onLoad', $mod);
 
 	return TRUE;
+}
+
+/*
+ * <TWCMS>
+ * Load config file for specified module
+ * and return config array
+ */
+function tw_loadcfg($mod) {
+	// Load config file for this module
+	if (file_exists(MPATH.$mod.'.cfg.php')) {
+		require MPATH.$mod.'.cfg.php';
+		return $cfg;
+	}
+
+	return FALSE;
 }
 
 /*

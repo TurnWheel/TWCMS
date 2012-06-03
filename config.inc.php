@@ -95,15 +95,6 @@ $cfg = array(
 	// Used internally to track which modules have been loaded
 	'mods_loaded' => array(),
 
-	/* SQL Settings */
-	'sql_enable' => TRUE, // Is DB connection even required?
-	// Host name for SQL Database ('localhost' works for most installations)
-	'sql_host' => 'localhost',
-	// Username for SQL login (Recommend you do NOT use root)
-	'sql_user' => 'somewebsite',
-	'sql_pass' => 'SQLPass123', // Password for SQL user
-	'sql_name' => 'somewebsite', // MySQL Database name
-
 	/* Error Settings */
 	'error_enable' => TRUE, // Enable custom error system
 	// Display custom php error template?
