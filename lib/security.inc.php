@@ -147,7 +147,7 @@ function tw_ismod($mod) {
 	}
 
 	// Make sure file exists
-	if (!file_exists(LPATH.'mod.'.$mod.'.inc.php')) return FALSE;
+	if (!file_exists(MPATH.$mod.'/'.$mod.'.inc.php')) return FALSE;
 
 	return TRUE;
 }
