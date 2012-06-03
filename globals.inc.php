@@ -29,7 +29,7 @@ session_start();
 require dirname(__FILE__).'/config.inc.php';
 require LPATH.'utility.inc.php';
 require LPATH.'security.inc.php';
-require LPATH.'process.inc.php';
+require LPATH.'processing.inc.php';
 require LPATH.'template.inc.php';
 
 // Move $_start to $cfg
