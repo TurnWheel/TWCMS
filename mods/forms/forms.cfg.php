@@ -75,6 +75,6 @@ $cfg['forms'] = array(
 			),
 		),
 	),
-));
+);
 
 // EOF
