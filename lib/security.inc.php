@@ -95,7 +95,12 @@ function tw_loadmod($mod) {
 
 	// Include library
 	// SECURITY: Should be include safe
-	require LPATH.'mod.'.$mod.'.inc.php';
+	require MPATH.$mod.'/'.$mod.'.inc.php';
+
+	// Load config file for this module
+	if (file_exists(MPATH.$mod.'.cfg.php')) {
+		require MPATH.$mod.'.cfg.php';
+	}
 
 	// Mark module as loaded
 	$cfg['mods_loaded'][$mod] = TRUE;
