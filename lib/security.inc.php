@@ -15,20 +15,20 @@ if (!defined('SECURITY')) exit;
  * <TWCMS>
  * Escape headers for general use.
  */
-function escape($v) {
+function escape($v, $html = FALSE) {
 	global $cfg;
 
 	// Handle arrays recursively
 	if (is_array($v)) {
 		foreach ($v AS $k => $aval) {
-			$v[$k] = escape($aval);
+			$v[$k] = escape($aval, $html);
 		}
 
 		return $v;
 	}
 
-	return $cfg['sql_enable'] ? mysql_real_escape_string($v)
-		: htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+	return !$html && $cfg['sql_enable'] ? mysql_real_escape_string($v)
+			: htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 
 /*
@@ -43,18 +43,37 @@ function path_escape($v) {
 /*
  * <TWCMS>
  * Shortcut for escaping HTML
- * Includes support for array input, which will
- * escape each VALUE of all arrays (recursively)
+ * This is kind of a legacy left-over, but still useful
  */
 function html_escape($v) {
-	if (is_array($v)) {
-		foreach ($v AS $key => $val) {
-			$v[$key] = html_escape($val);
+	return escape($v, TRUE);
+}
+
+/*
+ * <TWCMS>
+ * Checks all loaded modules for specified event
+ * function and calls if found
+ *
+ * If $mod is specified, it only runs the event for that mod
+ */
+function tw_runEvent($func, $mod = FALSE) {
+	global $cfg;
+
+	if ($mod === FALSE) {
+		foreach ($cfg['mods_loaded'] AS $mod => $bool) {
+			if (function_exists($mod.'_'.$func)) {
+				call_user_func($mod.'_'.$func);
+			}
 		}
 
-		return $v;
+		return TRUE;
 	}
-	else return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+	elseif (function_exists($mod.'_'.$func)) {
+		call_user_func($mod.'_'.$func);
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 /*
@@ -68,11 +87,11 @@ function tw_loadmod($mod) {
 	// Escape $mod name for paths just in case
 	$mod = path_escape($mod);
 
-	// Make sure mod has not already been loaded
-	if (isset($cfg['mods_loaded'][$mod])) return TRUE;
-
 	// Make sure module is usable
 	if (!tw_ismod($mod)) return FALSE;
+
+	// Make sure mod has not already been loaded
+	if (isset($cfg['mods_loaded'][$mod])) return TRUE;
 
 	// Include library
 	// SECURITY: Should be include safe
@@ -81,10 +100,8 @@ function tw_loadmod($mod) {
 	// Mark module as loaded
 	$cfg['mods_loaded'][$mod] = TRUE;
 
-	// Look for onload function
-	if (function_exists($mod.'_onload')) {
-		return call_user_func($mod.'_onload');
-	}
+	// Call onLoad event functions
+	tw_runEvent('onLoad', $mod);
 
 	return TRUE;
 }

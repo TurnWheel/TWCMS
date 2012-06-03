@@ -41,11 +41,6 @@ if (isset($cfg['admin']['pass'])) {
 	$cfg['admin']['pass'] = tw_genhash($cfg['admin']['pass']);
 }
 
-// Load available modules
-foreach ($cfg['mods_avail'] AS $mod) {
-	tw_loadmod($mod);
-}
-
 // Capture Referer Information
 $cfg['referer'] = isset($_SERVER['HTTP_REFERER']) ?
 					escape($_SERVER['HTTP_REFERER']) : '(Direct)';
@@ -53,5 +48,10 @@ $cfg['referer'] = isset($_SERVER['HTTP_REFERER']) ?
 // Re-sets "X-Powered-By" header with CMS Version
 // This helps override some servers' PHP Disclosure settings
 header('X-Powered-By: '.VERSION);
+
+// Load available modules
+foreach ($cfg['mods_avail'] AS $mod) {
+	tw_loadmod($mod);
+}
 
 // EOF

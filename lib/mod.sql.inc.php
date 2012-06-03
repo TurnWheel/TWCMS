@@ -19,7 +19,7 @@ $cfg['sql'] = array(
  * Constructor
  * Simply calls sql_connect with proper cfg params
  */
-function sql_onload() {
+function sql_onLoad() {
 	global $cfg;
 
 	// Connect to SQL Server

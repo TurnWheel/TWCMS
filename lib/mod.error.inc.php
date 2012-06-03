@@ -9,7 +9,7 @@
  * Error management functions
  */
 
-function error_onload() {
+function error_onLoad() {
 	// Define global error handler
 	set_error_handler('error_handle');
 }

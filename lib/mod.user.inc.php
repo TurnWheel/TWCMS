@@ -25,10 +25,8 @@ if (!defined('SECURITY')) exit;
 /*
  * Handles all the pre-conditions, login forms, cookie mangement,
  * and user verification
- *
- * Needs to be called onload when user.inc.php is first included
  */
-function user_onload() {
+function user_onLoad() {
 	global $U;
 
 	$isuser = FALSE; // Default to no user until verified

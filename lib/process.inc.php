@@ -39,22 +39,6 @@ function p_showerror($num) {
 
 /*
  * <TWCMS>
- * Checks all loaded modules for a process function and calls if found
- */
-function p_runEvent($func) {
-	global $cfg;
-
-	foreach ($cfg['mods_loaded'] AS $mod => $bool) {
-		if (function_exists($mod.'_'.$func)) {
-			call_user_func($mod.'_'.$func);
-		}
-	}
-
-	return TRUE;
-}
-
-/*
- * <TWCMS>
  * Loads HTML files using TWCMS data format
  *
  * First line of html files is the header+title
