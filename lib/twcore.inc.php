@@ -80,7 +80,8 @@ function tw_loadcfg($mod) {
 	// Load config file for this module
 	if (file_exists(MPATH.$mod.'/'.$mod.'.cfg.php')) {
 		require MPATH.$mod.'/'.$mod.'.cfg.php';
-		return $cfg;
+
+		if (isset($cfg)) return $cfg;
 	}
 
 	return FALSE;

@@ -119,13 +119,6 @@ define('CPATH', RPATH.'content/'); // Path to content files
 define('SSLURL', 'https://'.DOMAIN.'/'); // Path to SSL server
 define('WWWURL', 'http://'.DOMAIN.'/'); // Path to main website
 
-// Maps settings
-define('MAPS_HOST', 'maps.google.com');
-// SomeWebsite.com
-define('MAPS_KEY', 'ABQIAAAAZReS-Ex4akb7OZJr5kruGxQCvPwXk464zndFkQpy_L80v-esWBSEOIUIQxIGb9olf2owYHTsqjjZGg');
-// dev.somewebsite.com
-//define('MAPS_KEY', 'ABQIAAAAZReS-Ex4akb7OZJr5kruGxTOYl9STBTHMd_HDDjgXxc08qZ7wBRvNiTUXiXoGUcFgP0pf4mTJPAfcw');
-
 /*
  * Define Bit Flags
  * Do not edit unless you know what you are doing!
