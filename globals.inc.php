@@ -27,8 +27,9 @@ session_start();
 
 // Load base libraries
 require dirname(__FILE__).'/config.inc.php';
-require LPATH.'utility.inc.php';
+require LPATH.'twcore.inc.php';
 require LPATH.'security.inc.php';
+require LPATH.'utility.inc.php';
 require LPATH.'processing.inc.php';
 require LPATH.'template.inc.php';
 
