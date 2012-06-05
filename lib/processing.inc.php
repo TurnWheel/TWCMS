@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS 1.1
  *
  * Functions used during process script
  * also used by other libraries

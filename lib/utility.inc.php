@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS 1.1
  *
  * Incredibly disorganized set of utility functions.
  * They are rather random, so easy to just throw them in here.

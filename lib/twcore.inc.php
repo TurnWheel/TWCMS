@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS 1.1
  *
  * Internal functions used in the core of TWCMS
  *

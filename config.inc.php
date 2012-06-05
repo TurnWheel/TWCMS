@@ -159,7 +159,7 @@ define('FULLURL', SSL ? SSLURL : WWWURL);
 
 // Get requested path
 define('REQUESTURL', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
-define('VERSION', 'TWCMS 1.0-M'); // CMS Version
+define('VERSION', 'TWCMS 1.1'); // CMS Version
 
 // Save User's IP Address as constant
 define('USERIP', isset($_SERVER['REMOTE_ADDR']) ?

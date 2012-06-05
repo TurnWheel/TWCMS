@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS 1.1
  * Template Library
  *
  * Useful template based functions
