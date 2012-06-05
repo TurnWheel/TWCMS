@@ -54,7 +54,7 @@ function user_onLoad() {
 	$estr = PREFIX.'_email';
 	$pstr = PREFIX.'_hash';
 	$email = isset($_COOKIE[$estr]) ? escape($_COOKIE[$estr]) : '';
-	$pass = isset($_COOKIE[$pstr]) ? escape($_COOKIE[$hstr]) : '';
+	$pass = isset($_COOKIE[$pstr]) ? escape($_COOKIE[$pstr]) : '';
 
 	// If both of these credentials cotain some information, process them
 	// otherwise isuer stays FALSE
