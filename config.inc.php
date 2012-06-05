@@ -90,10 +90,11 @@ $cfg = array(
 	 * tw_loadmod in lib/security.inc.php
 	 * They can be disabled with <mod>_enable => FALSE flag
 	 *
-	 * For custom mods, just add it to the list with
-	 * the proper naming convention.
+	 * Add the mod to MPATH dir, with option cfg file
+	 * and then add to this list. Mods are not auto-loaded
+	 * from the MPATH dir
 	 *
-	 * <mod>_onload function is called during library init
+	 * <mod>_onLoad function is called during library init
 	 */
 	'mods_avail' => array(
 		'sql', 'error', 'forms',
@@ -101,7 +102,7 @@ $cfg = array(
 	),
 
 	// Used internally to track which modules have been loaded
-	'mods_loaded' => array(),
+	'mods_loaded' => array()
 );
 
 /* Define constants */
