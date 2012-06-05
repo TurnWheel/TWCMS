@@ -74,6 +74,15 @@ $cfg = array(
 	'image_size' => 600, // Size determines length of largest side
 	'image_size_th' => 150, // Size of thumbnail
 
+	// Email settings
+	// Default date format used in email.
+	// Can be change on a per-email basis
+	'email_date' => 'g:ia T \o\n F j, Y',
+
+	// Track all emails sent in DB?
+	// Requires sql module and email.sql schema
+	'email_savetoDB' => FALSE,
+
 	/*
 	 * Module Settings
 	 *

@@ -144,6 +144,8 @@ function tw_ismod($mod) {
  * $map - Array of replacements for mail template (See map_replace)
  */
 function tw_sendmail($mail, $map = array()) {
+	global $cfg;
+
 	// Check if disabled in config
 	// Use of 'enable' is legacy in TWCMS
 	// if 'enable' doesn't exist, it assumes TRUE
@@ -153,7 +155,7 @@ function tw_sendmail($mail, $map = array()) {
 	if (!isset($mail['to'])) return FALSE;
 
 	// Date format; use format from $mail if available
-	$df = isset($mail['date']) ? $mail['date'] : 'g:ia T \o\n F j, Y';
+	$df = isset($mail['date']) ? $mail['date'] : $cfg['email_date'];
 
 	$map = array_merge($map, array(
 		'domain' => DOMAIN,
@@ -174,6 +176,19 @@ function tw_sendmail($mail, $map = array()) {
 	$head = isset($mail['headers']) ? map_replace($map, $mail['headers']) : '';
 
 	$to = is_array($mail['to']) ? implode(',', $mail['to']) : $mail['to'];
+
+	// Save email to DB if enabled and sql module is loaded
+	if ($cfg['email_savetoDB'] && tw_isloaded('sql')) {
+		sql_query('INSERT INTO email ($keys) VALUES ($vals)',
+			array(
+				'to' => $to,
+				'subject' => $subj,
+				'body' => $body,
+				'headers' => $head,
+				'date' => NOW,
+				'flags' => 0
+			));
+	}
 
 	// Send mail and return status
 	return mail($to, $subj, $body, $head);
