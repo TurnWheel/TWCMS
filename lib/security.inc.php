@@ -37,7 +37,7 @@ function escape($v, $html = FALSE) {
  * and any file-based function
  */
 function path_escape($v) {
-	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/','', $v);
+	return preg_replace('/(\/\.\/)|[\/\\\]|(\.\.)/', '', $v);
 }
 
 /*
@@ -71,8 +71,8 @@ function check_auth($user) {
 	if (isset($_SERVER['REDIRECT_HTTP_AUTH'])
 			&& !empty($_SERVER['REDIRECT_HTTP_AUTH'])) {
 		list($type, $content) = explode(' ', $_SERVER['REDIRECT_HTTP_AUTH'], 2);
-		list($_SERVER['PHP_AUTH_USER'],
-				$_SERVER['PHP_AUTH_PW']) = explode(':',base64_decode($content));
+		list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) =
+				explode(':', base64_decode($content));
 	}
 
 	$u = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
