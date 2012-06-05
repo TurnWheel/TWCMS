@@ -25,9 +25,6 @@ $cfg['forms'] = array(
 
 		// ** Email Configurations **
 
-		// Format of dates in emails
-		'email_date' => 'g:ia T \o\n F j, Y',
-
 		// "admin" and "user" are static options
 		'emails' => array(
 			'admin' => array(
@@ -76,7 +73,7 @@ $cfg['forms'] = array(
 				Automated Email Sent By SomeWebsite.com'
 			),
 		),
-	),
+	)
 );
 
 // EOF

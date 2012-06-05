@@ -49,18 +49,13 @@ if (isset($_POST['submit'])) {
 
 		// Email variables
 		$email = $cfg['user_emails']['pass_forgot'];
+		$email['to'] = $useremail;
 		$map = array(
-			'sslurl' => SSLURL,
-			'wwwurl' => WWWURL,
-			'date' => date($cfg['user_emails']['date'], NOW),
 			'reseturl' => WWWURL.'password/reset?uid='.$uid.'&hash='.urlencode($hash)
 		);
 
-		$subject = map_replace($map, $email['subject']);
-		$body = map_replace($map, str_replace("\t", '', $email['body']));
-
 		// Send out email
-		mail($useremail, $subject, $body, $email['headers']);
+		tw_sendmail($email, $map);
 
 		// Show successful message
 		$T['content'] = '

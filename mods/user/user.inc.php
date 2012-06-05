@@ -51,15 +51,15 @@ function user_onLoad() {
 	}
 
 	// User login checking
-	$c_email = isset($_COOKIE[PREFIX.'_email']) ?
-					escape($_COOKIE[PREFIX.'_email']) : '';
-	$c_pass = isset($_COOKIE[PREFIX.'_hash']) ?
-					escape($_COOKIE[PREFIX.'_hash']) : '';
+	$estr = PREFIX.'_email';
+	$pstr = PREFIX.'_hash';
+	$email = isset($_COOKIE[$estr]) ? escape($_COOKIE[$estr]) : '';
+	$pass = isset($_COOKIE[$pstr]) ? escape($_COOKIE[$hstr]) : '';
 
 	// If both of these credentials cotain some information, process them
 	// otherwise isuer stays FALSE
-	if ($c_email !== '' && $c_pass !== '') {
-		$isuser = user_verify($U, $c_email, $c_pass);
+	if ($email !== '' && $pass !== '') {
+		$isuser = user_verify($U, $email, $pass);
 
 		// If cookies are set, and they did not validate
 		// then logout user to remove cookies and session
@@ -269,11 +269,7 @@ function user_register($data) {
 	unset($data['password']);
 
 	/* Email Notifications */
-	// Extra variables used for map_replace inside emails
 	$map = $data; // Use all fields as the starting of map
-	$map['date'] = date($cfg['user_emails']['date'], NOW);
-	$map['sslurl'] = SSLURL;
-	$map['wwwurl'] = WWWURL;
 	$map['userid'] = $userid;
 
 	// List all POST feilds in one map variable
@@ -283,26 +279,18 @@ function user_register($data) {
 		$map['fields'] .= $name.': '.$value."\n";
 	}
 
-	// Send Out User Email?
+	// Send email to moderator?
+	// Either a registration notification,
+	// or a mod email requesting activation
 	$email = FALSE;
 	if ($cfg['user_modreg']) $email = $cfg['user_emails']['modreg'];
 	elseif ($cfg['user_regnotify']) $email = $cfg['user_emails']['regnotify'];
 
-	if ($email !== FALSE) {
-		$to = implode(',',$email['to']);
-		$subject = map_replace($map, $email['subject']);
-		$body = map_replace($map, str_replace("\t", '', $email['body']));
-
-		mail($to, $subject, $body, $email['headers']);
-	}
+	if ($email !== FALSE) tw_sendmail($email, $map);
 
 	// Should we send user a welcome message?
 	if ($cfg['user_welcome']) {
-		$email = $cfg['user_emails']['welcome'];
-		$subject = map_replace($map, $email['subject']);
-		$body = map_replace($map, str_replace("\t", '', $email['body']));
-
-		mail($data['email'], $subject, $body, $email['headers']);
+		tw_sendmail($cfg['user_emails']['welcome'], $map);
 	}
 
 	return $userid;

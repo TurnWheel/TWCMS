@@ -53,6 +53,6 @@ foreach ($cfg['mods_avail'] AS $mod) {
 
 // Capture Referer Information
 $cfg['referer'] = isset($_SERVER['HTTP_REFERER']) ?
-					escape($_SERVER['HTTP_REFERER']) : '(Direct)';
+				escape($_SERVER['HTTP_REFERER']) : '(Direct)';
 
 // EOF

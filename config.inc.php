@@ -10,7 +10,6 @@
 if (!defined('SECURITY')) exit;
 
 $cfg = array(
-	/* Script Config */
 	// Set to TRUE to enable "Debug" mode
 	// This should be disabled for live sites
 	'debug' => TRUE,
@@ -51,7 +50,7 @@ $cfg = array(
 	 * unless res_checkRoot is FALSE, then just about_some_person.js
 	 *
 	 * Recommended to keep off unless really needed,
-	 * as it can be inefficient for large menu tress.
+	 * as it can be inefficient for large menu trees.
 	 */
 	'res_recursive' => FALSE,
 

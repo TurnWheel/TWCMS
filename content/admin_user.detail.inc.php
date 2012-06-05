@@ -73,9 +73,9 @@ if (isset($_POST['chstatus'])) {
 
 			// Send out email
 			$email = $cfg['user_emails']['approved'];
-			$subject = map_replace($map, str_replace("\t", '', $email['subject']));
-			$body = map_replace($map, str_replace("\t", '', $email['body']));
-			mail($data['email'], $subject, $body, $email['headers']);
+			$email['to'] = $data['email'];
+
+			tw_sendmail($cfg['user_emails']['approved'], $map);
 
 			$notified = TRUE;
 		}

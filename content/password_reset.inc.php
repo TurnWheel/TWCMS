@@ -120,18 +120,12 @@ sql_query('DELETE FROM user_pass WHERE recoverid = "'.$rid.'" LIMIT 1');
 
 // Email variables
 $email = $cfg['user_emails']['pass_reset'];
+$email['to'] = $user['email'];
 $map = array(
-	'sslurl' => SSLURL,
-	'wwwurl' => WWWURL,
-	'date' => date($cfg['user_emails']['date'], NOW),
 	'password' => $realpass
 );
 
-$subject = map_replace($map, $email['subject']);
-$body = map_replace($map, str_replace("\t", '', $email['body']));
-
-// Send out email with new password
-mail($user['email'], $subject, $body, $email['headers']);
+tw_sendmail($email, $map);
 
 // Display success message
 $T['content'] = '

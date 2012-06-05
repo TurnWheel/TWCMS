@@ -33,9 +33,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 		'error_name' => $cfg['error_vals'][$errno],
 		'error_file' => $errfile,
 		'error_line' => $errline,
-		'htmldump' => $dump,
-		'url' => WWWURL,
-		'version' => VERSION
+		'htmldump' => $dump
 	);
 
 	// Insert var dump into MySQL DB if enabled
@@ -60,20 +58,8 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 		}
 	}
 
-	// Send email if enabled
-	if ($cfg['error_email_enable']) {
-		// Easy config variable for error emails
-		$ecfg = $cfg['error_email'];
-
-		$map['date'] = date($ecfg['date']);
-
-		// Generate message from template
-		$msg = map_replace($map, $ecfg['body']);
-		$subject = map_replace($map, $ecfg['subject']);
-
-		$to = implode(',', $ecfg['to']);
-		mail($to, $subject, $msg, $ecfg['headers']);
-	}
+	// Send email
+	tw_sendmail($cfg['error_email'], $map);
 
 	// End processing
 	exit;

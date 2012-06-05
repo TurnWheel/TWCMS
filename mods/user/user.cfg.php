@@ -146,7 +146,6 @@ $cfg = array(
 	)
 );
 
-
 /*
  * User Flags (Permissions)
  */

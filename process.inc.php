@@ -136,7 +136,7 @@ $T['css'] = array();
 $T['js'] = array();
 
 // Run module event ('beforeProcess')
-tw_runEvent('beforeProcess');
+tw_event('beforeProcess');
 
 // If 404 flag, use 404 functions
 if ($P['404']) {
@@ -192,7 +192,7 @@ else {
 }
 
 // Run module event ('duringProcess')
-tw_runEvent('duringProcess');
+tw_event('duringProcess');
 
 // Swap bread crumbs for full title (only if this isnt already set)
 if ($T['header']  !== '' && $P['page'] !== strtolower($T['header'])) {
@@ -327,6 +327,6 @@ if ($cfg['res_recursive']) {
 }
 
 // Run module event ('afterProcess')
-tw_runEvent('afterProcess');
+tw_event('afterProcess');
 
 // End of processing

@@ -39,7 +39,7 @@ function tw_loadmod($mod) {
 	}
 
 	// Call onLoad event functions
-	tw_runEvent('onLoad', $mod);
+	tw_event('onLoad', $mod);
 
 	return TRUE;
 }
@@ -47,11 +47,10 @@ function tw_loadmod($mod) {
 /*
  * <TWCMS>
  * Checks all loaded modules for specified event
- * function and calls if found
  *
  * If $mod is specified, it only runs the event for that mod
  */
-function tw_runEvent($func, $mod = FALSE) {
+function tw_event($func, $mod = FALSE) {
 	global $cfg;
 
 	if ($mod === FALSE) {
@@ -128,6 +127,57 @@ function tw_ismod($mod) {
 	return TRUE;
 }
 
+/*
+ * <TWCMS>
+ *
+ * This handles all email arrays from configs
+ * Used in main system and modules
+ *
+ * $mail - Array of settings
+ * Key Settings:
+ * 'enable' - Set to FALSE to disable email on config. (Default: TRUE)
+ * 'to' - Array or string of who to send the email to
+ * 'body' - Body Template
+ * 'subject' - Full subject of email
+ * 'headers' - Additional email headers
+ * 'date' - Date format for map replacement
+ * $map - Array of replacements for mail template (See map_replace)
+ */
+function tw_sendmail($mail, $map = array()) {
+	// Check if disabled in config
+	// Use of 'enable' is legacy in TWCMS
+	// if 'enable' doesn't exist, it assumes TRUE
+	if (isset($mail['enable']) && !$mail['enable']) return FALSE;
+
+	// Make sure we know who to send to, otherwise nothing to do
+	if (!isset($mail['to'])) return FALSE;
+
+	// Date format; use format from $mail if available
+	$df = isset($mail['date']) ? $mail['date'] : 'g:ia T \o\n F j, Y';
+
+	$map = array_merge($map, array(
+		'domain' => DOMAIN,
+		'url' => FULLURL,
+		'wwwurl' => WWWURL,
+		'sslurl' => SSLURL,
+		'baseurl' => BASEURL,
+		'version' => VERSION,
+		'date' => date($df, NOW)
+	));
+
+	// Generate body text, remove tabs leftover from config
+	$temp = str_replace("\t", '', $mail['body']);
+	$body = map_replace($map, $temp);
+
+	// Replace subject and headers too
+	$subj = map_replace($map, $mail['subject']);
+	$head = isset($mail['headers']) ? map_replace($map, $mail['headers']) : '';
+
+	$to = is_array($mail['to']) ? implode(',', $mail['to']) : $mail['to'];
+
+	// Send mail and return status
+	return mail($to, $subj, $body, $head);
+}
 
 /*
  * <TWCMS>
