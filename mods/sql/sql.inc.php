@@ -1,6 +1,10 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS <Module>
+ *
+ * Mod Version: 1.0
+ * Author: Steven Bower
+ * TurnWheel Designs (cc) 2012
  *
  * Simple MySQL Wrapper
  */

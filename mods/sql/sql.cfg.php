@@ -1,7 +1,10 @@
 <?php
 /*
+ * TWCMS <Module>
+ *
  * SQL Module Settings
  */
+
 $cfg = array(
 	'sql_enable' => TRUE, // Is DB connection even required?
 

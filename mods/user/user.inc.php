@@ -256,7 +256,7 @@ function user_register($data) {
 
 	// Save user registration information to DB
 	sql_query('INSERT INTO user ($keys) VALUES($vals)',
-				array_merge($data,array(
+				array_merge($data, array(
 					'salt' => $salt,
 					'date' => NOW,
 					'flags' => $flags

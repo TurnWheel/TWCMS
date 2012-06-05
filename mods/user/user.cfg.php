@@ -1,5 +1,7 @@
 <?php
 /*
+ * TWCMS <Module>
+ *
  * User Module Config
  */
 
@@ -144,24 +146,26 @@ $cfg = array(
 	)
 );
 
-/* User Flags (Permissions) */
-if ($cfg['user_enable']) {
-	// Basic login privledges
-	define('U_LOGIN', 1);
 
-	// Marked if they have been "approved" and notified
-	// This is only used if user_modreg is enabled
-	define('U_NOTIFIED', 2);
+/*
+ * User Flags (Permissions)
+ */
 
-	// High-level permissions:
-	// EDITOR is partial access
-	// ADMIN is full access
-	define('U_EDITOR', 4);
-	define('U_ADMIN', 8);
+// Basic login privledges
+define('U_LOGIN', 1);
 
-	// Default perms for new accounts
-	define('U_DEFAULT', $cfg['user_modreg'] ? 0 : U_LOGIN);
+// Marked if they have been "approved" and notified
+// This is only used if user_modreg is enabled
+define('U_NOTIFIED', 2);
 
-	// Default perms for guests
-	define('U_GUEST', 0);
-}
+// High-level permissions:
+// EDITOR is partial access
+// ADMIN is full access
+define('U_EDITOR', 4);
+define('U_ADMIN', 8);
+
+// Default perms for new accounts
+define('U_DEFAULT', $cfg['user_modreg'] ? 0 : U_LOGIN);
+
+// Default perms for guests
+define('U_GUEST', 0);

@@ -81,6 +81,7 @@ if ($P['root'] !== 'index') {
 /** Start file tracking **/
 // Full page string using _ format (used for file lookup)
 $P['page'] = implode('_', $P['pages']);
+
 // Full page URL based on pages array (no beginning /)
 $P['pageurl'] = implode('/', $P['pages']);
 
@@ -154,11 +155,18 @@ elseif ($P['php']) {
 	 * This simply locks you into the default layout provided
 	 */
 
-	$T['header'] = ''; // Sets the h2 tag in template
-	$T['title'] = ''; // Used for <title> in template (usually same as $header)
-	$T['content'] = ''; // Body of your page!
+	// Sets the main header in template content area
+	$T['header'] = '';
 
-	// Yes, $P['file'] is safe thanks to path_escape (security.inc.php)
+	// Used for <title> in template
+	// Usually same as header, but may be different in some cases
+	$T['title'] = '';
+
+	// Actual content put into main content div
+	$T['content'] = '';
+
+	// $P['file'] is include safe
+	// See path_escape in lib/security.inc.php
 	include $P['file'];
 }
 else {
