@@ -1,5 +1,7 @@
 <?php
 /*
+ * TWCMS <Module>
+ *
  * Error Module Config
  */
 

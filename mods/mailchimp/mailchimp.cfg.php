@@ -1,5 +1,7 @@
 <?php
 /*
+ * TWCMS <Module>
+ *
  * MailChimp Module Config
  */
 

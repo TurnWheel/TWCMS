@@ -1,8 +1,8 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS <Module>
  *
- * Module Version: 0.1
+ * Mod Version: 0.5
  * Author: Steven Bower
  * TurnWheel Designs (cc) 2012
  *
