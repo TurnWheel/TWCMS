@@ -15,7 +15,7 @@ if (tw_isloaded('user')) {
 }
 else {
 	// Require admin auth
-	if (!check_auth($cfg['admin'])) req_auth('Restricted Area');
+	if (!check_auth('admin')) req_auth('Restricted Area');
 }
 
 $T['title'] = 'Admin: Form Data';

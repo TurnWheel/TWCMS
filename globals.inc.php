@@ -37,9 +37,9 @@ require LPATH.'template.inc.php';
 $cfg['start_time'] = $_start;
 unset($_start);
 
-// Encrypt admin pass so it's not stored as plain text
-if (isset($cfg['admin']['pass'])) {
-	$cfg['admin']['pass'] = tw_genhash($cfg['admin']['pass']);
+// Encrypt all auth passwords
+foreach ($cfg['auth'] AS $name => $login) {
+	$cfg['auth'][$name]['pass'] = tw_genhash($login['pass']);
 }
 
 // Re-sets "X-Powered-By" header with CMS Version

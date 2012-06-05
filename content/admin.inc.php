@@ -15,7 +15,7 @@ if (tw_isloaded('user')) {
 // Login credentials are set in config file
 else {
 	// Require admin auth
-	if (!check_auth($cfg['admin'])) req_auth('Restricted Area');
+	if (!check_auth('admin')) req_auth('Restricted Area');
 }
 
 $T['title'] = $T['header'] = 'Restricted Area';

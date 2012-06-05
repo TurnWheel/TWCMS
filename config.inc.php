@@ -66,8 +66,18 @@ $cfg = array(
 	// Seed key for enc_algo (NOTE: CHANGE ONLY DURING INITIAL INSTALL)
 	'enc_key' => 'CHANGE ME ONCE',
 
-	// Admin Login
-	'admin' => array('user' => 'admin','pass' => 'somedude'),
+	/*
+	 * HTTP Auth Logins
+	 * By default just 'admin' for admin areas
+	 * This becomes meaningless if user mod is enabled,
+	 * but both can be used for different areas if desired
+	 *
+	 * Passwords are automatically encrypted using hash_algo
+	 * on each page load (globals.inc.php)
+	 */
+	'auth' => array(
+		'admin' => array('user' => 'admin','pass' => 'somedude'),
+	),
 
 	// Image Upload Settings (if needed)
 	'image_types' => array('png','jpg','jpeg'),

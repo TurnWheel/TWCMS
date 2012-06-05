@@ -64,8 +64,14 @@ function req_auth($realm = 'Secret Realm') {
  * <TWCMS>
  * Verify HTTP Auth
  * Input: array('user' => 'me', 'pass' => sha1('test'))
+ * Or string representing name in cfg auth config
  */
-function check_auth($user) {
+function check_auth($login) {
+	// If a string, get login from cfg['auth']
+	if (is_string($login)) {
+		$login = $GLOBALS['cfg']['auth'][$login];
+	}
+
 	// For PHP5 CGI In conjunction
 	// with mod_rewrite: E=HTTP_AUTH:%{HTTP:Authorization}
 	if (isset($_SERVER['REDIRECT_HTTP_AUTH'])
@@ -78,7 +84,7 @@ function check_auth($user) {
 	$u = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
 	$p = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
 
-	if ($u === $user['user'] && tw_chkhash($p, $user['pass'])) return TRUE;
+	if ($u === $login['user'] && tw_chkhash($p, $login['pass'])) return TRUE;
 	else return FALSE;
 }
 
