@@ -60,6 +60,9 @@ function t_debug() {
 	// Display SQL debug if enabled
 	if ($cfg['sql_enable']) {
 		$html .= "\n".'<!-- SQL #: '.$cfg['sql']['count'].' -->';
+		if (!empty($cfg['sql']['qstats'])) {
+			$html .= '<!-- '.print_r($cfg['sql']['qstats'], TRUE).' -->';
+		}
 	}
 
 	return $html;

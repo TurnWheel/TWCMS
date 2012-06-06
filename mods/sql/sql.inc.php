@@ -122,8 +122,12 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 
 		// Add stats if in debug mode
 		if ($cfg['debug']) {
-			$cfg['sql']['qstats'][] = htmlentities($q).'<br />'
-					.'<b>Querytime:</b> '.$cfg['sql']['time'];
+			$cfg['sql']['qstats'][] = array(
+				'query' => str_replace("\t", '', htmlentities($q)),
+				'time' => $cfg['sql']['time'],
+				'file' => $file,
+				'line' => $line
+			);
 		}
 
 		// Return query reference

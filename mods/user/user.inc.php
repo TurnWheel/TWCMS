@@ -160,7 +160,8 @@ function user_showlogin($error = TRUE) {
 function user_verify(&$user, $email, $pass, $salt = FALSE) {
 	if ($email === '' || $pass === '') return FALSE;
 
-	sql_query('SELECT * FROM user WHERE email = "%s" LIMIT 1', $email);
+	sql_query('SELECT * FROM user WHERE email = "%s" LIMIT 1',
+				$email, __FILE__, __LINE__);
 	$user = sql_fetch_array();
 
 	// Validates email address
@@ -260,7 +261,7 @@ function user_register($data) {
 					'salt' => $salt,
 					'date' => NOW,
 					'flags' => $flags
-				)));
+				)), __FILE__, __LINE__);
 
 	$userid = sql_insert_id();
 
