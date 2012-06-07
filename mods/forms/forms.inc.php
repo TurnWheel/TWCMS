@@ -6,8 +6,13 @@
  * Author: Steven Bower
  * TurnWheel Designs (cc) 2012
  *
- * Useful form functions
+ * Useful form integrated form system
  * Includes sending emails and saving to DB
+ *
+ * ---- Additional Files ----
+ * content/contact.inc.php
+ * content/admin_forms.inc.php
+ * ----
  */
 
 if (!defined('SECURITY')) exit;

@@ -90,8 +90,8 @@ $cfg = array(
 	'email_date' => 'g:ia T \o\n F j, Y',
 
 	// Track all emails sent in DB?
-	// Requires sql module and email.sql schema
-	'email_savetoDB' => FALSE,
+	// Requires sql module and schema/email.sql schema
+	'email_savedb' => FALSE,
 
 	/*
 	 * Module Settings

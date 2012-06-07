@@ -12,7 +12,7 @@ if (tw_isloaded('user')) {
 }
 
 // If no user module, fallback to built-in HTTP auth
-// Login credentials are set in config file
+// Login credentials are set in global config file
 else {
 	// Require admin auth
 	if (!check_auth('admin')) req_auth('Restricted Area');
@@ -38,6 +38,12 @@ if (isset($cfg['mods_loaded']['forms'])) {
 	if (tw_isloaded('forms')) {
 		$T['content'] .= '
 		<li><a href="/admin/forms">View Form Data</a></li>';
+	}
+
+	// If error module is enabled, and savedb flag is turned on
+	if (tw_isloaded('error') && $cfg['error_savedb']) {
+		$T['content'] .= '
+		<li><a href="/admin/errors">View Error Data</a></li>';
 	}
 
 	$T['content'] .= '

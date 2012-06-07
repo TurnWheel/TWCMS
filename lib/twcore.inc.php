@@ -178,7 +178,7 @@ function tw_sendmail($mail, $map = array()) {
 	$to = is_array($mail['to']) ? implode(',', $mail['to']) : $mail['to'];
 
 	// Save email to DB if enabled and sql module is loaded
-	if ($cfg['email_savetoDB'] && tw_isloaded('sql')) {
+	if ($cfg['email_savedb'] && tw_isloaded('sql')) {
 		sql_query('INSERT INTO email ($keys) VALUES ($vals)',
 			array(
 				'to' => $to,

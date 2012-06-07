@@ -16,6 +16,8 @@ $cfg = array(
 	'error_template' => TRUE,
 
 	// Save error details to DB for record keeping?
+	// Requires schema/error.sql to be loaded manually
+	// Also allows access to content/admin_errors.inc.php
 	'error_savedb' => FALSE,
 
 	// Error email configurations

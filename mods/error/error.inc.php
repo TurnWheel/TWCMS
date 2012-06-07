@@ -7,6 +7,12 @@
  * TurnWheel Designs (cc) 2012
  *
  * Error management functions
+ *
+ * ---- Additional Files ----
+ * content/error.php.html
+ * content/error.php.debug.html
+ * content/admin_errors.inc.php
+ * ----
  */
 
 function error_onLoad() {

@@ -189,7 +189,7 @@ function sql_data_seek($n, $id = -1) {
 // Find next ID value from
 // Column 'c' inside table 't'
 function sql_nextid($c, $t) {
-	sql_query('SELECT MAX('.$c.') AS max FROM '.$t);
+	sql_query('SELECT MAX('.$c.') AS max FROM '.$t, '', __FILE__, __LINE__);
 	$r = sql_fetch_array();
 	$r['max'] = (int) $r['max'];
 

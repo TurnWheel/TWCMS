@@ -11,12 +11,17 @@
  * This module comes with additional includes other than this library
  *
  * ---- Additional Files ----
- * sql/user.sql
  * content/user.inc.php
  * content/user_profile.inc.php
  * content/admin_user.inc.php
  * content/admin_user.detail.inc.php
- * js/pre.admin_user.js
+ * content/password.inc.php
+ * content/password_reset.inc.php
+ * content/register.inc.php
+ * content/register_thankyou.inc.php
+ * content/login.inc.php
+ * content/logout.inc.php
+ * js/<pre>.admin_user.js
  * ----
  */
 
