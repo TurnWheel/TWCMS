@@ -65,6 +65,9 @@ function t_debug() {
 		}
 	}
 
+	// Run 'debug' mod event
+	tw_event('debug');
+
 	return $html;
 }
 

@@ -99,10 +99,12 @@ $P['php'] = FALSE; // Determines if include file is PHP or HTML
 $P['file'] = CPATH.$P['page']; // File name
 $P['num'] = sizeof($P['pages']); // Number of sub-pages requested (nesting #)
 
-// This checks for a .html file in CPATH;
-// If .html is not found, it looks for .inc.php
-// If not found, it will go up the path tree until
-// it finds any file it can.
+/*
+ * This checks for a .html file in CPATH;
+ * If .html is not found, it looks for .inc.php
+ * If not found, it will go up the path tree until
+ * it finds any file it can.
+ */
 $notFound = TRUE;
 while ($notFound) {
 	// Makes sure that file exists AND is readable
@@ -138,6 +140,8 @@ while ($notFound) {
 if ($notFound) $P['404'] = TRUE;
 
 // Is this the index page? (Bool)
+// 'indexnew' is hardcoded here, so you can have a 'non-public index'
+// that still behaves like the real index page
 define('ISINDEX', ($P['page'] === 'index' || $P['page'] === 'indexnew'));
 
 // Setup CSS/JS Template variables
@@ -244,6 +248,7 @@ if ($T['title'] !== '') {
 $T['title'] = str_replace("\r",'',str_replace("\n",'',trim($T['title'])));
 
 // Exception for indexnew (dev/debug)
+// this allows indexnew to load the normal index page resources
 if ($P['page'] === 'indexnew') {
 	$P['root'] = $P['page'] = 'index';
 }

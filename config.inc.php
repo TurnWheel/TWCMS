@@ -98,9 +98,11 @@ $cfg = array(
 	/*
 	 * Module Settings
 	 *
-	 * mods_avail just passes the names onto
-	 * tw_loadmod in lib/security.inc.php
-	 * They can be disabled with <mod>_enable => FALSE flag
+	 * mods_enabled is an array of mods to be loaded
+	 * in global includea
+	 *
+	 * Each mod can also be disabled with
+	 * <mod>_enable => FALSE config option
 	 *
 	 * Add the mod to MPATH dir, with option cfg file
 	 * and then add to this list. Mods are not auto-loaded
@@ -108,7 +110,7 @@ $cfg = array(
 	 *
 	 * <mod>_onLoad function is called during library init
 	 */
-	'mods_avail' => array(
+	'mods_enabled' => array(
 		'sql', 'error', 'forms',
 		'user', 'mailchimp'
 	),

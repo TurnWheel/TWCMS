@@ -110,8 +110,8 @@ function tw_isloaded($mod) {
 function tw_ismod($mod) {
 	global $cfg;
 
-	// Makes sure it is in mods_avail
-	if (array_search($mod, $cfg['mods_avail']) === FALSE) {
+	// Makes sure mod is in mods_enabled
+	if (array_search($mod, $cfg['mods_enabled']) === FALSE) {
 		return FALSE;
 	}
 
