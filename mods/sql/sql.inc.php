@@ -102,7 +102,10 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 	global $cfg;
 
 	// Generate full query using inputed array
-	if (!empty($vals)) $q = sql_prepare($q, $vals);
+	// Do not use empty() here as this ignores 0 and '0'
+	if ($vals !== '' && $vals !== array()) {
+		$q = sql_prepare($q, $vals);
+	}
 
 	$cfg['sql']['id'] = 0; // Unset existing ID
 
