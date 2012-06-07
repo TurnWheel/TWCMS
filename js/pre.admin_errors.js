@@ -1,8 +1,8 @@
 /*
  * TWCMS <Module>
  *
- * JS for admin/user
- * Part of TWCMS User Module
+ * JS for admin/errors
+ * Part of TWCMS Error Module
  *
  * Requires /js/jquery.dataTables.min.js
  */
