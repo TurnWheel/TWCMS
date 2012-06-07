@@ -203,7 +203,7 @@ if (sizeof($error) > 0) {
 	else {
 		print '
 		<strong class="red">Disabled</strong></p>';
-		
+
 		if ($cfg['user_modreg'] && !check_flag(U_NOTIFIED, $data['flags'])) {
 			print '
 			<p><strong>Important:</strong> This user will receive an
