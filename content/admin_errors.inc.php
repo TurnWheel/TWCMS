@@ -2,7 +2,8 @@
 /*
  * TWCMS <Module>
  *
- * Error Module Admin Area
+ * Part of TWCMS Error Module
+ *
  * Simply views all errors in the DB
  */
 

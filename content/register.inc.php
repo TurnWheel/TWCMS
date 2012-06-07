@@ -1,8 +1,10 @@
 <?php
 /*
- * TWCMS User Module
+ * TWCMS <Module>
  *
- * Registration form
+ * Part of TWCMS User Module
+ *
+ * Simple Registration Form
  */
 
 // Make sure registration is enabled

@@ -12,6 +12,8 @@
  * content/error.php.html
  * content/error.php.debug.html
  * content/admin_errors.inc.php
+ * js/<pre>.admin_errors.js
+ * css/<pre>.admin_errors.css
  * ----
  */
 

@@ -2,7 +2,7 @@
 /*
  * TWCMS <Module>
  *
- * Part of User Module
+ * Part of TWCMS User Module
  */
 
 if (!ISUSER) return p_showerror(403);

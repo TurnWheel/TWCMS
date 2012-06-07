@@ -1,18 +1,50 @@
 <?php
-// Global does the initial setup of including
-// config, libraries, and setting up DB connection
+/*
+ * TWCMS 1.1
+ * Template Include
+ *
+ * This file holds the main template for the whole site
+ * Dynamic content files and mods are NOT required to stay
+ * within this framework, but it does serve as the launching point.
+ */
+
+/*
+ * Global include does the initial setup of including configs,
+ * loading libraries, and module onLoad calls.
+ *
+ * This is required for using the base system,
+ * and is the only include required for running TWMCS.
+ * Content-related features are all in process.inc.php
+ */
 require 'globals.inc.php';
 
 // Common header variable
 $_GET['id'] = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Header variables to process (add as many as needed)
+/*
+ * Header variables to process as part of CMS system
+ *
+ * This limits the number of nested levels you can go
+ * This is also limited by the rewrite rules in .htaccess,
+ * where the names of the headers are defined
+ *
+ * Note: The more you add, the more inefficient the processing will be.
+ * Only add as needed.
+ */
 $headers = array('a','b','c');
 
-// Process headers and get page details
+/*
+ * This is where the real fun begins--
+ * Processes headers, determines which content file to load (CPATH),
+ * and runs all mod events related to processing.
+ *
+ * Dynamic content files are permitted to simply exit processing,
+ * thereby skipping to rest of this template file, and displaying
+ * within their own custom template.
+ */
 require 'process.inc.php';
 
-// Proccess main template variables
+// Shortcuts for main template variables
 $title = isset($T['title']) ? $T['title'] : '';
 $header = isset($T['header']) ? $T['header'] : '';
 $content = isset($T['content']) ? $T['content'] : '';

@@ -1,11 +1,20 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS 1.1
+ * Page Processing
  *
- * This file processes page headers
- * and then searches content directory for the appropriate page.
- * Returns variables such as header, title, content, breadcrumbs, etc.
- * The template is responsible for parsing and displaying these variables.
+ * This file processes page headers and then searches
+ * the content directory (CPATH) for the appropriate page.
+ *
+ * Returns template variables such as header, title, content,
+ * all within the $T global array.
+ *
+ * Additional processing details can be found within
+ * the $P global array.
+ *
+ * The main template is mainly responsible for parsing
+ * and displaying these variables. Though they are also
+ * accessible by dynamic content files (CPATH/*.inc.php)
  */
 
 // Template Variable
@@ -30,7 +39,7 @@ $P['headers'] = $headers;
  */
 $P['get'] = array();
 foreach ($P['headers'] AS $num => $key) {
-	// Handle first param with special condition (defaults to index)
+	// Handle first index with special condition (defaults to index page)
 	if ($num === 0) {
 		$P['get'][$key] = isset($_GET[$key]) && !empty($_GET[$key])
 					? path_escape($_GET[$key]) : 'index';

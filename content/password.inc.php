@@ -2,7 +2,7 @@
 /*
  * TWCMS <Module>
  *
- * Part of User Module
+ * Part of TWCMS User Module
  */
 
 $T['title'] = $T['header'] = 'Forgot Password';

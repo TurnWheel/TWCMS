@@ -1,10 +1,10 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS 1.1
  * Global Include File
  *
- * Coded by Steven Bower
- * TurnWheel Designs (cc) 2012
+ * Loads global config, core libraries, and
+ * loads all modules and mod configs
  */
 
 // Config Changes
@@ -46,13 +46,11 @@ foreach ($cfg['auth'] AS $name => $login) {
 // This helps override some servers' PHP Disclosure settings
 header('X-Powered-By: '.VERSION);
 
-// Load available modules
+/*
+ * Load all modules, configs, and calls module onLoad events
+ */
 foreach ($cfg['mods_avail'] AS $mod) {
 	tw_loadmod($mod);
 }
-
-// Capture Referer Information
-$cfg['referer'] = isset($_SERVER['HTTP_REFERER']) ?
-				escape($_SERVER['HTTP_REFERER']) : '(Direct)';
 
 // EOF

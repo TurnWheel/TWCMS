@@ -22,6 +22,7 @@
  * content/login.inc.php
  * content/logout.inc.php
  * js/<pre>.admin_user.js
+ * css/<pre>.admin_user.css
  * ----
  */
 

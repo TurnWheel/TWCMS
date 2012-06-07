@@ -2,7 +2,9 @@
 /*
  * TWCMS <Module>
  *
- * Part of User Module
+ * Part of TWCMS User Module
+ *
+ * Simple thankyou page shown after registration
  */
 
 // Make sure registration is enabled

@@ -2,8 +2,9 @@
 /*
  * TWCMS <Module>
  *
- * Part of User Module
- * Admin User Edit Profile
+ * Part of TWCMS User Module
+ *
+ * Admin Area to manage user account details
  */
 
 // Get user data based on ID

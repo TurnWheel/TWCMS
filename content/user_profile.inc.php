@@ -2,8 +2,9 @@
 /*
  * TWCMS <Module>
  *
- * Part of User Module
- * User Edit Profile
+ * Part of TWCMS User Module
+ *
+ * Allows user to edit profile and settings
  */
 
 if (!ISUSER) return p_showerror(403);

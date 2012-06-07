@@ -1,9 +1,10 @@
 <?php
 /*
- * User Management Admin Area
- * Part of TWCMS user module
+ * TWCMS <Module>
  *
- * Steven Bower (cc) 2012
+ * Part of TWCMS User Module
+ *
+ * Admin Area to manage user account details
  */
 
 // Verify permissions

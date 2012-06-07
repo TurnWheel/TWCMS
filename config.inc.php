@@ -1,10 +1,12 @@
 <?php
 /*
- * TWCMS 1.0
+ * TWCMS 1.1
  * Global Configuration File
  *
- * Coded by Steven Bower
- * TurnWheel Designs (cc) 2012
+ * All the core settings for TWCMS are located here
+ * Modules add to the global array through mods/<mod>/<mod>.cfg.php
+ *
+ * Important constants used throughout the API are set here
  */
 
 if (!defined('SECURITY')) exit;
@@ -150,19 +152,25 @@ define('T_APPROVE', 1); // JUST A SAMPLE
  * These values should never change
  */
 
+// CMS Version, update on each new release
+define('VERSION', 'TWCMS 1.1');
+
+// Utility constants
 define('NOW', time());
 define('SSL', isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on');
 
 // Full URL is the current full domain path
-// Just takes into account SSL
+// (Basically same as WWWURL, but accounts for SSL)
 define('FULLURL', SSL ? SSLURL : WWWURL);
 
-// Get requested path
+// Capture important server headers:
+// Full requested PATH, IP Address and Referer
 define('REQUESTURL', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
-define('VERSION', 'TWCMS 1.1'); // CMS Version
 
-// Save User's IP Address as constant
 define('USERIP', isset($_SERVER['REMOTE_ADDR']) ?
-		htmlspecialchars($_SERVER['REMOTE_ADDR'], ENT_QUOTES, 'UTF-8') : 'N/A');
+	htmlspecialchars($_SERVER['REMOTE_ADDR'], ENT_QUOTES, 'UTF-8') : 'N/A');
+
+define('REFERER', isset($_SERVER['HTTP_REFERER']) ?
+	htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8') : '(Direct)');
 
 // EOF
