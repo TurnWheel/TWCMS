@@ -53,22 +53,12 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
  * Returns debug info to template
  */
 function t_debug() {
-	global $cfg;
+	global $cfg, $T;
 
-	$html = '<!-- Time: '.(microtime(TRUE)-$cfg['start_time']).'s -->';
-
-	// Display SQL debug if enabled
-	if ($cfg['sql_enable']) {
-		$html .= "\n".'<!-- SQL #: '.$cfg['sql']['count'].' -->';
-		if (!empty($cfg['sql']['qstats'])) {
-			$html .= '<!-- '.print_r($cfg['sql']['qstats'], TRUE).' -->';
-		}
-	}
+	$T['debug'] = '<!-- Time: '.(microtime(TRUE)-$cfg['start_time']).'s -->';
 
 	// Run 'debug' mod event
 	tw_event('debug');
-
-	return $html;
 }
 
 

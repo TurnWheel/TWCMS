@@ -20,7 +20,7 @@ $cfg['sql'] = array(
 );
 
 /*
- * Constructor
+ * TW Event Function
  * Simply calls sql_connect with proper cfg params
  */
 function sql_onLoad() {
@@ -34,6 +34,19 @@ function sql_onLoad() {
 	unset($cfg['sql_user'], $cfg['sql_pass']);
 
 	return TRUE;
+}
+
+/*
+ * TW Event Function
+ * Saves all debug information to $T['debug'] template var
+ */
+function sql_debug() {
+	global $cfg, $T;
+
+	$T['debug'] .= "\n".'<!-- SQL #: '.$cfg['sql']['count'].' -->'."\n";
+	if (!empty($cfg['sql']['qstats'])) {
+		$T['debug'] .= '<!-- '.print_r($cfg['sql']['qstats'], TRUE).' -->';
+	}
 }
 
 // Creates MySQL Connection

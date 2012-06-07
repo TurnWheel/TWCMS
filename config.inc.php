@@ -99,10 +99,7 @@ $cfg = array(
 	 * Module Settings
 	 *
 	 * mods_enabled is an array of mods to be loaded
-	 * in global includea
-	 *
-	 * Each mod can also be disabled with
-	 * <mod>_enable => FALSE config option
+	 * in global include
 	 *
 	 * Add the mod to MPATH dir, with option cfg file
 	 * and then add to this list. Mods are not auto-loaded

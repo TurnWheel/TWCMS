@@ -6,8 +6,6 @@
  */
 
 $cfg = array(
-	'sql_enable' => TRUE, // Is DB connection even required?
-
 	// Host name for SQL Database ('localhost' works for most installations)
 	'sql_host' => 'localhost',
 

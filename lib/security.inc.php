@@ -27,7 +27,7 @@ function escape($v, $html = FALSE) {
 		return $v;
 	}
 
-	return !$html && $cfg['sql_enable'] ? mysql_real_escape_string($v)
+	return tw_isloaded('sql') && !$html ? mysql_real_escape_string($v)
 			: htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 

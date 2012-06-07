@@ -115,12 +115,6 @@ function tw_ismod($mod) {
 		return FALSE;
 	}
 
-	// If _enable flag is available, and it is FALSE, it is disabled
-	// If no _enable flag is present, it proceeds as if it were TRUE
-	if (isset($cfg[$mod.'_enable']) && !$cfg[$mod.'_enable'])  {
-		return FALSE;
-	}
-
 	// Make sure file exists
 	if (!file_exists(MPATH.$mod.'/'.$mod.'.inc.php')) return FALSE;
 

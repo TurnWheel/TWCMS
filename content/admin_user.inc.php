@@ -8,8 +8,8 @@
  */
 
 // Verify permissions
-// User module must be enabled for this area to load
-if (!$cfg['user_enable'] || !user_restrict(U_ADMIN)) return;
+// User module must be included for this area to load
+if (!tw_isloaded('user') || !user_restrict(U_ADMIN)) return;
 
 // Check if we should load detail page
 if ($_GET['id'] !== 0) {

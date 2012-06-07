@@ -6,9 +6,6 @@
  */
 
 $cfg = array(
-	// Enable Module?
-	'mailchimp_enable' => FALSE,
-
 	// Mail Chimp End Points (See Mailchimp Docs For Details)
 	'mc_ep' => 'http://us2.api.mailchimp.com/1.3/',
 	'mc_key' => '{paste key}', // API Key (account login)

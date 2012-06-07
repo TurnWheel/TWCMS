@@ -6,9 +6,6 @@
  */
 
 $cfg = array(
-	// Enable module?
-	'error_enable' => TRUE,
-
 	// Display custom php error template?
 	// Will load error.php.html. If debug mode is on, it will load
 	// error.php.debug.html, which will show full error details.

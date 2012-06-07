@@ -174,7 +174,10 @@ foreach ($T['js'] AS $file) {
 
 <?php
 // Display debug code if enabled
-if ($cfg['debug']) print t_debug();
+if ($cfg['debug']) {
+	t_debug();
+	print $T['debug'];
+}
 ?>
 
 </body>

@@ -6,10 +6,6 @@
  */
 
 $cfg = array(
-	// Enable user login and registration systems
-	// requires that sql_enable = TRUE and user table has been created
-	'user_enable' => TRUE,
-
 	// Seconds until cookies expire (default 604800, or 1 month)
 	'user_expire' => 604800,
 
