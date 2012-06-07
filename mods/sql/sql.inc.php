@@ -102,7 +102,7 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 	global $cfg;
 
 	// Generate full query using inputed array
-	// Do not use empty() here as this ignores 0 and '0'
+	// Do not use empty() here as it would ignore 0 and '0'
 	if ($vals !== '' && $vals !== array()) {
 		$q = sql_prepare($q, $vals);
 	}
@@ -110,7 +110,10 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 	$cfg['sql']['id'] = 0; // Unset existing ID
 
 	if ($q !== '') {
-		$startsqltime = microtime(TRUE); // Start timer
+		// Queries are timed in debug mode
+		if ($cfg['debug']) {
+			$sqltime = microtime(TRUE);
+		}
 
 		// Verify valid query and execute
 		if (!$cfg['sql']['id'] = mysql_query($q, $cfg['sql']['con'])) {
@@ -119,15 +122,17 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 						<strong>'.mysql_error().'</strong>');
 		}
 
-		// Track time and query count
-		$cfg['sql']['time'] += microtime(TRUE)-$startsqltime;
+		// Tracks query count (always, regardless of debug)
 		++$cfg['sql']['count'];
 
-		// Add stats if in debug mode
+		// Track all stats in debug mode
 		if ($cfg['debug']) {
+			$sqltime = microtime(TRUE)-$sqltime;
+
+			$cfg['sql']['time'] += $sqltime;
 			$cfg['sql']['qstats'][] = array(
 				'query' => str_replace("\t", '', htmlentities($q)),
-				'time' => $cfg['sql']['time'],
+				'time' => $sqltime,
 				'file' => $file,
 				'line' => $line
 			);
