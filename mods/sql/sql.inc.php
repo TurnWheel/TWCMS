@@ -69,29 +69,56 @@ function sql_close() {
 	else return FALSE;
 }
 
-// Prepare sql statement
+/*
+ * Prepares sql statement with parameter replacements
+ */
 function sql_prepare($q, $vals) {
 	// Escape vals if it is a string or array
 	if (is_string($vals) || is_array($vals)) {
 		$vals = escape($vals);
 	}
 
+	/*
+	 * Handle arrays with special case, as they
+	 * can be used in multiple ways
+	 *
+	 * Example: array('joe', 1234) will simply replace in order
+	 *
+	 * Valued arrays can also be used:
+	 * array('name' => 'joe', 'flag' => 1234);
+	 *
+	 * Valued arrays give you access to $keys and $vals, which
+	 * can be used for simple INSERT functions
+	 *
+	 * Example:
+	 * INSERT INTO test ($keys) VALUES($vals)
+	 * and just provide an 'key' => 'val' format array
+	 */
 	if (is_array($vals)) {
-		$keys = array_keys($vals);
+		// Process $keys if requested
+		if (strpos($q, '$keys') !== FALSE) {
+			$keys = array_keys($vals);
 
-		// Add backticks to keys
-		foreach ($keys AS $k => $v) {
-			$keys[$k] = '`'.$v.'`';
+			// Add backticks to keys
+			foreach ($keys AS $k => $v) {
+				$keys[$k] = '`'.$v.'`';
+			}
+
+			// Replace "$keys" var with keys of $vals array
+			$q = str_replace('$keys', implode($keys, ', '), $q);
 		}
 
-		// Replace "$keys" var with keys of $vals array
-		$q = str_replace('$keys', implode($keys, ', '), $q);
+		// Don't get $vals and '$vals' mixed up
+		if (strpos($q, '$vals') !== FALSE) {
+			// Replace $vals with %s's as a easy shortcut
+			$num = sizeof($vals);
+			$q = str_replace('$vals', '"%s"'.str_repeat(',"%s"', $num-1), $q);
+		}
 
-		// Replace "$vals" var with %s's as a easy shortcut
-		$q = str_replace('$vals', '"%s"'.str_repeat(',"%s"', count($vals)-1), $q);
-
+		// Run sprintf with array of vals
 		$q = vsprintf($q, $vals);
 	}
+	// Handles strings, integers, etc.
 	else $q = sprintf($q, $vals);
 
 	return $q;
