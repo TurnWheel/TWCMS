@@ -7,7 +7,8 @@
  */
 
 // Get user data based on ID
-sql_query('SELECT * FROM user WHERE userid = "%d" LIMIT 1', (int) $_GET['id']);
+sql_query('SELECT * FROM user WHERE userid = "%d" LIMIT 1',
+			(int) $_GET['id'], __FILE__, __LINE__);
 $user = sql_fetch_array();
 
 // Make sure user exists
@@ -82,7 +83,7 @@ if (isset($_POST['chstatus'])) {
 	}
 
 	sql_query('UPDATE user SET flags = "%d" WHERE userid = "%d"',
-				array($data['flags'], $data['id']));
+				array($data['flags'], $data['id']), __FILE__, __LINE__);
 
 	print '
 	<div class="box success">
@@ -114,7 +115,7 @@ if (isset($_POST['profile'])) {
 					array(
 						$data['firstname'], $data['lastname'],
 						$data['phone'], $data['zip'], $data['id']
-					));
+					), __FILE__, __LINE__);
 
 		print '
 		<div class="box success">
@@ -148,7 +149,9 @@ if (isset($_POST['pass'])) {
 		$hash = tw_genhash($_POST['newpass'], TRUE, $salt);
 
 		sql_query('UPDATE user SET password = "%s", salt = "%s"
-					WHERE userid = "%d"', array($hash, $salt, $data['id']));
+					WHERE userid = "%d"',
+					array($hash, $salt, $data['id']),
+					__FILE__, __LINE__);
 
 		print '
 		<div class="box success">

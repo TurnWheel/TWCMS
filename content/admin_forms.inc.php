@@ -29,7 +29,8 @@ if ($_GET['id'] !== 0) {
 
 	// Get entry data from DB
 	sql_query('SELECT entryid,data,name,date FROM forms
-					WHERE entryid = "%d" LIMIT 1', $_GET['id']);
+					WHERE entryid = "%d" LIMIT 1',
+					$_GET['id'], __FILE__, __LINE__);
 
 	$info = sql_fetch_array();
 
@@ -99,7 +100,7 @@ if ($fname === '') {
 	<h3>Select Which Form Data to view</h3>
 	<ul>';
 
-	sql_query('SELECT name FROM forms GROUP BY name');
+	sql_query('SELECT name FROM forms GROUP BY name', '', __FILE__, __LINE__);
 
 	if (sql_num_rows() === 0) {
 		print '<li><em>No data available for viewing</em></li>';
@@ -107,7 +108,8 @@ if ($fname === '') {
 	else {
 		while ($r = sql_fetch_array()) {
 			print '
-			<li><a href="/admin/forms?form='.$r['name'].'">'.ucwords($r['name']).'</a></li>';
+			<li><a href="/admin/forms?form='.$r['name'].'">'
+			.ucwords($r['name']).'</a></li>';
 		}
 	}
 
@@ -131,7 +133,7 @@ print '
 
 sql_query('SELECT entryid AS id,data,name,date FROM forms
 			WHERE name = "%s"
-			ORDER BY date DESC', $fname);
+			ORDER BY date DESC', $fname, __FILE__, __LINE__);
 ?>
 
 <table cellspacing="0">

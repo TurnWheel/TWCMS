@@ -48,7 +48,7 @@ if (isset($_POST['profile'])) {
 					array(
 						$data['firstname'], $data['lastname'],
 						$data['phone'], $data['zip'], $data['id']
-					));
+					), __FILE__, __LINE__);
 
 		print '
 		<div class="box success">
@@ -87,7 +87,8 @@ if (isset($_POST['pass'])) {
 		$hash = tw_genhash($_POST['newpass'], TRUE, $salt);
 
 		sql_query('UPDATE user SET password = "%s", salt = "%s"
-					WHERE userid = "%d"', array($hash, $salt, $data['id']));
+					WHERE userid = "%d"',
+					array($hash, $salt, $data['id']), __FILE__, __LINE__);
 
 		print '
 		<div class="box success">

@@ -9,7 +9,8 @@ $T['title'] = $T['header'] = 'Password Reset';
 
 // Delete password recovery entries
 // that are more than 24 hours old
-sql_query('DELETE FROM user_pass WHERE date < '.(NOW-86400));
+sql_query('DELETE FROM user_pass WHERE date < '.(NOW-86400),
+			'', __FILE__, __LINE__);
 
 // Headers used in password recovery
 $_GET['uid'] = isset($_GET['uid']) ? intval($_GET['uid']) : 0;

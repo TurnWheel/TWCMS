@@ -30,7 +30,8 @@ if (isset($_POST['submit'])) {
 	if (!valid_email($useremail)) $error['email'] = TRUE;
 
 	// Verify Email Exists in Database
-	sql_query('SELECT userid FROM user WHERE email = "%s" LIMIT 1', $useremail);
+	sql_query('SELECT userid FROM user WHERE email = "%s" LIMIT 1',
+				$useremail, __FILE__, __LINE__);
 	$u = sql_fetch_array();
 
 	// Error if not found
@@ -45,7 +46,7 @@ if (isset($_POST['submit'])) {
 		sql_query('INSERT INTO user_pass ($keys) VALUES($vals)',
 					array('userid' => $uid,
 					'hash' => $hash,
-					'date' => NOW));
+					'date' => NOW), __FILE__, __LINE__);
 
 		// Email variables
 		$email = $cfg['user_emails']['pass_forgot'];

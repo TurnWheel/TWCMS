@@ -21,7 +21,7 @@ $T['title'] = $T['header'] = 'User Management';
 // Display table of users to manage
 $html = '';
 
-sql_query('SELECT * FROM user ORDER BY userid ASC');
+sql_query('SELECT * FROM user ORDER BY userid ASC', '', __FILE__, __LINE__);
 $users = array();
 while ($r = sql_fetch_array()) {
 	$users[] = array(
