@@ -156,15 +156,18 @@ foreach ($T['js'] AS $file) {
 				<a href="/sitemap">Sitemap</a>
 			</p>
 			<div class="social">
-				<a href="#facebook" rel="external" class="facebook"><b>Facebook</b></a>
+				<a href="#fb" rel="external" class="facebook"><b>Facebook</b></a>
 				<a href="#yelp" rel="external" class="yelp"><b>Yelp</b></a>
-				<a href="#google" rel="external" class="google"><b>Google Local</b></a>
+				<a href="#g" rel="external" class="google"><b>Google Local</b></a>
 			</div>
 			<p class="copyright">
 				&copy; Copyright <?php print date('Y', NOW); ?>
 				SomeWebsite.com &mdash; All Rights Reserved<br />
 
-				Website by <a href="http://turnwheel.com" rel="external">TurnWheel Web Designs</a>
+				Website by
+				<a href="http://turnwheel.com" rel="external">
+					TurnWheel Web Designs
+				</a>
 			</p>
 		</div>
 	</div>
