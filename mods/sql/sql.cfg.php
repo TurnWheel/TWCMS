@@ -6,13 +6,20 @@
  */
 
 $cfg = array(
-	// Host name for SQL Database ('localhost' works for most installations)
+	/* SQL Server Login Details */
+
+	// Host name for SQL Database
+	// 'localhost' works for most installations
 	'sql_host' => 'localhost',
 
-	// Username for SQL login (Recommend you do NOT use root)
+	// SQL Username (Should NOT be 'root')
 	'sql_user' => 'somewebsite',
-	'sql_pass' => 'SQLPass123', // Password for SQL user
-	'sql_name' => 'somewebsite', // MySQL Database name
+
+	// Password for SQL User
+	'sql_pass' => 'SQLPass123',
+
+	// Name of MySQL DB To connect to
+	'sql_name' => 'somewebsite',
 );
 
 // Prefix for SQL tables

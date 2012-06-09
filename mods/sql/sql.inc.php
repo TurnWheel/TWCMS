@@ -16,7 +16,7 @@ $cfg['sql'] = array(
 	'id' => 0, // Stores current query reference
 	'time' => 0, // Stores total execution time
 	'count' => 0, // Counts number of queries
-	'qstats' => array() // Keeps record of stats (DEBUG MODE ONLY)
+	'qstats' => array() // Keeps record of stats
 );
 
 /*
@@ -30,9 +30,6 @@ function sql_onLoad() {
 	sql_connect($cfg['sql_host'], $cfg['sql_user'],
 		$cfg['sql_pass'],$cfg['sql_name']);
 
-	// Security Measure: Don't keep user/pass set
-	unset($cfg['sql_user'], $cfg['sql_pass']);
-
 	return TRUE;
 }
 
@@ -45,7 +42,8 @@ function sql_debug() {
 
 	$T['debug'] .= "\n".'<!-- SQL #: '.$cfg['sql']['count'].' -->'."\n";
 	if (!empty($cfg['sql']['qstats'])) {
-		$T['debug'] .= '<!-- '.print_r($cfg['sql']['qstats'], TRUE).' -->';
+		$txt = htmlentities(print_r($cfg['sql']['qstats'], TRUE));
+		$T['debug'] .= '<!-- '.$txt.' -->';
 	}
 }
 
@@ -150,10 +148,7 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 	$cfg['sql']['id'] = 0; // Unset existing ID
 
 	if ($q !== '') {
-		// Queries are timed in debug mode
-		if ($cfg['debug']) {
-			$sqltime = microtime(TRUE);
-		}
+		$sqltime = microtime(TRUE);
 
 		// Verify valid query and execute
 		if (!$cfg['sql']['id'] = mysql_query($q, $cfg['sql']['con'])) {
@@ -162,24 +157,84 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 						<strong>'.mysql_error().'</strong>');
 		}
 
-		// Tracks query count (always, regardless of debug)
-		++$cfg['sql']['count'];
+		// Save all query stats
+		$cfg['sql']['count'] += 1;
+		$sqltime = microtime(TRUE)-$sqltime;
 
-		// Track all stats in debug mode
-		if ($cfg['debug']) {
-			$sqltime = microtime(TRUE)-$sqltime;
-
-			$cfg['sql']['time'] += $sqltime;
-			$cfg['sql']['qstats'][] = array(
-				'query' => str_replace("\t", '', htmlentities($q)),
-				'time' => $sqltime,
-				'file' => $file,
-				'line' => $line
-			);
-		}
+		$cfg['sql']['time'] += $sqltime;
+		$cfg['sql']['qstats'][] = array(
+			'query' => $q,
+			'time' => $sqltime,
+			'file' => $file,
+			'line' => $line
+		);
 
 		// Return query reference
 		return $cfg['sql']['id'];
+	}
+}
+
+/*
+ * SQL Query Tracking
+ *
+ * Starts tracking queries for different purposes
+ * If tracking has already started, it will get reset!
+ */
+function sql_track_start() {
+	global $cfg;
+
+	$cfg['sql']['track_start'] = sizeof($cfg['sql']['qstats']);
+	return TRUE;
+}
+
+/*
+ * SQL Query Tracking
+ *
+ * Ends tracking
+ * Will re-do all queries processed from start of tracking
+ * with the new DB settings. If no DB settings are entered,
+ * it just returns array of query information
+ *
+ * DB Settings Expected Array format:
+ * array(
+ * 'host' => 'localhost',
+ * 'user' => 'dbuser',
+ * 'pass' => 'pass',
+ * 'name' => 'db2'
+ * );
+ */
+function sql_track_end($db = FALSE) {
+	global $cfg;
+
+	$stats = $cfg['sql']['qstats'];
+	$end = sizeof($stats);
+	$start = $cfg['sql']['track_start'];
+
+	// End tracking regardless
+	unset($cfg['sql']['track_start']);
+
+	$diff = $end-$start;
+
+	// If there have not been queries, return FALSE
+	if ($diff <= 0) return FALSE;
+
+	$queries = array_slice($stats, $end-$diff);
+
+	// If no DB information is entered, it just returns queries
+	if (!is_array($db) || $db === array()) {
+		return $queries;
+	}
+	// If DB information is present, try to connect to new information,
+	// and re-run all queries
+	else {
+		sql_connect($db['host'], $db['user'], $db['pass'], $db['name']);
+
+		foreach ($queries AS $key => $qinfo) {
+			sql_query($qinfo['query']);
+		}
+
+		// Re-connect to default DB
+		sql_onLoad();
 	}
 }
 
