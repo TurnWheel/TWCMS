@@ -11,14 +11,6 @@
 
 if (!defined('SECURITY')) exit;
 
-// SQL Global Params
-$cfg['sql'] = array(
-	'id' => 0, // Stores current query reference
-	'time' => 0, // Stores total execution time
-	'count' => 0, // Counts number of queries
-	'qstats' => array() // Keeps record of stats
-);
-
 /*
  * TW Event Function
  * Simply calls sql_connect with proper cfg params
@@ -47,7 +39,10 @@ function sql_debug() {
 	}
 }
 
-// Creates MySQL Connection
+/*
+ * Creates MySQL Connection
+ * and returns sql connection resource
+ */
 function sql_connect($host, $user, $password = '', $name = '') {
 	global $cfg;
 
@@ -67,7 +62,9 @@ function sql_connect($host, $user, $password = '', $name = '') {
 	return $cfg['sql']['con'];
 }
 
-// Close MySQL Connection
+/*
+ * Close MySQL Connection
+ */
 function sql_close() {
 	global $cfg;
 
@@ -82,6 +79,9 @@ function sql_close() {
 
 /*
  * Prepares sql statement with parameter replacements
+ * with support for single strings and arrays
+ *
+ * All values are automatically escaped for MySQL input
  */
 function sql_prepare($q, $vals) {
 	// Escape vals if it is a string or array
@@ -135,7 +135,15 @@ function sql_prepare($q, $vals) {
 	return $q;
 }
 
-// Process Queries
+/*
+ * Executes query and saves execution stats
+ * as well as track errors (with file/line information)
+ *
+ * $vals can be an array of values, key/value pair,
+ * or just a single string/number
+ *
+ * Returns query resource id
+ */
 function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 	global $cfg;
 
@@ -150,7 +158,8 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 	if ($q !== '') {
 		$sqltime = microtime(TRUE);
 
-		// Verify valid query and execute
+		// Execute query, save to resource global
+		// and check for errors
 		if (!$cfg['sql']['id'] = mysql_query($q, $cfg['sql']['con'])) {
 			sql_error('<strong>Bad SQL Query</strong> ('.$file.':'.$line.'):
 						'.htmlentities($q).'<br />
@@ -238,7 +247,10 @@ function sql_track_end($db = FALSE) {
 	}
 }
 
-// Fetch associative array
+/*
+ * Returns associative array
+ * Most commonly used method
+ */
 function sql_fetch_array($id = -1) {
 	global $cfg;
 
@@ -246,7 +258,9 @@ function sql_fetch_array($id = -1) {
 	return mysql_fetch_assoc($cfg['sql']['id']);
 }
 
-// See php.net/mysql_data_seek
+/*
+ * See php.net/mysql_data_seek
+ */
 function sql_data_seek($n, $id = -1) {
 	global $cfg;
 
@@ -254,24 +268,33 @@ function sql_data_seek($n, $id = -1) {
 	mysql_data_seek($cfg['sql']['id'], $n);
 }
 
-// Find next ID value from
-// Column 'c' inside table 't'
-function sql_nextid($c, $t) {
-	sql_query('SELECT MAX('.$c.') AS max FROM '.$t, '', __FILE__, __LINE__);
+/*
+ * Find next ID value to be populated from
+ * Column $col inside table $tbl
+ *
+ * This is essentially a PHP version of auto_increment,
+ * except it must be called manually
+ */
+function sql_nextid($col, $tbl) {
+	sql_query('SELECT MAX('.$col.') AS max FROM '.$tbl, '', __FILE__, __LINE__);
 	$r = sql_fetch_array();
-	$r['max'] = (int) $r['max'];
+	$max = intval($r['max'])+1;
 
-	return (($r['max']+1) > 0) ? $r['max']+1 : 1;
+	return $max > 0 ? $max+1 : 1;
 }
 
-// Get recent insert ID
+/*
+ * Gets auto_increment ID of latest INSERT query
+ */
 function sql_insert_id($id = -1) {
 	global $cfg;
 
 	return ($id === -1) ? mysql_insert_id() : mysql_insert_id($id);
 }
 
-// Free result
+/*
+ * Frees up memory from query
+ */
 function sql_free_result($id = -1) {
 	global $cfg;
 
@@ -279,7 +302,11 @@ function sql_free_result($id = -1) {
 	return mysql_free_result($cfg['sql']['id']);
 }
 
-// Return number of rows
+/*
+ * Returns number of rows returned in query
+ * Recommended to avoid this function, as it is considered
+ * very slow and inefficient
+ */
 function sql_num_rows($id = -1) {
 	global $cfg;
 
@@ -287,11 +314,15 @@ function sql_num_rows($id = -1) {
 	return mysql_num_rows($cfg['sql']['id']);
 }
 
-// Return MySQL Error
+/*
+ * Triggers sql errors
+ * $halt bool determines if script should exit
+ */
 function sql_error($err, $halt = FALSE) {
 	global $cfg;
 
-	trigger_error($err,E_USER_ERROR);
+	trigger_error($err, E_USER_ERROR);
+
 	if ($halt) exit;
 }
 

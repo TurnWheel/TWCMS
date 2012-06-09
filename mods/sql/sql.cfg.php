@@ -22,6 +22,17 @@ $cfg = array(
 	'sql_name' => 'somewebsite',
 );
 
+/*
+ * SQL Global Params
+ * These defaults do not change
+ */
+$cfg['sql'] = array(
+	'id' => 0, // Stores current query reference
+	'time' => 0, // Stores total execution time
+	'count' => 0, // Counts number of queries
+	'qstats' => array() // Keeps record of stats
+);
+
 // Prefix for SQL tables
 define('SQL_PREFIX', '');
 
