@@ -3,7 +3,7 @@
 
 # Sonic.net PHP 5.3
 #Action php-cgi /cgi-bin/php53
-#AddHandler php-cgi .php 
+#AddHandler php-cgi .php
 
 DirectoryIndex index.php
 

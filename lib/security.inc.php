@@ -14,6 +14,9 @@ if (!defined('SECURITY')) exit;
 /*
  * <TWCMS>
  * Escape headers for general use.
+ *
+ * $html = TRUE forces html escaping
+ * However, if SQL mod is disabled, this is default anyway
  */
 function escape($v, $html = FALSE) {
 	global $cfg;
@@ -43,7 +46,7 @@ function path_escape($v) {
 /*
  * <TWCMS>
  * Shortcut for escaping HTML
- * This is kind of a legacy left-over, but still useful
+ * This is really a legacy left-over, but still a useful shortcut
  */
 function html_escape($v) {
 	return escape($v, TRUE);
@@ -67,9 +70,11 @@ function req_auth($realm = 'Secret Realm') {
  * Or string representing name in cfg auth config
  */
 function check_auth($login) {
+	global $cfg;
+
 	// If a string, get login from cfg['auth']
-	if (is_string($login)) {
-		$login = $GLOBALS['cfg']['auth'][$login];
+	if (is_string($login) && isset($cfg['auth'][$login])) {
+		$login = $cfg['auth'][$login];
 	}
 
 	// For PHP5 CGI In conjunction
@@ -100,17 +105,17 @@ function print404() {
 	header('HTTP/1.1 404 Not Found');
 	header('X-Powered-By:', TRUE);
 	header('Set-Cookie', TRUE);
-	?>
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+
+	print '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <title>404 Not Found</title>
 </head><body>
 <h1>Not Found</h1>
-<p>The requested URL <?php print $_SERVER['REQUEST_URI']; ?> was not found on this server.</p>
+<p>The requested URL '.$_SERVER['REQUEST_URI'].' was not found on this server.</p>
 <hr>
-<address>Apache Server at <?php print $_SERVER['SERVER_NAME']; ?> Port 80</address>
-</body></html>
-	<?php
+<address>Apache Server at '.$_SERVER['SERVER_NAME'].' Port 80</address>
+</body></html>';
+
 }
 
 // EOF

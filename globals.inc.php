@@ -47,7 +47,7 @@ foreach ($cfg['auth'] AS $name => $login) {
 header('X-Powered-By: '.VERSION);
 
 /*
- * Load all modules, configs, and calls module onLoad events
+ * Load all modules, configs, and call module onLoad events
  */
 foreach ($cfg['mods_enabled'] AS $mod) {
 	tw_loadmod($mod);

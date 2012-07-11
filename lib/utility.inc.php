@@ -142,44 +142,6 @@ function recursiveDelete($str) {
 }
 
 /*
- * Get lat/lng from google based on address
- * MAPS_HOST and MAPS_KEY are defined in config
- */
-function google_latlng($addr, &$status) {
-	if ($addr == '') return FALSE;
-
-	// Set up variables
-	$delay = 0;
-	$base = 'http://'.MAPS_HOST.'/maps/geo?output=csv&key='.MAPS_KEY;
-	$pending = TRUE;
-	$status = '';
-
-	while ($pending) {
-		$request = $base.'&q='.urlencode($addr);
-		$csv = file_get_contents($request);
-
-		if (!$csv) $delay += 100000;
-		else {
-			$split = split(',',$csv);
-			$status = $split[0];
-			if (strcmp($status, '200') == 0) {
-				// Return array(lat,lng,acc)
-				return array($split[2],$split[3], (int) $split[1]);
-			}
-			elseif (strcmp($status,'620') == 0 || strcmp($status,'403') == 0) {
-				$delay += 100000; // Sent geocodes too fast
-			}
-			else return FALSE; // Failure to geocode
-		}
-
-		usleep($delay);
-	}
-
-	// If it reaches this point, just move on
-	return FALSE;
-}
-
-/*
  * Resize images being uploaded
  * $type: jpg,jpeg,png,gif
  * $orig: Original Image
@@ -365,20 +327,20 @@ function secs2str($secs, $long = FALSE) {
  */
 function time_since($time, $showdate = TRUE) {
 	$secs = array(
-		array(31536000,'year'),
-		array(2592000,'month'),
-		array(604800,'week'),
-		array(86400,'day'),
-		array(3600,'hour'),
-		array(60,'minute'),
+		array(31536000, 'year'),
+		array(2592000, 'month'),
+		array(604800, 'week'),
+		array(86400, 'day'),
+		array(3600, 'hour'),
+		array(60, 'minute'),
 	);
 
 	$since = NOW-$time;
 	$str = '';
 
 	if ($showdate === TRUE && $since > 604800) {
-		$str = date('F jS',$time);
-		if ($since > 31536000) $str .= ', '.date('Y',$time);
+		$str = date('F jS', $time);
+		if ($since > 31536000) $str .= ', '.date('Y', $time);
 
 		return $str;
 	}
@@ -412,7 +374,7 @@ function parse_csv_row($file, $longest = 0, $delimiter = ',') {
 }
 
 /*
- * Parse CSV file by column
+ * Parse CSV File by Column
  */
 function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
 	if (!file_exists($file)) return FALSE;
@@ -480,7 +442,7 @@ function url_clean($string) {
 	$url = iconv('utf-8', 'us-ascii//TRANSLIT', $url);
 	$url = strtolower($url);
 
-	 // keep only letters, numbers, '_' and separator
+	// keep only letters, numbers, '_' and separator
 	$url = preg_replace('~[^-a-z0-9_]+~', '', $url);
 
 	return $url;
@@ -561,7 +523,7 @@ function sanitize($text = '') {
 
 /*
  * Validate Phone Numbers
- * Supports formats:
+ * Supported formats:
  * (555) 555-12345
  * 555-12345
  */
@@ -580,8 +542,7 @@ function valid_phone($pn, $useareacode = TRUE) {
 
 /*
  * Validate EMail Address
- * Full rfc3696 valid function
- * is at the bottom of this file.
+ * Full rfc3696 valid function below
  */
 function valid_email($email)  {
 	return is_rfc822_valid_email_address($email);

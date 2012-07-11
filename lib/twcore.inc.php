@@ -90,7 +90,7 @@ function tw_loadcfg($mod) {
  * <TWCMS>
  * Check if mod is loaded
  *
- * Really, this just check $cfg['mods_loaded']
+ * Really, this just checks $cfg['mods_loaded']
  * but it makes for a sensible shortcut
  */
 function tw_isloaded($mod) {
@@ -129,13 +129,13 @@ function tw_ismod($mod) {
  *
  * $mail - Array of settings
  * Key Settings:
- * 'enable' - Set to FALSE to disable email on config. (Default: TRUE)
+ * 'enable' - Set to FALSE to disable email in config. (Default: TRUE)
  * 'to' - Array or string of who to send the email to
  * 'body' - Body Template
  * 'subject' - Full subject of email
  * 'headers' - Additional email headers
  * 'date' - Date format for map replacement
- * $map - Array of replacements for mail template (See map_replace)
+ * $map - Array of replacements for mail template (See map_replace in utility)
  */
 function tw_sendmail($mail, $map = array()) {
 	global $cfg;
@@ -181,7 +181,7 @@ function tw_sendmail($mail, $map = array()) {
 				'headers' => $head,
 				'date' => NOW,
 				'flags' => 0
-			));
+			), __FILE__, __LINE__);
 	}
 
 	// Send mail and return status
@@ -191,7 +191,6 @@ function tw_sendmail($mail, $map = array()) {
 /*
  * <TWCMS>
  * Hashes a string based on config
- * settings, set in config.inc.php
  *
  * Returns computed hash string
  * $salt_str returns the salt by ref
@@ -231,7 +230,7 @@ function tw_chkhash($input, $enc, $salt_str = '') {
 /*
  * <TWCMS>
  * Encrypts a string based on config
- * settings, set in config.inc.php
+ * (This is two-way encryption, for one-way see tw_genhash)
  */
 function tw_enc($input) {
 	global $cfg;
@@ -260,3 +259,5 @@ function tw_dec($input) {
 	$pad = ord($input[($len = strlen($input)) - 1]);
 	return substr($input, 0, strlen($input) - $pad);
 }
+
+// EOF

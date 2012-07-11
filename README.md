@@ -1,8 +1,10 @@
 TWCMS
 ------------
 
-This code is currently considered in BETA
 We do not officially provide support for this code.
+All documentation is in code comments.
+Start with globals, config, and index.php
 
-There is no license on this code currently.
-You are free to do with it as you please.
+You are free to do with this code as you please.
+I care too little about licenses to bother adding one,
+so rest assured I don't care what you do with it.
