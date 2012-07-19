@@ -70,6 +70,22 @@ function tw_event($func, $mod = FALSE) {
 	return FALSE;
 }
 
+
+/*
+ * <TWCMS>
+ * TW Message function
+ * Saves internal messages from event functions
+ *
+ * Used for cron callbacks and debug
+ */
+function tw_msg($msg, $file = __FILE__, $line = __LINE__, $newline = TRUE) {
+	$file = basename($file);
+
+	print '['.$file.':'.$line.'] '.$msg;
+
+	if ($newline) print "\n";
+}
+
 /*
  * <TWCMS>
  * Load config file for specified module

@@ -405,6 +405,36 @@ function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
 }
 
 /*
+ * Get lat/lng from google based on address
+ */
+function google_latlng($addr) {
+	if ($addr === '') return FALSE;
+
+	$base = 'http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=';
+	$url = $base.urlencode($addr);
+
+	$data = file_get_contents($url);
+
+	if (!$data) return FALSE;
+
+	$json = json_decode($data, TRUE);
+
+	// Verify status code
+	$status = $json['status'];
+
+	// If status is OK, return lat/lng information
+	if ($json['status'] === 'OK') {
+		$results = $json['results'][0];
+		$loc = $results['geometry']['location'];
+		return array($loc['lat'], $loc['lng']);
+	}
+
+	print_r($json);
+
+	return FALSE;
+}
+
+/*
  * Calculates distance in miles from one set
  * of coordinates to another
  */
