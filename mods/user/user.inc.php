@@ -214,6 +214,9 @@ function user_login(&$user, $email, $pass) {
 		setcookie(PREFIX.'_email', $email, $time, BASEURL);
 		setcookie(PREFIX.'_hash', $user['password'], $time, BASEURL);
 
+		// Run login event
+		tw_event('onUserLogin');
+
 		return TRUE;
 	}
 
@@ -231,6 +234,9 @@ function user_logout() {
 	// Destroy session and start a new one 
 	session_destroy();
 	session_start();
+
+	// Run logout event
+	tw_event('onUserLogout');
 
 	return TRUE;
 }
@@ -299,6 +305,9 @@ function user_register($data) {
 	if ($cfg['user_welcome']) {
 		tw_sendmail($cfg['user_emails']['welcome'], $map);
 	}
+
+	// Register event
+	tw_event('onUserRegister');
 
 	return $userid;
 }
