@@ -15,25 +15,26 @@ if (!defined('SECURITY')) exit;
 /*
  * <TWCMS>
  * Check Bit Flags
- * Usage: check_flag(F_FLAG, $flags)
+ * Usage: hasflag(F_FLAG, $flags)
  */
-function check_flag($flag, $val) {
+function hasflag($flag, $val) {
 	if (($flag&$val) === 0) return FALSE;
 	else return TRUE;
 }
 
 /*
- * Check list of flags for greatest results
+ * Check list of flags for highest value
  * $text = array of (flag) => (text descrip)
  * $compare = flag to test against
+ *
  * if $incFlag = TRUE: returns Array ([0] => flag, [1] => text)
- * else returns text
+ * else returns text descrip
  */
-function check_flaglist($text, $compare, $incFlag = TRUE) {
+function hasflag_list($text, $compare, $incFlag = TRUE) {
 	$result = '';
 
 	foreach ($text AS $flag => $txt) {
-		if (check_flag($flag, $compare)) {
+		if (hasflag($flag, $compare)) {
 			$result = $incFlag ? array($flag, $txt) : $txt;
 		}
 	}

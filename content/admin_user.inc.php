@@ -60,7 +60,7 @@ foreach ($users AS $user) {
 		</td>
 		<td class="center">'.$user['email'].'</td>
 		<td class="center">
-			'.(check_flag(U_LOGIN, $user['flags']) ?
+			'.(hasflag(U_LOGIN, $user['flags']) ?
 				'<strong class="green">Enabled</strong>' :
 				'<strong class="red">Disabled</strong>').'
 		</td>

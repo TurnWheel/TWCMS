@@ -174,7 +174,7 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
 	if ($user === FALSE) return FALSE;
 
 	// Verify the user has login permissions
-	if (!check_flag(U_LOGIN, $user['flags'])) {
+	if (!hasflag(U_LOGIN, $user['flags'])) {
 		define('LOGINDENIED', TRUE);
 		return FALSE;
 	}
@@ -318,7 +318,7 @@ function user_register($data) {
  */
 function user_hasperm($perm) {
 	global $U;
-	return check_flag($perm, $U['flags']);
+	return hasflag($perm, $U['flags']);
 }
 
 /*
