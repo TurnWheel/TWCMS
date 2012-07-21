@@ -29,16 +29,16 @@ function tw_loadmod($mod) {
 	// SECURITY: Should be include safe
 	require MPATH.$mod.'/'.$mod.'.inc.php';
 
-	// Mark module as loaded
-	$cfg['mods_loaded'][$mod] = TRUE;
-
 	// Load config file and merge config into global cfg
 	$ncfg = tw_loadcfg($mod);
 	if ($ncfg !== FALSE) {
 		$cfg = array_merge($cfg, $ncfg);
 	}
 
-	// Call onLoad event functions
+	// Mark module as loaded
+	$cfg['mods_loaded'][$mod] = TRUE;
+
+	// Run onLoad event just for this module
 	tw_event('onLoad', $mod);
 
 	return TRUE;
@@ -63,8 +63,7 @@ function tw_event($func, $mod = FALSE) {
 		return TRUE;
 	}
 	elseif (function_exists($mod.'_'.$func)) {
-		call_user_func($mod.'_'.$func);
-		return TRUE;
+		return call_user_func($mod.'_'.$func);
 	}
 
 	return FALSE;
