@@ -140,13 +140,6 @@ define('SSLURL', 'https://'.DOMAIN.'/'); // Path to SSL server
 define('WWWURL', 'http://'.DOMAIN.'/'); // Path to main website
 
 /*
- * Define Bit Flags
- * Do not edit unless you know what you are doing!
- */
-
-define('T_APPROVE', 1); // JUST A SAMPLE
-
-/*
  * Do Not Edit Below This Line
  * These values should never change
  */
