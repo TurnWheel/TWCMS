@@ -92,7 +92,7 @@ function tw_msg($msg, $file = __FILE__, $line = __LINE__, $newline = TRUE) {
  */
 function tw_loadcfg($mod) {
 	// Load config file for this module
-	if (file_exists(MPATH.$mod.'/'.$mod.'.cfg.php')) {
+	if (is_file(MPATH.$mod.'/'.$mod.'.cfg.php')) {
 		require MPATH.$mod.'/'.$mod.'.cfg.php';
 
 		if (isset($cfg)) return $cfg;
@@ -131,7 +131,7 @@ function tw_ismod($mod) {
 	}
 
 	// Make sure file exists
-	if (!file_exists(MPATH.$mod.'/'.$mod.'.inc.php')) return FALSE;
+	if (!is_file(MPATH.$mod.'/'.$mod.'.inc.php')) return FALSE;
 
 	return TRUE;
 }

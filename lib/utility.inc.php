@@ -360,7 +360,7 @@ function time_since($time, $showdate = TRUE) {
  * Parse CSV File by Row
  */
 function parse_csv_row($file, $longest = 0, $delimiter = ',') {
-	if (!file_exists($file)) return FALSE;
+	if (!is_file($file)) return FALSE;
 
 	$data = array();
 	$file = fopen($file, 'r');
@@ -378,7 +378,7 @@ function parse_csv_row($file, $longest = 0, $delimiter = ',') {
  * Parse CSV File by Column
  */
 function parse_csv_col($file, $map, $longest = 0, $delimiter = ',') {
-	if (!file_exists($file)) return FALSE;
+	if (!is_file($file)) return FALSE;
 
 	$data = array();
 	$file = fopen($file,'r');

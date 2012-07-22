@@ -257,10 +257,10 @@ if ($P['page'] === 'indexnew') {
  */
 $sb = 'sidebar.'; // String justs helps make the lines smaller
 $T['sidebar'] =
-	(file_exists(CPATH.$sb.$P['root'].'.inc.php') ? CPATH.$sb.$P['root'].'.inc.php' :
-	(file_exists(CPATH.$sb.$P['root'].'.html') ? CPATH.$sb.$P['root'].'.html' :
-	(file_exists(CPATH.$sb.'default.inc.php') ? CPATH.$sb.'default.inc.php' :
-	(file_exists(CPATH.$sb.'default.html') ? CPATH.$sb.'default.html' : ''))));
+	(is_file(CPATH.$sb.$P['root'].'.inc.php') ? CPATH.$sb.$P['root'].'.inc.php' :
+	(is_file(CPATH.$sb.$P['root'].'.html') ? CPATH.$sb.$P['root'].'.html' :
+	(is_file(CPATH.$sb.'default.inc.php') ? CPATH.$sb.'default.inc.php' :
+	(is_file(CPATH.$sb.'default.html') ? CPATH.$sb.'default.html' : ''))));
 
 /* Find CSS files */
 

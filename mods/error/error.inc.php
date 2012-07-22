@@ -60,7 +60,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	if ($cfg['error_template']) {
 		$file = CPATH.($cfg['debug'] ? 'error.php.debug.html' : 'error.php.html');
 
-		if (file_exists($file)) {
+		if (is_file($file)) {
 			$content = file_get_contents($file);
 			print map_replace($map, $content);
 		}

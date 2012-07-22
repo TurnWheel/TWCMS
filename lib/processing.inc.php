@@ -24,7 +24,7 @@ function p_showerror($num) {
 	$file = CPATH.'error.'.$num.'.html';
 
 	if (!isset($cfg['httpCodes'][$num])) return FALSE;
-	if (!file_exists($file)) return FALSE;
+	if (!is_file($file)) return FALSE;
 
 	header('HTTP/1.1 '.$cfg['httpCodes'][$num]);
 
@@ -85,7 +85,7 @@ function p_htmlfile($file) {
  * File Name Returned: css/<PREFIX>.subpage.css?_=12343425;
 */
 function p_exfile($dir, $name) {
-	return file_exists($dir.'/'.PREFIX.'.'.$name) ?
+	return is_file($dir.'/'.PREFIX.'.'.$name) ?
 			PREFIX.'.'.$name.'?_='.filemtime($dir.'/'.PREFIX.'.'.$name)
 			: FALSE;
 }
