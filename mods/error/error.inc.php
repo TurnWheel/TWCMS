@@ -11,9 +11,9 @@
  * ---- Additional Files ----
  * content/error.php.html
  * content/error.php.debug.html
- * content/admin_errors.inc.php
- * js/<pre>.admin_errors.js
- * css/<pre>.admin_errors.css
+ * content/admin_error.inc.php
+ * js/<pre>.admin_error.js
+ * css/<pre>.admin_error.css
  * ----
  */
 

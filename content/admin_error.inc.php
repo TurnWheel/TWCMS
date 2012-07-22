@@ -41,7 +41,7 @@ if (!$cfg['error_savedb']) {
 	</div>';
 }
 
-sql_query('SELECT eid, error, date, flags FROM errors');
+sql_query('SELECT eid, error, date, flags FROM error');
 $errors = array();
 while ($r = sql_fetch_array()) {
 	$errors[(int) $r['eid']] = array(
@@ -63,7 +63,7 @@ $i = 0;
 foreach ($errors AS $id => $error) {
 	$content .= '
 	<tr class="table'.($i%2).'">
-		<td><a href="/admin/errors/'.$id.'">#'.$id.'</a></td>
+		<td><a href="/admin/error/'.$id.'">#'.$id.'</a></td>
 		<td>
 			<span title="'.$error['error'].'">
 				'.truncate($error['error'], 100).'
