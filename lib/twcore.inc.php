@@ -50,20 +50,20 @@ function tw_loadmod($mod) {
  *
  * If $mod is specified, it only runs the event for that mod
  */
-function tw_event($func, $mod = FALSE) {
+function tw_event($func, $mod = FALSE, $input = array()) {
 	global $cfg;
 
 	if ($mod === FALSE) {
 		foreach ($cfg['mods_loaded'] AS $mod => $bool) {
 			if (function_exists($mod.'_'.$func)) {
-				call_user_func($mod.'_'.$func);
+				call_user_func($mod.'_'.$func, $input);
 			}
 		}
 
 		return TRUE;
 	}
 	elseif (function_exists($mod.'_'.$func)) {
-		return call_user_func($mod.'_'.$func);
+		return call_user_func($mod.'_'.$func, $input);
 	}
 
 	return FALSE;
