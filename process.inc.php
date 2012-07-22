@@ -17,10 +17,6 @@
  * accessible by dynamic content files (CPATH/*.inc.php)
  */
 
-// Template Variable
-// All values the template will need should be in the $T array.
-$T = array();
-
 // Process Variable
 // All values key to processing will be in the $P array.
 $P = array();

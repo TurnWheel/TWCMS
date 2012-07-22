@@ -46,6 +46,10 @@ foreach ($cfg['auth'] AS $name => $login) {
 // This helps override some servers' PHP Disclosure settings
 header('X-Powered-By: '.VERSION);
 
+// Template Variable
+// All values the template will need should be in the $T array.
+$T = array();
+
 /*
  * Load all modules, configs, and call module onLoad events
  */
