@@ -18,8 +18,7 @@ if (!defined('SECURITY')) exit;
  * Usage: hasflag(F_FLAG, $flags)
  */
 function hasflag($flag, $val) {
-	if (($flag&$val) === 0) return FALSE;
-	else return TRUE;
+	return ($flag&$val) === 0) ? FALSE : TRUE;
 }
 
 /*
@@ -43,6 +42,27 @@ function hasflag_list($text, $compare, $incFlag = TRUE) {
 }
 
 /*
+ * <TWCMS>
+ * Removes specified flag from value
+ * Ex: rmflag(4, 29) -> 25
+ * Ex: rmflag(4, 25) -> 25
+ */
+function rmflag($flag, $val) {
+	return $val & ~$flag;
+}
+
+/*
+ * <TWCMS>
+ * Adds specified flag to value
+ * Ex: addflag(4, 25) -> 29
+ * Ex: addflag(4, 29) -> 29
+ */
+function addflag($flag, $val) {
+	return $val | $flag;
+}
+
+/*
+ * <TWCMS>
  * Simple array -> Replace mapping function
  * Ex: print map_replace(array('foo' => 'bar'), '{foo} stuff')
  * -> bar stuff
