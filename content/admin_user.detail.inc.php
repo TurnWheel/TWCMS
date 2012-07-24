@@ -51,19 +51,19 @@ if (isset($_POST['chstatus'])) {
 	// Check for U_LOGIN
 	// if true, remove U_LOGIN from flags
 	// otherwise add U_LOGIN from flags
-	if (hasflag(U_LOGIN, $data['flags'])) {
+	if (hasflag($data['flags'], ULOGIN)) {
 		// Remove U_LOGIN
-		$data['flags'] = $data['flags'] & ~U_LOGIN;
+		$data['flags'] = rmflag($data['flags'], U_LOGIN);
 	}
 	else {
 		// Add U_LOGIN
-		$data['flags'] |= U_LOGIN;
+		$data['flags'] = addflag($data['flags'], U_LOGIN);
 
 		// Alert user of approval if user_modreg is enabled
 		// and they have not previously been notified
-		if ($cfg['user_modreg'] && !hasflag(U_NOTIFIED, $data['flags'])) {
+		if ($cfg['user_modreg'] && !hasflag($data['flags'], U_NOTIFIED)) {
 			// Add U_NOTIFIED flag
-			$data['flags'] |= U_NOTIFIED;
+			$data['flags'] = addflag($data['flags'], U_NOTIFIED);
 
 			$map = array(
 				'date' => date($cfg['user_emails']['date'], NOW),
@@ -195,7 +195,7 @@ if (sizeof($error) > 0) {
 	<p>
 			<strong>Status:</strong>
 	<?php
-	if (hasflag(U_LOGIN, $data['flags'])) {
+	if (hasflag($data['flags'], U_LOGIN)) {
 		print '
 		<strong class="green">Active</strong></p>
 		<button type="submit" name="chstatus">Disable Account</button><br />';
@@ -204,7 +204,7 @@ if (sizeof($error) > 0) {
 		print '
 		<strong class="red">Disabled</strong></p>';
 
-		if ($cfg['user_modreg'] && !hasflag(U_NOTIFIED, $data['flags'])) {
+		if ($cfg['user_modreg'] && !hasflag($data['flags'], U_NOTIFIED)) {
 			print '
 			<p><strong>Important:</strong> This user will receive an
 			email notification when this account is approved</p>';
@@ -213,7 +213,7 @@ if (sizeof($error) > 0) {
 		print '
 		<button type="submit" name="chstatus">
 			'.($cfg['user_modreg'] ?
-				(hasflag(U_NOTIFIED, $data['flags']) ? 'Enable Account' :
+				(hasflag($data['flags'], U_NOTIFIED) ? 'Enable Account' :
 					'Approve Account') :
 				'Enable Account').'
 		</button><br />';

@@ -27,7 +27,7 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 	$currurl = CURRURL;
 
 	$ret = '
-	<div id="breadcrumbs">'."\n";
+	<nav id="breadcrumbs">'."\n";
 
 	foreach ($bcrumbs AS $name => $url) {
 		// Convert url to printable name
@@ -44,7 +44,7 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 	}
 
 	$ret .= '
-	</div>'."\n";
+	</nav>'."\n";
 
 	return $ret;
 }

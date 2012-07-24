@@ -15,16 +15,16 @@ if (!defined('SECURITY')) exit;
 /*
  * <TWCMS>
  * Check Bit Flags
- * Usage: hasflag(F_FLAG, $flags)
+ * Usage: hasflag($flags, F_FLAG)
  */
-function hasflag($flag, $val) {
-	return ($flag&$val) === 0) ? FALSE : TRUE;
+function hasflag($val, $flag) {
+	return (bool) ($val & $flag);
 }
 
 /*
  * Check list of flags for highest value
  * $text = array of (flag) => (text descrip)
- * $compare = flag to test against
+ * $compare = flag setting to test against
  *
  * if $incFlag = TRUE: returns Array ([0] => flag, [1] => text)
  * else returns text descrip
@@ -33,7 +33,7 @@ function hasflag_list($text, $compare, $incFlag = TRUE) {
 	$result = '';
 
 	foreach ($text AS $flag => $txt) {
-		if (hasflag($flag, $compare)) {
+		if (hasflag($compare, $flag)) {
 			$result = $incFlag ? array($flag, $txt) : $txt;
 		}
 	}
@@ -44,20 +44,20 @@ function hasflag_list($text, $compare, $incFlag = TRUE) {
 /*
  * <TWCMS>
  * Removes specified flag from value
- * Ex: rmflag(4, 29) -> 25
- * Ex: rmflag(4, 25) -> 25
+ * Ex: rmflag(29, 4) -> 25
+ * Ex: rmflag(25, 4) -> 25
  */
-function rmflag($flag, $val) {
+function rmflag($val, $flag) {
 	return $val & ~$flag;
 }
 
 /*
  * <TWCMS>
  * Adds specified flag to value
- * Ex: addflag(4, 25) -> 29
- * Ex: addflag(4, 29) -> 29
+ * Ex: addflag(25, 4) -> 29
+ * Ex: addflag(29, 4) -> 29
  */
-function addflag($flag, $val) {
+function addflag($val, $flag) {
 	return $val | $flag;
 }
 

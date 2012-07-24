@@ -38,6 +38,9 @@ function user_onLoad() {
 	$isuser = FALSE; // Default to no user until verified
 	$U = array(); // Empty setting for user prefs
 
+	// SQL Module is required
+	if (!tw_isloaded('sql')) return FALSE;
+
 	// Login user if POST was sent
 	if (isset($_POST['login'])) {
 		$email = isset($_POST['email']) ? escape($_POST['email']) : '';
@@ -174,7 +177,7 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
 	if ($user === FALSE) return FALSE;
 
 	// Verify the user has login permissions
-	if (!hasflag(U_LOGIN, $user['flags'])) {
+	if (!hasflag($user['flags'], U_LOGIN)) {
 		define('LOGINDENIED', TRUE);
 		return FALSE;
 	}
@@ -231,7 +234,7 @@ function user_logout() {
 	setcookie(PREFIX.'_email', '', NOW-3360, BASEURL);
 	setcookie(PREFIX.'_hash', '', NOW-3360, BASEURL);
 
-	// Destroy session and start a new one 
+	// Destroy session and start a new one
 	session_destroy();
 	session_start();
 
@@ -315,10 +318,12 @@ function user_register($data) {
 /*
  * Permission Checks
  * Ex: user_hasperm(U_ADMIN)
+ *
+ * Just returns hasflag(), but still a sensible shortcut
  */
 function user_hasperm($perm) {
 	global $U;
-	return hasflag($perm, $U['flags']);
+	return hasflag($U['flags'], $perm);
 }
 
 /*
