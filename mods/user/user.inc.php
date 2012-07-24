@@ -319,11 +319,11 @@ function user_register($data) {
  * Permission Checks
  * Ex: user_hasperm(U_ADMIN)
  *
- * Just returns hasflag(), but still a sensible shortcut
+ * Returns hasflag(), except a input of 0 will return TRUE
  */
 function user_hasperm($perm) {
 	global $U;
-	return hasflag($U['flags'], $perm);
+	return $perm === 0 || hasflag($U['flags'], $perm);
 }
 
 /*
