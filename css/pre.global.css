@@ -170,7 +170,7 @@ button:hover {
 	width: 994px;
 	background: transparent;
 }
-#header {
+header {
 	position: absolute;
 	margin: 0 auto;
 	top: -170px;
