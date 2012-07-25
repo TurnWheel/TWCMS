@@ -21,7 +21,7 @@ if (!defined('SECURITY')) exit;
  * $attr: Additional attributes and settings
  * $prefix: (optional) PREFIX is automatically added to CSS/JS file names
  */
-function t_addRes($type, $name, $prefx = PREFIX) {
+function t_addRes($type, $name, $prefix = PREFIX) {
 	global $T;
 
 	if ($type === 'css' || $type === 'js') {
