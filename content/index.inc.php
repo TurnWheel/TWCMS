@@ -14,9 +14,9 @@ ob_start();
 	// Sample of blog teaser include
 	//include 'news/teaser.php';
 	?>
-	<div class="box">
+	<article class="box">
 		<p>Blog stuff can go here, or just static updates if needed</p>
-	</div>
+	</article>
 </div>
 
 <?php

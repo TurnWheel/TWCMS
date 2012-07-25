@@ -69,9 +69,13 @@ function t_debug() {
  *
  * $err = Array of errors
  * $key = Checks for this key inside $err
+ * $return = Print or return html? (Optional)
  */
-function t_iserror($err, $key) {
-	if (isset($err[$key])) print ' class="error"';
+function t_iserror($err, $key, $return = FALSE) {
+	if (isset($err[$key])) {
+		if ($return) return ' class="error"';
+		print ' class="error"';
+	}
 }
 
 /*
@@ -94,7 +98,7 @@ function t_select($opts, $select = '', $return = FALSE) {
 	}
 
 	if ($return) return $html;
-	else print $html;
+	print $html;
 }
 
 // EOF

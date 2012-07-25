@@ -52,8 +52,8 @@ $content = isset($T['content']) ? $T['content'] : '';
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<title><?php print ISINDEX ? 'Home' : $title; ?> :: Misc. Demo Site</title>
+	<meta charset="utf-8" />
+	<title><?php print ISINDEX ? 'Home' : $title; ?> :: TWCMS Demo Site</title>
 
 	<meta name="description" content="Enter a descrip" />
 	<meta name="keywords" content="Enter keywords" />
@@ -67,7 +67,9 @@ foreach ($T['css'] AS $file) {
 }
 ?>
 
-
+	<!--[if IE]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/jquery.colorbox.min.js"></script><?php
 foreach ($T['js'] AS $file) {
@@ -99,15 +101,17 @@ foreach ($T['js'] AS $file) {
 		<h1><a href="/">Main Title Of Website (Hidden by default)</a></h1>
 	</div>
 	<div id="container">
-		<div id="header">
+		<header>
 			<div id="logo"><a href="/"><b>Text of Logo</b></a></div>
-			<ul id="menu">
-				<li><a href="/">Home</a></li>
-				<li><a href="/about">About Us</a></li>
-				<li><a href="/something">Something Cool</a></li>
-				<li><a href="/contact">Contact Us</a></li>
-			</ul>
-		</div>
+			<nav id="menu">
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/about">About Us</a></li>
+					<li><a href="/something">Something Cool</a></li>
+					<li><a href="/contact">Contact Us</a></li>
+				</ul>
+			</nav>
+		</header>
 		<div id="content">
 			<div id="content_inner">
 			<?php
@@ -145,8 +149,8 @@ foreach ($T['js'] AS $file) {
 	<div id="gotop"><a href="#top">Return to Top of Page</a></div>
 	<div id="footer_top"></div>
 	<div id="footer">
-		<div id="footer_inner">
-			<p>
+		<footer>
+			<p class="footer_nav">
 				<a href="/">Home</a> |
 				<a href="/about">About Us</a> |
 				<a href="/something">Something Cool</a> |
@@ -169,7 +173,7 @@ foreach ($T['js'] AS $file) {
 					TurnWheel Web Designs
 				</a>
 			</p>
-		</div>
+		</footer>
 	</div>
 
 <?php
