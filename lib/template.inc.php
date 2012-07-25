@@ -50,15 +50,36 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 }
 
 /*
- * Returns debug info to template
+ * Gets debug information from all modules
+ * $html: FALSE to disable HTML response, instead returns TEXT only
+ *
+ * $return: Returns HTML from function if TRUE
+ * otherwise the debug info will be saved to $T['debug']
  */
-function t_debug() {
+function t_debug($html = TRUE, $return = FALSE) {
 	global $cfg, $T;
 
-	$T['debug'] = '<!-- Time: '.(microtime(TRUE)-$cfg['start_time']).'s -->';
-
 	// Run 'debug' mod event
-	tw_event('debug');
+	$debug = tw_event('debug');
+
+	if (!$debug) $debug = array();
+
+	// End processing timer
+	$debug['globaltimer'] = (microtime(TRUE)-$cfg['start_time']).'s';
+	$ret = '';
+
+	foreach ($debug AS $name => $text) {
+		if ($html) $ret .= '<!-- ';
+
+		$ret .= $name.': '.$text;
+
+		if ($html) $ret .= ' -->';
+
+		$ret .= "\n";
+	}
+
+	if ($return) return $ret;
+	$T['debug'] = $ret;
 }
 
 

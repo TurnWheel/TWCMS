@@ -48,22 +48,26 @@ function tw_loadmod($mod) {
  * <TWCMS>
  * Checks all loaded modules for specified event
  *
- * If $mod is specified, it only runs the event for that mod
+ * $func: Name of event functions
+ * $mod: If specified, it only runs event for that one mod
+ * $input: Input value (array for multiple values)
+ * Returns: Array of return values; FALSE on failure
  */
 function tw_event($func, $mod = FALSE, $input = array()) {
 	global $cfg;
 
 	if ($mod === FALSE) {
+		$event = array();
 		foreach ($cfg['mods_loaded'] AS $mod => $bool) {
 			if (function_exists($mod.'_'.$func)) {
-				call_user_func($mod.'_'.$func, $input);
+				$event[$mod] = call_user_func($mod.'_'.$func, $input);
 			}
 		}
 
-		return TRUE;
+		return $event;
 	}
 	elseif (function_exists($mod.'_'.$func)) {
-		return call_user_func($mod.'_'.$func, $input);
+		return array(call_user_func($mod.'_'.$func, $input));
 	}
 
 	return FALSE;
