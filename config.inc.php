@@ -145,7 +145,7 @@ define('WWWURL', 'http://'.DOMAIN.'/'); // Path to main website
  */
 
 // CMS Version, update on each new release
-define('VERSION', 'TWCMS 1.1');
+define('VERSION', 'TWCMS 1.2');
 
 // Utility constants
 define('NOW', time());
