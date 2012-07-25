@@ -24,8 +24,12 @@ $cli = !isset($_SERVER['HTTP_HOST']);
 
 if (!$cli) print '<pre>';
 
-// Run cron events
-tw_event('onCron');
+// Run cron events and print out return values
+$cron = tw_event('onCron');
+foreach ($cron AS $mod => $ret) {
+	print '['.$mod.']: '.(is_array($ret) ? print_r($ret, TRUE) : $ret);
+	print "\n\n";
+}
 
 if (!$cli) print '</pre>';
 
