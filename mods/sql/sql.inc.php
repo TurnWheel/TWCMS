@@ -32,7 +32,8 @@ function sql_onLoad() {
 function sql_debug() {
 	global $cfg, $T;
 
-	$ret = 'Query #: '.$cfg['sql']['count'];
+	$ret = 'Queries; '.$cfg['sql']['count'].';';
+	$ret .= 'SQL Time; '.$cfg['sql']['time'];
 
 	if (!empty($cfg['sql']['qstats'])) {
 		$ret .= "\n\n".htmlentities(print_r($cfg['sql']['qstats'], TRUE));

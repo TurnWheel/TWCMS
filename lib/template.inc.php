@@ -66,8 +66,8 @@ function t_debug($html = TRUE, $return = TRUE) {
 
 	// End processing timer
 	$debug['globaltimer'] = (microtime(TRUE)-$cfg['start_time']).'s';
-	$ret = '';
 
+	$ret = '';
 	foreach ($debug AS $name => $text) {
 		if ($html) $ret .= '<!-- ';
 
