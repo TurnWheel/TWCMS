@@ -30,8 +30,6 @@ tw_event('onCron');
 if (!$cli) print '</pre>';
 
 // Load and print all debug information
-// May contain HTML, but still useful
-t_debug();
-print $T['debug'];
+print t_debug(FALSE);
 
 ?>

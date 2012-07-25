@@ -56,7 +56,7 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
  * $return: Returns HTML from function if TRUE
  * otherwise the debug info will be saved to $T['debug']
  */
-function t_debug($html = TRUE, $return = FALSE) {
+function t_debug($html = TRUE, $return = TRUE) {
 	global $cfg, $T;
 
 	// Run 'debug' mod event

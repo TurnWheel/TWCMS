@@ -32,11 +32,13 @@ function sql_onLoad() {
 function sql_debug() {
 	global $cfg, $T;
 
-	$T['debug'] .= "\n".'<!-- SQL #: '.$cfg['sql']['count'].' -->'."\n";
+	$ret = "\n".'SQL #: '.$cfg['sql']['count']."\n\n";
+
 	if (!empty($cfg['sql']['qstats'])) {
-		$txt = htmlentities(print_r($cfg['sql']['qstats'], TRUE));
-		$T['debug'] .= '<!-- '.$txt.' -->';
+		$ret .= htmlentities(print_r($cfg['sql']['qstats'], TRUE));
 	}
+
+	return $ret;
 }
 
 /*

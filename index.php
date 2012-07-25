@@ -179,7 +179,7 @@ foreach ($T['js'] AS $file) {
 <?php
 // Display debug code if enabled
 if ($cfg['debug']) {
-	print t_debug(TRUE, TRUE);
+	print t_debug();
 }
 ?>
 
