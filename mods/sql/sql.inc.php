@@ -33,7 +33,7 @@ function sql_debug() {
 	global $cfg, $T;
 
 	$ret = 'Queries; '.$cfg['sql']['count'].'; ';
-	$ret .= 'SQL Time; '.$cfg['sql']['time'];
+	$ret .= 'SQL Time; '.$cfg['sql']['time'].'s ';
 
 	if (!empty($cfg['sql']['qstats'])) {
 		$ret .= "\n\n".htmlentities(print_r($cfg['sql']['qstats'], TRUE));
