@@ -32,10 +32,10 @@ function sql_onLoad() {
 function sql_debug() {
 	global $cfg, $T;
 
-	$ret = "\n".'SQL #: '.$cfg['sql']['count']."\n\n";
+	$ret = 'Query #: '.$cfg['sql']['count'];
 
 	if (!empty($cfg['sql']['qstats'])) {
-		$ret .= htmlentities(print_r($cfg['sql']['qstats'], TRUE));
+		$ret .= "\n\n".htmlentities(print_r($cfg['sql']['qstats'], TRUE));
 	}
 
 	return $ret;
