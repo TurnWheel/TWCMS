@@ -78,20 +78,6 @@ function p_htmlfile($file) {
 
 /*
  * <TWCMS>
- * Simple processing function to get CSS/JS files quickly
- * Filename Format: dir/PREFIX.file.ext?timestamp
- * ****
- * Sample: get_exfile('css','subpage.css');
- * File Name Returned: css/<PREFIX>.subpage.css?_=12343425;
-*/
-function p_exfile($dir, $name) {
-	return is_file($dir.'/'.PREFIX.'.'.$name) ?
-			PREFIX.'.'.$name.'?_='.filemtime($dir.'/'.PREFIX.'.'.$name)
-			: FALSE;
-}
-
-/*
- * <TWCMS>
  * Convert URL segment to full "printable" name
  *
  * Replaces '-' with ' / ', and '_' with spaces

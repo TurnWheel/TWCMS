@@ -14,6 +14,44 @@
 if (!defined('SECURITY')) exit;
 
 /*
+ * Adds a header resource to the template
+ *
+ * $type: 'css' or 'js'
+ * $name: File basename (without extension or path)
+ * $attr: Additional attributes and settings
+ * $prefix: (optional) PREFIX is automatically added to CSS/JS file names
+ */
+function t_addRes($type, $name, $prefx = PREFIX) {
+	global $T;
+
+	if ($type === 'css' || $type === 'js') {
+		$file = t_exfile($type, $name.'.'.$type, $prefix);
+
+		if (!$file) return FALSE;
+
+		$T[$type][$name] = $file;
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+/*
+ * <TWCMS>
+ * Simple processing function to get CSS/JS files quickly
+ * Filename Format: dir/PREFIX.file.ext?timestamp
+ * ****
+ * Sample: t_exfile('css','subpage.css');
+ * File Name Returned: css/<PREFIX>.subpage.css?_=12343425;
+*/
+function t_exfile($dir, $name, $prefix = PREFIX) {
+	$fname = ($prefix ? $prefix.'.' : '').$name;
+	$fpath = $dir.'/'.$fname;
+
+	return is_file($fpath) ? $fname.'?_='.filemtime($fpath) : FALSE;
+}
+
+/*
  * Breadcrumb function
  *
  * Simple: Call with $T['bcrumbs'] array

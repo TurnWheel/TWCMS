@@ -262,49 +262,30 @@ $T['sidebar'] =
 	(is_file(CPATH.$sb.'default.inc.php') ? CPATH.$sb.'default.inc.php' :
 	(is_file(CPATH.$sb.'default.html') ? CPATH.$sb.'default.html' : ''))));
 
-/* Find CSS files */
+/* Add Resources  */
 
-// Array of CSS files to load (managed by template)
-$T['css'][] = p_exfile('css','global.css');
-$T['css'][] = p_exfile('css','navigation.css');
+// Default files
+t_addRes('css', 'global');
+t_addRes('js', 'global');
 
-// Load Sub Page CSS file (if its not index page)
+// Load subpage resources
 if (!ISINDEX) {
-	$T['css'][] = p_exfile('css','subpage.css');
+	t_addRes('css', 'subpage');
+	t_addRes('js', 'subpage');
 }
 
-// Load root page CSS file
+// Load root page resources
 // if checking parent, or if there is no parent
 if ($cfg['res_checkRoot'] || $P['root'] === $P['page']) {
-	$T['css'][] = p_exfile('css',$P['root'].'.css');
+	t_addRes('css', $P['root']);
+	t_addRes('js', $P['root']);
 }
 
-// Check for current page CSS
+// Check for current page resources
 // if current page different from root
 if ($P['root'] !== $P['page']) {
-	$T['css'][] = p_exfile('css',$P['page'].'.css');
-}
-
-/* Find JS Files */
-
-// Array of JS files to load (managed by template)
-$T['js'][] = p_exfile('js','global.js');
-
-// Load Sub Page JS file (if its not index page)
-if (!ISINDEX) {
-	$T['js'][] = p_exfile('js','subpage.js');
-}
-
-// Load root page JS file
-// if checking parent, or if there is no parent
-if ($cfg['res_checkRoot'] || $P['root'] === $P['page']) {
-	$T['js'][] = p_exfile('js',$P['root'].'.js');
-}
-
-// Check for current page JS
-// if current page different from root
-if ($P['root'] !== $P['page']) {
-	$T['js'][] = p_exfile('js',$P['page'].'.js');
+	t_addRes('css', $P['page']);
+	t_addRes('js', $P['page']);
 }
 
 /*
@@ -330,8 +311,8 @@ if ($cfg['res_recursive']) {
 			}
 
 			$curr = implode($track, '_');
-			$T['css'][] = p_exfile('css', $curr.'.css');
-			$T['js'][] = p_exfile('js', $curr.'.js');
+			t_addRes('css', $curr);
+			t_addRes('js', $curr);
 		}
 	}
 }
