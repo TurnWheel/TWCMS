@@ -242,7 +242,7 @@ function sql_track_end($db = FALSE) {
 		sql_connect($db['host'], $db['user'], $db['pass'], $db['name']);
 
 		foreach ($queries AS $key => $qinfo) {
-			sql_query($qinfo['query']);
+			sql_query($qinfo['query'], '', __FILE__, __LINE__);
 		}
 
 		// Re-connect to default DB
