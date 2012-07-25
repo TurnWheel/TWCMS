@@ -82,13 +82,19 @@ function t_iserror($err, $key) {
  * Result: <option value="CA">California</option>
  *
  * $select: Which "value" to mark as selected
+ *
+ * $return: Return or print? Default FALSE (prints)
  */
-function t_select($opts, $select = '') {
+function t_select($opts, $select = '', $return = FALSE) {
+	$html = '';
 	foreach ($opts AS $val => $name) {
-		print '
-		<option value="'.$val.'"'.($select === $val ? ' selected="selected"' : '')
+		$html .= '
+		<option value="'.$val.'"'.($select == $val ? ' selected="selected"' : '')
 			.'>'.$name.'</option>';
 	}
+
+	if ($return) return $html;
+	else print $html;
 }
 
 // EOF
