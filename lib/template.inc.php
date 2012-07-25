@@ -14,6 +14,7 @@
 if (!defined('SECURITY')) exit;
 
 /*
+ * <TWCMS>
  * Adds a header resource to the template
  *
  * $type: 'css' or 'js'

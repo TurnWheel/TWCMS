@@ -67,11 +67,13 @@ foreach ($T['css'] AS $file) {
 }
 ?>
 
+
 	<!--[if IE]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<script src="/js/jquery.min.js"></script>
-	<script src="/js/jquery.colorbox.min.js"></script><?php
+	<script src="/js/jquery.colorbox.min.js"></script>
+<?php
 foreach ($T['js'] AS $file) {
 	if (!is_string($file) || empty($file)) continue;
 	print '
