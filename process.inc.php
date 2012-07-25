@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.1
+ * TWCMS 1.x
  * Page Processing
  *
  * This file processes page headers and then searches

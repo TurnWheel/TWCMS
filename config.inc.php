@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.1
+ * TWCMS 1.x
  * Global Configuration File
  *
  * All the core settings for TWCMS are located here

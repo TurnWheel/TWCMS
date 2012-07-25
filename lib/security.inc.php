@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.1
+ * TWCMS 1.x
  *
  * Set of security functions, such as HTTP auth,
  * errors and escape functions

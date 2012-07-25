@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.1
+ * TWCMS 1.x
  * Global Include File
  *
  * Loads global config, core libraries, and

@@ -1,6 +1,6 @@
 <?php
 /*
- * TWCMS 1.1
+ * TWCMS 1.x
  * Template Include
  *
  * This file holds the main template for the whole site
