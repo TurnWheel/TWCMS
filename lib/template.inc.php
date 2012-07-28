@@ -20,21 +20,69 @@ if (!defined('SECURITY')) exit;
  * $type: 'css' or 'js'
  * $name: File basename (without extension or path)
  * $attr: Additional attributes and settings
+ * $priority: 1-10, 1 being highest priority, determins order
  * $prefix: (optional) PREFIX is automatically added to CSS/JS file names
  */
-function t_addRes($type, $name, $prefix = PREFIX) {
+function t_addRes($type, $name, $pri = 10, $prefix = PREFIX) {
 	global $T;
+
+	$pri = (int) $pri;
+	// Sanity check on priority input
+	if ($pri > 10 || $pri < 1) {
+		$pri = 10;
+	}
 
 	if ($type === 'css' || $type === 'js') {
 		$file = t_exfile($type, $name.'.'.$type, $prefix);
 
 		if (!$file) return FALSE;
 
-		$T[$type][$name] = $file;
+		if (!isset($T[$type][$pri])) {
+			$T[$type][$pri] = array();
+		}
+
+		$T[$type][$pri][$name] = $file;
+
 		return TRUE;
 	}
 
 	return FALSE;
+}
+
+/*
+ * <TWCMS>
+ *
+ * Displays resources inside template
+ * Resources are defined by t_addRes
+ *
+ * $type: Must be either CSS or JS
+ */
+function t_displayRes($type = 'css') {
+	global $T;
+
+	if (!isset($T[$type])) return FALSE;
+
+	$html = '';
+
+	foreach ($T[$type] AS $pri => $name) {
+		foreach ($name AS $file) {
+			if (!is_string($file) || empty($file)) continue;
+
+			$html .= "\t";
+
+			if ($type === 'css') {
+				$html .= '<link rel="stylesheet" type="text/css"'
+					.'href="/css/'.$file.'" />';
+			}
+			elseif ($type === 'js') {
+				$html .= '<script src="/js/'.$file.'"></script>';
+			}
+
+			$html .= "\n";
+		}
+	}
+
+	return $html;
 }
 
 /*

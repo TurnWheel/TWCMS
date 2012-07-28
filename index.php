@@ -59,27 +59,14 @@ $content = isset($T['content']) ? $T['content'] : '';
 	<meta name="keywords" content="Enter keywords" />
 	<meta name="robots" content="index, follow" />
 	<link rel="shortcut icon" href="/images/fav.png" type="image/x-icon" />
-<?php
-foreach ($T['css'] AS $file) {
-	if (!is_string($file) || empty($file)) continue;
-	print '
-	<link rel="stylesheet" type="text/css" href="/css/'.$file.'" media="screen" />';
-}
-?>
-
+<?php print t_displayRes('css'); ?>
 
 	<!--[if IE]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/jquery.colorbox.min.js"></script>
-<?php
-foreach ($T['js'] AS $file) {
-	if (!is_string($file) || empty($file)) continue;
-	print '
-	<script src="/js/'.$file.'"></script>';
-}
-?>
+<?php print t_displayRes('js'); ?>
 
 	<script>
 	//<!--
