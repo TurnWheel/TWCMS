@@ -265,27 +265,27 @@ $T['sidebar'] =
 /* Add Resources  */
 
 // Default files
-t_addRes('css', 'global');
-t_addRes('js', 'global');
+t_addRes('css', 'global', 1);
+t_addRes('js', 'global', 1);
 
 // Load subpage resources
 if (!ISINDEX) {
-	t_addRes('css', 'subpage');
-	t_addRes('js', 'subpage');
+	t_addRes('css', 'subpage', 2);
+	t_addRes('js', 'subpage', 2);
 }
 
 // Load root page resources
 // if checking parent, or if there is no parent
 if ($cfg['res_checkRoot'] || $P['root'] === $P['page']) {
-	t_addRes('css', $P['root']);
-	t_addRes('js', $P['root']);
+	t_addRes('css', $P['root'], 2);
+	t_addRes('js', $P['root'], 2);
 }
 
 // Check for current page resources
 // if current page different from root
 if ($P['root'] !== $P['page']) {
-	t_addRes('css', $P['page']);
-	t_addRes('js', $P['page']);
+	t_addRes('css', $P['page'], 3);
+	t_addRes('js', $P['page'], 3);
 }
 
 /*
@@ -311,8 +311,8 @@ if ($cfg['res_recursive']) {
 			}
 
 			$curr = implode($track, '_');
-			t_addRes('css', $curr);
-			t_addRes('js', $curr);
+			t_addRes('css', $curr, 3);
+			t_addRes('js', $curr, 3);
 		}
 	}
 }
