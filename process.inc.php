@@ -265,8 +265,8 @@ $T['sidebar'] =
 /* Add Resources  */
 
 // Default files
-t_addRes('css', 'global', 1);
-t_addRes('js', 'global', 1);
+t_addRes('css', 'global', 2);
+t_addRes('js', 'global', 2);
 
 // Load subpage resources
 if (!ISINDEX) {
@@ -284,8 +284,8 @@ if ($cfg['res_checkRoot'] || $P['root'] === $P['page']) {
 // Check for current page resources
 // if current page different from root
 if ($P['root'] !== $P['page']) {
-	t_addRes('css', $P['page'], 3);
-	t_addRes('js', $P['page'], 3);
+	t_addRes('css', $P['page'], 2);
+	t_addRes('js', $P['page'], 2);
 }
 
 /*
