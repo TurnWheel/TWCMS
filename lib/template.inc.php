@@ -37,8 +37,8 @@ function t_addRes($type, $name, $pri = 10, $prefix = PREFIX) {
 
 		if (!$file) return FALSE;
 
-		if (!isset($T[$type][$pri])) {
-			$T[$type][$pri] = array();
+		if (!isset($T[$type])) {
+			$T[$type] = array_fill(1, 10, array());
 		}
 
 		$T[$type][$pri][$name] = $file;
@@ -51,7 +51,6 @@ function t_addRes($type, $name, $pri = 10, $prefix = PREFIX) {
 
 /*
  * <TWCMS>
- *
  * Displays resources inside template
  * Resources are defined by t_addRes
  *
@@ -80,6 +79,47 @@ function t_displayRes($type = 'css') {
 
 			$html .= "\n";
 		}
+	}
+
+	return $html;
+}
+
+/*
+ * <TWCMS>
+ * Adds meta data to template array
+ */
+function t_addMeta($name, $content= '') {
+	global $T;
+
+	if (!isset($T['meta'])) $T['meta'] = array();
+
+	$T['meta'][$name] = html_escape($content);
+
+	return TRUE;
+}
+
+/*
+ * <TWCMS>
+ * Displays meta data added with t_addMeta
+ *
+ * $name: Specifies specific meta value to return,
+ * otherwise returns all of them
+ */
+function t_displayMeta($name = '') {
+	global $T;
+
+	$metas = $T['meta'];
+	if ($name !== '') {
+		if (isset($T['meta'][$name])) {
+			$metas = array($name => $T['meta'][$name]);
+		}
+		else return FALSE;
+	}
+
+	$html = '';
+
+	foreach ($metas AS $name => $content) {
+		$html .= "\t".'<meta name="'.$name.'" content="'.$content.'" />'."\n";
 	}
 
 	return $html;

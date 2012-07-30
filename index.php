@@ -48,6 +48,15 @@ require 'process.inc.php';
 $title = isset($T['title']) ? $T['title'] : '';
 $header = isset($T['header']) ? $T['header'] : '';
 $content = isset($T['content']) ? $T['content'] : '';
+
+// Add jquery libraries to top
+t_addRes('js', 'jquery.min', 1, '');
+t_addRes('js', 'jquery.colorbox.min', 1, '');
+
+// Add default meta data
+t_addMeta('description', 'Site Description');
+t_addMeta('keywords', 'Enter keywords');
+t_addMeta('robots', 'index, follow');
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
@@ -55,17 +64,13 @@ $content = isset($T['content']) ? $T['content'] : '';
 	<meta charset="utf-8" />
 	<title><?php print ISINDEX ? 'Home' : $title; ?> :: TWCMS Demo Site</title>
 
-	<meta name="description" content="Enter a descrip" />
-	<meta name="keywords" content="Enter keywords" />
-	<meta name="robots" content="index, follow" />
+<?php print t_displayMeta(); ?>
 	<link rel="shortcut icon" href="/images/fav.png" type="image/x-icon" />
 <?php print t_displayRes('css'); ?>
 
 	<!--[if IE]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<script src="/js/jquery.min.js"></script>
-	<script src="/js/jquery.colorbox.min.js"></script>
 <?php print t_displayRes('js'); ?>
 
 	<script>
