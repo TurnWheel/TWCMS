@@ -140,10 +140,6 @@ if ($notFound) $P['404'] = TRUE;
 // that still behaves like the real index page
 define('ISINDEX', ($P['page'] === 'index' || $P['page'] === 'indexnew'));
 
-// Setup CSS/JS Template variables
-$T['css'] = array();
-$T['js'] = array();
-
 // Run module event ('beforeProcess')
 tw_event('beforeProcess');
 
