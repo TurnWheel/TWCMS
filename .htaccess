@@ -26,14 +26,15 @@ DirectoryIndex index.php
 
 	############################################
 
+	# Forces trailing slash (/about -> /about/)
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_URI} !(.*)/$
+	RewriteRule ^(.*)$ $1/ [L,R=301]
+
 	# Don't rewrite for existing files, directories and links
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_FILENAME} !-l
-
-	# Forces trailing slash (/about -> /about/)
-	RewriteCond %{REQUEST_URI} !(.*)/$
-	RewriteRule ^(.*)$ $1/ [L,R=301]
 
 	# Everything goes to index
 	RewriteRule . /index.php [L,QSA]

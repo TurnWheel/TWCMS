@@ -86,7 +86,7 @@ function p_htmlfile($file) {
  * Examples--
  * abbey-road : Abbey Road
  * early.80s~late.80s : Early-80s / Late-80s
- *
+ * early-80s-.-late-80s : Early 80s - Late 80s
  */
 function p_url2name($url) {
 	return ucwords(

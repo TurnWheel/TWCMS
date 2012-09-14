@@ -178,6 +178,15 @@ while ($notFound) {
 // Set 404 error if file is never found
 if ($notFound) $P['404'] = TRUE;
 
+// HARDCODED EXCEPTIONS
+// 'sidebar' and 'error' are protected roots
+// and used for internal files. These files are
+// not accessible directly.
+$stest = explode('.', $P['root'], 2);
+if ($stest[0] === 'error' || $stest[0] === 'sidebar') {
+	$P['404'] = TRUE;
+}
+
 // Is this the index page? (Bool)
 // 'indexnew' is hardcoded here, so you can have a 'non-public index'
 // that still behaves like the real index page
