@@ -80,11 +80,19 @@ function p_htmlfile($file) {
  * <TWCMS>
  * Convert URL segment to full "printable" name
  *
- * Replaces '-' with ' / ', and '_' with spaces
- * then capitalizes each word
+ * Replaces '-' with space, '.' with '-', '~' with ' / '
+ * then capitalizes each word.
+ *
+ * Examples--
+ * abbey-road : Abbey Road
+ * early.80s~late.80s : Early-80s / Late-80s
+ *
  */
 function p_url2name($url) {
-	return ucwords(str_replace('-',' / ', str_replace('_',' ',$url)));
+	return ucwords(
+		str_replace('~', ' / ',
+		str_replace('.', '-',
+		str_replace('-', ' ', $url))));
 }
 
 // EOF

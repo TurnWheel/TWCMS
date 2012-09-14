@@ -23,14 +23,14 @@ $T['content'] = '';
 
 // Check if ID has been set
 // If so, display entry details
-if ($_GET['id'] !== 0) {
-	$T['title'] .= ': Entry #'.$_GET['id'];
-	$T['header'] = 'Viewing Entry #'.$_GET['id'];
+if (isset($H['id']) && $H['id'] !== 0) {
+	$T['title'] .= ': Entry #'.$H['id'];
+	$T['header'] = 'Viewing Entry #'.$H['id'];
 
 	// Get entry data from DB
-	sql_query('SELECT entryid,data,name,date FROM forms
-					WHERE entryid = "%d" LIMIT 1',
-					$_GET['id'], __FILE__, __LINE__);
+	sql_query('SELECT entryid, data, name, date FROM forms
+		WHERE entryid = "%d" LIMIT 1',
+		$H['id'], __FILE__, __LINE__);
 
 	$info = sql_fetch_array();
 
@@ -91,8 +91,8 @@ $header = 'Viewing Form Data';
 // Start output buffer
 ob_start();
 
-// Get form name ($_GET['form'])
-$fname = isset($_GET['form']) ? escape($_GET['form']) : '';
+// Get form name ($H['form'])
+$fname = isset($H['form']) ? escape($H['form']) : '';
 
 // No form name set, show possible form options
 if ($fname === '') {

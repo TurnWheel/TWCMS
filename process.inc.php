@@ -17,63 +17,105 @@
  * accessible by dynamic content files (CPATH/*.inc.php)
  */
 
+/*
+ * Header Variable
+ * All header values are stored here for quick access
+ * Stored in # => val format for all headers
+ * plus special vars (/cat:5/); cat => 5
+ * pure integers are saved as id (/10/); id => 10,
+ * additional integers get numbers: (/10/15/); id => 10, id2 => 15
+ */
+$H = array();
+
 // Process Variable
 // All values key to processing will be in the $P array.
 $P = array();
 
-// Make sure something is set
-// Requires that there be a 0 index setting
-// 0 index is handled with special case, and can not be ommited!
-if (empty($headers) || !isset($headers[0])) $headers = array('a');
-$P['headers'] = $headers;
+// Define current URL as a constant without strings and achors
+// Dumb-ass work-around because PHP doesn't like colons in parse_url
+$url = str_replace(':', ';', REQUESTURL);
+$path = parse_url($url, PHP_URL_PATH);
+$path = str_replace(';', ':', $path);
+define('CURRURL', $path);
 
-/*
- * Get Header Variables
- * URL Format defined in .htaccess
- * <a>/<b>/<c>/<d>
- * Maps to content file: CPATH/<a>_(<b>_(<c>_(<d>))).(html|inc.php)
- */
-$P['get'] = array();
-foreach ($P['headers'] AS $num => $key) {
-	// Handle first index with special condition (defaults to index page)
-	if ($num === 0) {
-		$P['get'][$key] = isset($_GET[$key]) && !empty($_GET[$key])
-					? path_escape($_GET[$key]) : 'index';
+// Run event 'beforeProcess'
+tw_event('beforeProcess');
+
+// Special case for index as default
+if (CURRURL === '/') $headers = array('index');
+else $headers = explode('/', CURRURL);
+
+// Generate $H array based on headers
+$lastid = 1;
+foreach ($headers AS $k => $val) {
+	if ($val === '' || $val === '/') continue;
+
+	$H[] = path_escape($val);
+
+	// If value is a pure integer
+	// save as specific ID #
+	if (intval($val) !== 0) {
+		// Remove ID from main array
+		array_pop($H);
+
+		// Process which ID it should be
+		$val = intval($val);
+		if ($lastid === 1) {
+			$H['id'] = $val;
+		}
+		else {
+			$H['id'+$lastid] = $val;
+		}
+
+		++$lastid;
 	}
-	else {
-		$P['get'][$key] = isset($_GET[$key]) ? path_escape($_GET[$key]) : '';
+	// If : is present, separate for variable
+	// to use as key (cat:5); cat => 5
+	elseif (strpos($val, ':') !== FALSE) {
+		// Remove var from main array
+		array_pop($H);
+
+		// Split value based on colon
+		$colon = explode(':', $val, 2);
+		$ckey = $colon[0];
+		$cval = $colon[1];
+
+		// Save as associative array,
+		// but also check if it is an integer.
+		// Integers should always remain their type
+		$H[$ckey] = intval($cval) !== 0 ? intval($cval) : path_escape($cval);
 	}
 }
 
-// Find current URL
-$currurl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+/*
+ * Get Raw Header Variables
+ * GET variable can override normal URL variables
+ * Example: /store/cat:5/?cat=10; $H['cat'] = 10
+ */
+foreach ($_GET AS $key => $val) {
+	$H[$key] = $val;
+}
 
-// Remove any query strings/anchors from the url
-$surl = parse_url($currurl);
-
-// Define current URL as a constant without strings and achors
-define('CURRURL', $surl['path']);
-
+// Determine which headers belong where
 $P['root'] = ''; // Main page (first root in the chain)
+$P['pages'] = array(); // Array of all pages
 
-// Dynamically adds all roots to array
-$P['pages'] = array(); // Array of active roots
-foreach ($P['headers'] AS $num => $key) {
+foreach ($H AS $key => $val) {
+	// Exclude special variables
+	if (!is_int($key)) continue;
+
 	// Set root page (first name found)
-	if ($num === 0) $P['root'] = $P['get'][$key];
+	if ($key === 0) $P['root'] = $H[$key];
 
-	// Add to array of pages if set
-	if ($P['get'][$key] !== '') $P['pages'][] = $P['get'][$key];
+	$P['pages'][] = $H[$key];
 }
 
 // For tracking breadcrumbs
-// (empty on index; format <title> => $url)
-$T['bcrumbs'] = array();
+// (format: <title> => $url)
+$T['bcrumbs'] = array('Home' => FULLURL);
 
-// Generate starting bread crumbs if not on index
+// Generate starting breadcrumbs if not on home page
 if ($P['root'] !== 'index') {
-	$T['bcrumbs'] = array('Home' => FULLURL);
-
 	// Add breadcrumbs for current page + subpages
 	$prev = '';
 	foreach ($P['pages'] AS $bcpage) {
@@ -87,12 +129,13 @@ if ($P['root'] !== 'index') {
 // Full page string using _ format (used for file lookup)
 $P['page'] = implode('_', $P['pages']);
 
-// Full page URL based on pages array (no beginning /)
+// Full page URL based on pages array
+// No beginning '/', and no variables
 $P['pageurl'] = implode('/', $P['pages']);
 
 $P['404'] = FALSE; // Bool to determine if a 404 error needs to be thrown
 $P['php'] = FALSE; // Determines if include file is PHP or HTML
-$P['file'] = CPATH.$P['page']; // File name
+$P['file'] = CPATH.$P['page']; // Full path to page file
 $P['num'] = sizeof($P['pages']); // Number of sub-pages requested (nesting #)
 
 /*
@@ -140,8 +183,8 @@ if ($notFound) $P['404'] = TRUE;
 // that still behaves like the real index page
 define('ISINDEX', ($P['page'] === 'index' || $P['page'] === 'indexnew'));
 
-// Run module event ('beforeProcess')
-tw_event('beforeProcess');
+// Run module event 'beforeContent'
+tw_event('beforeContent');
 
 // If 404 flag, use 404 functions
 if ($P['404']) {
@@ -196,7 +239,7 @@ else {
 	$T['title'] = $T['header'] = $html['header'];
 }
 
-// Run module event ('duringProcess')
+// Run module event 'duringProcess'
 tw_event('duringProcess');
 
 // Swap bread crumbs for full title (only if this isnt already set)
@@ -220,10 +263,11 @@ if ($T['header']  !== '' && $P['page'] !== strtolower($T['header'])) {
 // Add previous pages to title format
 // make sure to exclude the current page
 // which should already be set
-if ($T['title'] !== '') {
+if ($cfg['p_crumbTitles'] && $T['title'] !== '') {
 	$tpages = array(); // Array to hold formatted title pages
+	$revpages = array_slice(array_reverse($P['pages']), 1);
 
-	foreach (array_slice(array_reverse($P['pages']),1) AS $val) {
+	foreach ($revpages AS $val) {
 		// Skip array values to prevent errors and recursion
 		if (is_array($val)) continue;
 
@@ -313,7 +357,7 @@ if ($cfg['res_recursive']) {
 	}
 }
 
-// Run module event ('afterProcess')
+// Run module event 'afterProcess'
 tw_event('afterProcess');
 
 // End of processing

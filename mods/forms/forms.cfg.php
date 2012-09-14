@@ -16,12 +16,12 @@ $cfg['forms'] = array(
 
 		// Save received data to DB?
 		// Requires 'sql' module to be enabled
-		'savedb' => FALSE,
+		'savedb' => TRUE,
 
 		// Redirect to page after submission?
 		// If FALSE, not redirect happens.
 		// If a string, it uses string as destination URL
-		'redirect' => '/contact/thankyou',
+		'redirect' => '/contact/thankyou/',
 
 		// ** Email Configurations **
 

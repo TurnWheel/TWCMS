@@ -13,11 +13,11 @@ sql_query('DELETE FROM user_pass WHERE date < '.(NOW-86400),
 			'', __FILE__, __LINE__);
 
 // Headers used in password recovery
-$_GET['uid'] = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
-$_GET['hash'] = isset($_GET['hash']) ? escape($_GET['hash']) : '';
+$H['uid'] = isset($H['uid']) ? intval($H['uid']) : 0;
+$H['hash'] = isset($H['hash']) ? escape($H['hash']) : '';
 
 // Validate headers
-if ($_GET['uid'] === 0 || $_GET['hash'] === '') {
+if ($H['uid'] === 0 || $H['hash'] === '') {
 	$T['content'] = '
 	<div class="box error">
 		<strong>Error!</strong> The page you have arrived at
@@ -32,7 +32,7 @@ if ($_GET['uid'] === 0 || $_GET['hash'] === '') {
 // Validate ID/Hash
 sql_query('SELECT recoverid FROM user_pass
 			WHERE userid = "%d" AND hash = "%s"',
-				array($_GET['uid'], $_GET['hash']));
+				array($H['uid'], $H['hash']));
 $r = sql_fetch_array();
 
 // If no found, display error (most likely expired)
@@ -68,7 +68,7 @@ if (!isset($_POST['accept'])) {
 		<div>
 			<p>Are you sure you wish to reset your account password?</p>
 			<div style="width:200px;float:left;">
-				<form method="post" action="/password/reset?uid='.$_GET['uid'].'&amp;hash='.$_GET['hash'].'">
+				<form method="post" action="/password/reset?uid='.$H['uid'].'&amp;hash='.$H['hash'].'">
 					<button type="submit" name="accept">Yes, Reset Password</button>
 				</form>
 			</div>
@@ -85,7 +85,7 @@ if (!isset($_POST['accept'])) {
 }
 
 // Get user email address
-sql_query('SELECT email FROM user WHERE userid = "%d" LIMIT 1', $_GET['uid']);
+sql_query('SELECT email FROM user WHERE userid = "%d" LIMIT 1', $H['uid']);
 $user = sql_fetch_array();
 
 // Make sure patient exists (should never happen)
@@ -114,7 +114,7 @@ $hash = tw_genhash($realpass, TRUE, $salt);
 // Update password in DB
 sql_query('UPDATE user SET password = "%s", salt = "%s"
 			WHERE userid = "%d" LIMIT 1',
-				array($hash, $salt, $_GET['uid']));
+				array($hash, $salt, $H['uid']));
 
 // Remove temporary password recovery entry
 sql_query('DELETE FROM user_pass WHERE recoverid = "'.$rid.'" LIMIT 1');

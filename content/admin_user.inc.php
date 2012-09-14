@@ -12,7 +12,7 @@
 if (!tw_isloaded('user') || !user_restrict(U_ADMIN)) return;
 
 // Check if we should load detail page
-if ($_GET['id'] !== 0) {
+if (isset($H['id']) && $H['id'] !== 0) {
 	require CPATH.'admin_user.detail.inc.php';
 	return; // Skip rest of file
 }

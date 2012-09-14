@@ -9,7 +9,7 @@
 
 // Get user data based on ID
 sql_query('SELECT * FROM user WHERE userid = "%d" LIMIT 1',
-			(int) $_GET['id'], __FILE__, __LINE__);
+			(int) $H['id'], __FILE__, __LINE__);
 $user = sql_fetch_array();
 
 // Make sure user exists
@@ -30,7 +30,7 @@ if ($user === FALSE) {
 $T['title'] = $T['header'] = 'Edit User Profile';
 
 $data = array(
-	'id' => (int) $_GET['id'],
+	'id' => (int) $H['id'],
 	'email' => html_escape($user['email']),
 	'firstname' => html_escape($user['firstname']),
 	'lastname' => html_escape($user['lastname']),

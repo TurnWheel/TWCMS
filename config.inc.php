@@ -32,6 +32,11 @@ $cfg = array(
 	'p_tryParents' => FALSE,
 
 	/*
+	 * Show parent pages in title like breadcrumbs
+	 */
+	'p_crumbTitles' => TRUE,
+
+	/*
 	 * Load resources for root pages on subpages?
 	 *
 	 * If FALSE, it will not load parent resources for subpages
@@ -145,7 +150,7 @@ define('WWWURL', 'http://'.DOMAIN.'/'); // Path to main website
  */
 
 // CMS Version, update on each new release
-define('VERSION', 'TWCMS 1.2');
+define('VERSION', 'TWCMS 1.5-RC1');
 
 // Utility constants
 define('NOW', time());

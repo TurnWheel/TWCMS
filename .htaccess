@@ -25,20 +25,16 @@ DirectoryIndex index.php
 	#RewriteRule .* - [E=HTTP_AUTH:%{HTTP:Authorization}]
 
 	############################################
-	## never rewrite for existing files, directories and links
+
+	# Don't rewrite for existing files, directories and links
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_FILENAME} !-l
 
-	# Index
-	RewriteRule ^/?$ index.php [L,QSA]
+	# Forces trailing slash (/about -> /about/)
+	RewriteCond %{REQUEST_URI} !(.*)/$
+	RewriteRule ^(.*)$ $1/ [L,R=301]
 
-	# Global Definitions for CMS
-	RewriteRule ^([0-9a-z\_\-]+)?/?$ index.php?a=$1 [L,QSA]
-	RewriteRule ^([0-9a-z\_\-]+)/([0-9]+)?/?$ index.php?a=$1&id=$2 [L,QSA]
-	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)?/?$ index.php?a=$1&b=$2 [L,QSA]
-	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9]+)?/?$ index.php?a=$1&b=$2&id=$3 [L,QSA]
-	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9a-z\_\-]+)?/?$ index.php?a=$1&b=$2&c=$3 [L,QSA]
-	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9]+)?/?$ index.php?a=$1&b=$2&c=$3&id=$4 [L,QSA]
-	RewriteRule ^([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9a-z\_\-]+)/([0-9a-z\_\-]+)?/?$ index.php?a=$1&b=$2&c=$3&d=$4 [L,QSA]
+	# Everything goes to index
+	RewriteRule . /index.php [L,QSA]
 </IfModule>

@@ -54,7 +54,7 @@ if (sizeof($error) === 0) {
 
 ?>
 
-<form method="post" action="/contact">
+<form method="post" action="/contact/">
 <fieldset>
 	<legend>Contact Us</legend>
 	<div>

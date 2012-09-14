@@ -18,21 +18,6 @@
  */
 require 'globals.inc.php';
 
-// Common header variable
-$_GET['id'] = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-/*
- * Header variables to process as part of CMS system
- *
- * This limits the number of nested levels you can go
- * This is also limited by the rewrite rules in .htaccess,
- * where the names of the headers are defined
- *
- * Note: The more you add, the more inefficient the processing will be.
- * Only add as needed.
- */
-$headers = array('a','b','c');
-
 /*
  * This is where the real fun begins--
  * Processes headers, determines which content file to load (CPATH),
@@ -100,9 +85,9 @@ t_addMeta('robots', 'index, follow');
 			<nav id="menu">
 				<ul>
 					<li><a href="/">Home</a></li>
-					<li><a href="/about">About Us</a></li>
-					<li><a href="/something">Something Cool</a></li>
-					<li><a href="/contact">Contact Us</a></li>
+					<li><a href="/about/">About Us</a></li>
+					<li><a href="/something/">Something Cool</a></li>
+					<li><a href="/contact/">Contact Us</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -146,12 +131,12 @@ t_addMeta('robots', 'index, follow');
 		<footer>
 			<p class="footer_nav">
 				<a href="/">Home</a> |
-				<a href="/about">About Us</a> |
-				<a href="/something">Something Cool</a> |
-				<a href="/lame">Lame</a> |
-				<a href="/news">Latest News</a> |
-				<a href="/contact">Contact Us</a> |
-				<a href="/sitemap">Sitemap</a>
+				<a href="/about/">About Us</a> |
+				<a href="/something/">Something Cool</a> |
+				<a href="/lame/">Lame</a> |
+				<a href="/news/">Latest News</a> |
+				<a href="/contact/">Contact Us</a> |
+				<a href="/sitemap/">Sitemap</a>
 			</p>
 			<div class="social">
 				<a href="#fb" rel="external" class="facebook"><b>Facebook</b></a>

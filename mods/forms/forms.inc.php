@@ -78,8 +78,8 @@ function form_process($name, &$error) {
 
 	// First replace to email with form data
 	// if specified field exists
+	$ucfg = $fcfg['emails']['user'];
 	if (isset($data[$ucfg['to']])) {
-		$ucfg = $fcfg['emails']['user'];
 		$ucfg['to'] = $data[$ucfg['to']];
 
 		tw_sendmail($ucfg, $map);
