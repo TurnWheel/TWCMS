@@ -31,6 +31,9 @@ $H = array();
 // All values key to processing will be in the $P array.
 $P = array();
 
+// Determines if a 404 error needs to be thrown (404)
+$P['404'] = FALSE;
+
 // Define current URL as a constant without strings and achors
 // Dumb-ass work-around because PHP doesn't like colons in parse_url
 $url = str_replace(':', ';', REQUESTURL);
@@ -68,6 +71,12 @@ foreach ($headers AS $k => $val) {
 		}
 
 		++$lastid;
+	}
+	// If _ is present, just remove
+	// Underscores are illegal characters
+	elseif (strpos($val, '_') !== FALSE) {
+		array_pop($H);
+		$P['404'] = TRUE;
 	}
 	// If : is present, separate for variable
 	// to use as key (cat:5); cat => 5
@@ -133,7 +142,6 @@ $P['page'] = implode('_', $P['pages']);
 // No beginning '/', and no variables
 $P['pageurl'] = implode('/', $P['pages']);
 
-$P['404'] = FALSE; // Bool to determine if a 404 error needs to be thrown
 $P['php'] = FALSE; // Determines if include file is PHP or HTML
 $P['file'] = CPATH.$P['page']; // Full path to page file
 $P['num'] = sizeof($P['pages']); // Number of sub-pages requested (nesting #)
@@ -144,7 +152,7 @@ $P['num'] = sizeof($P['pages']); // Number of sub-pages requested (nesting #)
  * If not found, it will go up the path tree until
  * it finds any file it can.
  */
-$notFound = TRUE;
+$notFound = $P['404'] ? FALSE : TRUE;
 while ($notFound) {
 	// Makes sure that file exists AND is readable
 	if (is_readable($P['file'].'.html')) {
@@ -169,7 +177,7 @@ while ($notFound) {
 		// Break out of loop, file still not found
 		if ($sizeof === 1) break;
 
-		// Create new file string
+		// Create new file string with parent
 		array_pop($split);
 		$P['file'] = implode('_', $split);
 	}
