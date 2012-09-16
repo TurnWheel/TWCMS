@@ -53,8 +53,9 @@ function user_onLoad() {
 	if (isset($_POST['login'])) {
 		$email = isset($_POST['email']) ? escape($_POST['email']) : '';
 		$pass = isset($_POST['password']) ? escape($_POST['password']) : '';
+		$remem = isset($_POST['remember']) ? TRUE : FALSE;
 
-		if (user_login($U, $email, $pass)) $isuser = TRUE;
+		if (user_login($U, $email, $pass, $remem)) $isuser = TRUE;
 		// Set constant on failure so that content will be
 		// replaced with proper error
 		else define('LOGINFAILED', TRUE);
@@ -160,6 +161,10 @@ function user_showlogin($error = TRUE) {
 			<label for="pass"'.($failed ? ' class="error"' : '').'>Password:</label>
 			<input type="password" name="password" id="pass" /><br />
 
+			<input type="checkbox" name="remember" id="remember"
+				value="yes" checked="checked" />
+			<label for="remember">Stay Logged In?</label><br />
+
 			<button type="submit" name="login"><strong>Login</strong></button><br />
 			<a href="/password/">(Forgot Password)</a>
 		</div>
@@ -215,13 +220,13 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
  * TRUE: Login successful
  * FALSE: Bad user/pass
  */
-function user_login(&$user, $email, $pass) {
+function user_login(&$user, $email, $pass, $remember = TRUE) {
 	global $cfg;
 
 	// Verify credentials
 	if (user_verify($user, $email, $pass, TRUE)) {
 		// Save cookies
-		$time = NOW+$cfg['user_expire'];
+		$time = $remember ? NOW+$cfg['user_expire'] : 0;
 		setcookie(PREFIX.'_email', $email, $time, BASEURL);
 		setcookie(PREFIX.'_hash', $user['password'], $time, BASEURL);
 
