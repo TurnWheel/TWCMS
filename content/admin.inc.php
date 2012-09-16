@@ -25,29 +25,18 @@ $T['content'] = '
 	This is a restricted area. You must have ADMIN permissions to view this page.
 </p>';
 
-// If form module is loaded, display form link
-if (isset($cfg['mods_loaded']['forms'])) {
-	$T['content'] .= '
-	<ul>';
+$T['content'] .= '
+<ul>';
 
-	if (tw_isloaded('user')) {
-		$T['content'] .= '
-			<li><a href="/admin/user/">User Management</a></li>';
-	}
-
-	if (tw_isloaded('forms')) {
-		$T['content'] .= '
-		<li><a href="/admin/forms/">View Form Data</a></li>';
-	}
-
-	// If error module is enabled, and savedb flag is turned on
-	if (tw_isloaded('error') && $cfg['error_savedb']) {
-		$T['content'] .= '
-		<li><a href="/admin/error/">View Error Data</a></li>';
-	}
+$links = tw_event('adminMenu');
+foreach ($links AS $mod => $item) {
+	if (!is_array($item)) continue;
 
 	$T['content'] .= '
-	</ul>';
+	<li><a href="'.$item['url'].'">'.$item['text'].'</a></li>';
 }
+
+$T['content'] .= '
+</ul>';
 
 // EOF

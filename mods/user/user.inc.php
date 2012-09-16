@@ -28,6 +28,14 @@
 
 if (!defined('SECURITY')) exit;
 
+/* Displays menu link in admin */
+function user_adminMenu() {
+	return array(
+		'url' => '/admin/user/',
+		'text' => 'User Management'
+	);
+}
+
 /*
  * Handles all the pre-conditions, login forms, cookie mangement,
  * and user verification

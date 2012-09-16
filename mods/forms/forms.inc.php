@@ -17,6 +17,14 @@
 
 if (!defined('SECURITY')) exit;
 
+/* Displays menu link in admin */
+function forms_adminMenu() {
+	return array(
+		'url' => '/admin/forms/',
+		'text' => 'View Form Data'
+	);
+}
+
 /*
  * Process form data
  *

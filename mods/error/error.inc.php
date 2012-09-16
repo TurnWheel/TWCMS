@@ -22,6 +22,20 @@ function error_onLoad() {
 	set_error_handler('error_handle');
 }
 
+/* Displays menu link in admin */
+function error_adminMenu() {
+	global $cfg;
+
+	if ($cfg['error_savedb']) {
+		return array(
+			'url' => '/admin/forms/',
+			'text' => 'View Form Data'
+		);
+	}
+
+	return FALSE;
+}
+
 /*
  * Handles all error calls
  */

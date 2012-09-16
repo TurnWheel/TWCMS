@@ -329,4 +329,18 @@ function sql_error($err, $halt = FALSE) {
 	if ($halt) exit;
 }
 
+/* Displays menu link in admin */
+function sql_adminMenu() {
+	global $cfg;
+
+	// Only display item if email saving is enabled
+	// This is not stricly related to SQL module
+	if ($cfg['email_savedb']) {
+		/*return array(
+			'url' => '/admin/emails/',
+			'text' => 'System Emails'
+		);*/
+	}
+}
+
 // EOF
