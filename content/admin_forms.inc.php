@@ -48,7 +48,7 @@ if (isset($H['id']) && $H['id'] !== 0) {
 
 	$T['content'] .= '
 	<p>
-		<a href="/admin/forms?form='.$info['name'].'">
+		<a href="/admin/forms/form:'.$info['name'].'/">
 			&lt;&lt; More Entries from "'.$info['name'].'" form
 		</a>
 	</p>';
@@ -108,7 +108,7 @@ if ($fname === '') {
 	else {
 		while ($r = sql_fetch_array()) {
 			print '
-			<li><a href="/admin/forms?form='.$r['name'].'">'
+			<li><a href="/admin/forms/form:'.$r['name'].'/">'
 			.ucwords($r['name']).'</a></li>';
 		}
 	}
@@ -129,7 +129,7 @@ if ($fname === '') {
 $header .= ': "'.$fname.'"';
 
 print '
-<p><a href="/admin/forms">&lt;&lt; Select Different Form</a></p>';
+<p><a href="/admin/forms/">&lt;&lt; Select Different Form</a></p>';
 
 sql_query('SELECT entryid AS id,data,name,date FROM forms
 			WHERE name = "%s"
@@ -149,13 +149,13 @@ while ($r = sql_fetch_array()) {
 	print '
 	<tr class="table'.($k%2).'">
 		<td class="center">
-			<a href="/admin/forms/'.$r['id'].'">'.$r['id'].'</a>
+			<a href="/admin/forms/'.$r['id'].'/">'.$r['id'].'</a>
 		</td>
 		<td class="center">
 			'.date('F j, Y, g:i a',$r['date']).'
 		</td>
 		<td class="center">
-			<a href="/admin/forms/'.$r['id'].'">View Details</a>
+			<a href="/admin/forms/'.$r['id'].'/">View Details</a>
 		</td>
 	</tr>';
 

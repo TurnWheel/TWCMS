@@ -32,18 +32,18 @@ if (isset($cfg['mods_loaded']['forms'])) {
 
 	if (tw_isloaded('user')) {
 		$T['content'] .= '
-			<li><a href="/admin/user">User Management</a></li>';
+			<li><a href="/admin/user/">User Management</a></li>';
 	}
 
 	if (tw_isloaded('forms')) {
 		$T['content'] .= '
-		<li><a href="/admin/forms">View Form Data</a></li>';
+		<li><a href="/admin/forms/">View Form Data</a></li>';
 	}
 
 	// If error module is enabled, and savedb flag is turned on
 	if (tw_isloaded('error') && $cfg['error_savedb']) {
 		$T['content'] .= '
-		<li><a href="/admin/error">View Error Data</a></li>';
+		<li><a href="/admin/error/">View Error Data</a></li>';
 	}
 
 	$T['content'] .= '

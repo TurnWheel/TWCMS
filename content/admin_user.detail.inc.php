@@ -21,7 +21,7 @@ if ($user === FALSE) {
 			<strong>Error!</strong>
 			User could not be found. Please go back and try again.
 		</p>
-		<p><a href="/admin/user">&lt;&lt; User Management</a></p>
+		<p><a href="/admin/user/">&lt;&lt; User Management</a></p>
 	</div>';
 
 	return; // Skip rest of file
@@ -186,10 +186,10 @@ if (sizeof($error) > 0) {
 }
 ?>
 <div>
-	<p><a href="/admin/user">&laquo; Go Back To User Management</a></p>
+	<p><a href="/admin/user/">&laquo; Go Back To User Management</a></p>
 </div>
 
-<form method="post" action="/admin/user/<?php print $data['id']; ?>">
+<form method="post" action="/admin/user/<?php print $data['id']; ?>/">
 <fieldset>
 	<legend>Account Status</legend>
 	<p>
@@ -222,7 +222,7 @@ if (sizeof($error) > 0) {
 </fieldset>
 </form>
 
-<form method="post" action="/admin/user/<?php print $data['id']; ?>">
+<form method="post" action="/admin/user/<?php print $data['id']; ?>/">
 <fieldset>
 	<legend>Account Profile</legend>
 	<table cellspacing="0">
@@ -259,7 +259,7 @@ if (sizeof($error) > 0) {
 </fieldset>
 </form>
 
-<form method="post" action="/admin/user/<?php print $data['id']; ?>">
+<form method="post" action="/admin/user/<?php print $data['id']; ?>/">
 <fieldset>
 	<legend>Reset Password</legend>
 	<table cellspacing="0">

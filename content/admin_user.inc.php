@@ -53,7 +53,7 @@ foreach ($users AS $user) {
 	$html .= '
 	<tr class="table'.($i%2).'">
 		<td class="center">
-			<a href="/admin/user/'.$user['id'].'">'.$user['id'].'</a>
+			<a href="/admin/user/'.$user['id'].'/">'.$user['id'].'</a>
 		</td>
 		<td class="center">
 			'.$user['firstname'].' '.$user['lastname'].'
@@ -65,7 +65,7 @@ foreach ($users AS $user) {
 				'<strong class="red">Disabled</strong>').'
 		</td>
 		<td class="center">
-			<a href="/admin/user/'.$user['id'].'">Manage</a>
+			<a href="/admin/user/'.$user['id'].'/">Manage</a>
 		</td>
 	</tr>';
 
