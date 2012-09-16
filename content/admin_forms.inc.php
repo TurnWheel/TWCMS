@@ -86,8 +86,6 @@ if (isset($H['id']) && $H['id'] !== 0) {
 	return; // Finish processing
 }
 
-$header = 'Viewing Form Data';
-
 // Start output buffer
 ob_start();
 
@@ -96,6 +94,8 @@ $fname = isset($H['form']) ? escape($H['form']) : '';
 
 // No form name set, show possible form options
 if ($fname === '') {
+	$T['header'] = 'Form Selection';
+
 	print '
 	<h3>Select Which Form Data to view</h3>
 	<ul>';
@@ -124,9 +124,8 @@ if ($fname === '') {
 	return;
 }
 
-// At this point, $fname should be set
-// show data for this for name
-$header .= ': "'.$fname.'"';
+// Show form data for $fname
+$T['header'] = 'Viewing Form Data: "'.$fname.'"';
 
 print '
 <p><a href="/admin/forms/">&lt;&lt; Select Different Form</a></p>';
