@@ -16,9 +16,9 @@ $T['content'] = '
 <div class="box">
 	<p>
 		If you are not currently a member,
-		please <a href="/register">register</a>.
+		please <a href="/register/">register</a>.
 		If you are having trouble with your password, use the
-		<a href="/password">Reset Password</a> tool.
+		<a href="/password/">Reset Password</a> tool.
 	</p>
 </div><br />';
 

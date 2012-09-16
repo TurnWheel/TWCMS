@@ -64,7 +64,7 @@ if (isset($_POST['register'])) {
 		// Register user data. Returns FALSE on failure
 		if (user_register($data) !== FALSE) {
 			// Redirects to thankyou page on success
-			header('Location: /register/thankyou');
+			header('Location: /register/thankyou/');
 			exit;
 		}
 		else {
@@ -110,7 +110,7 @@ if (sizeof($error) > 0) {
 }
 ?>
 
-<form method="post" action="/register">
+<form method="post" action="/register/">
 <fieldset id="register">
 	<legend>Account Information</legend>
 	<div>
@@ -153,7 +153,7 @@ if (sizeof($error) > 0) {
 <div>
 	<input type="checkbox" name="accept" id="accept" value="true"<?php print $data['accept'] !== '' ? ' checked="checked"' : '';?> />
 	<label for="accept"<?php t_iserror($error, 'accept'); ?>>
-		I have read and accept your <a href="/terms" rel="external">Terms of Use</a>
+		I have read and accept your <a href="/terms/" rel="external">Terms of Use</a>
 	</label>
 </div><br />
 

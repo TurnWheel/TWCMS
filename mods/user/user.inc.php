@@ -120,7 +120,7 @@ function user_showlogin($error = TRUE) {
 				<strong>Sorry,</strong> but you must be logged into an
 				authorized account to view this page.
 				Please login using the form below, or
-				<a href="/register">register</a>.
+				<a href="/register/">register</a>.
 			</p>
 		</div><br />';
 	}
@@ -161,7 +161,7 @@ function user_showlogin($error = TRUE) {
 			<input type="password" name="password" id="pass" /><br />
 
 			<button type="submit" name="login"><strong>Login</strong></button><br />
-			<a href="/password">(Forgot Password)</a>
+			<a href="/password/">(Forgot Password)</a>
 		</div>
 	</fieldset>
 	</form>';

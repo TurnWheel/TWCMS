@@ -29,7 +29,7 @@ if ($cfg['user_modreg']) {
 else {
 	$T['content'] .= '
 	<strong>Success!</strong> Your account has been created.
-	You may now <a href="/login">login to your new account</a>
+	You may now <a href="/login/">login to your new account</a>
 	using the credentials you entered.';
 }
 

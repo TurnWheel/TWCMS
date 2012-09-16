@@ -22,7 +22,7 @@ if ($H['uid'] === 0 || $H['hash'] === '') {
 	<div class="box error">
 		<strong>Error!</strong> The page you have arrived at
 		is invalid. If this link was sent to you in a password recovery
-		email, please try using <a href="/password">the recovery tool</a> again.
+		email, please try using <a href="/password/">the recovery tool</a> again.
 		Password recovery links expire after 24 hours.
 	</div>';
 
@@ -42,7 +42,7 @@ if ($r === FALSE) {
 		<p>
 			<strong>Error!</strong> The page you have arrived at
 			is no longer valid. Most likely the 24 hour expiration period has passed.
-			Please try using <a href="/password">the recovery tool</a> again.
+			Please try using <a href="/password/">the recovery tool</a> again.
 		</p>
 	</div>';
 
@@ -68,7 +68,7 @@ if (!isset($_POST['accept'])) {
 		<div>
 			<p>Are you sure you wish to reset your account password?</p>
 			<div style="width:200px;float:left;">
-				<form method="post" action="/password/reset?uid='.$H['uid'].'&amp;hash='.$H['hash'].'">
+				<form method="post" action="/password/reset/uid:'.$H['uid'].'/hash:'.$H['hash'].'/">
 					<button type="submit" name="accept">Yes, Reset Password</button>
 				</form>
 			</div>
@@ -96,7 +96,7 @@ if ($user === FALSE) {
 			<strong>Error!</strong> The account password you are trying to
 			reset no longer exists. This is an error message you should never see.
 			If you are seeing this, please
-			<a href="/contact">report this to the site administrator.</a>
+			<a href="/contact/">report this to the site administrator.</a>
 		</p>
 	</div>';
 
@@ -136,7 +136,7 @@ $T['content'] = '
 			You should receive an email within the next 15 minutes
 			containing your new password. If you do not receive this email,
 			check your Spam folders. Otherwise, you may want to attempt
-			<a href="/password">another password reset</a>.
+			<a href="/password/">another password reset</a>.
 		</p>
 	</div>';
 

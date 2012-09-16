@@ -5,8 +5,8 @@ if (ISUSER) {
 	<div>
 		<p>Welcome, <strong>'.$U['firstname'].'</strong></p>
 		<p>
-			<a href="/user">Manage Account</a> |
-			<a href="/logout">Logout</a>
+			<a href="/user/">Manage Account</a> |
+			<a href="/logout/">Logout</a>
 		</p>
 	</div>';
 }
@@ -14,7 +14,7 @@ else {
 	print '
 	<div>
 		<p>Welcome <strong>Guest</strong></p>
-		<p><a href="/login">Login</a></p>
+		<p><a href="/login/">Login</a></p>
 	</div>';
 }
 ?>

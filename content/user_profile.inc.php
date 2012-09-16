@@ -123,7 +123,7 @@ if (sizeof($error) > 0) {
 }
 ?>
 
-<form method="post" action="/user/profile">
+<form method="post" action="/user/profile/">
 <fieldset>
 	<legend>Account Profile</legend>
 	<table cellspacing="0">
@@ -160,7 +160,7 @@ if (sizeof($error) > 0) {
 </fieldset>
 </form>
 
-<form method="post" action="/user/profile">
+<form method="post" action="/user/profile/">
 <fieldset>
 	<legend>Reset Password</legend>
 	<table cellspacing="0">

@@ -13,8 +13,8 @@ if (ISUSER) {
 	<div class="box notice">
 		<p>
 			You are already logged in as a user. You may
-			<a href="/user/settings">update your password on your settings page</a>
-			or you may <a href="/logout">logout</a> and request a password reset.
+			<a href="/user/settings/">update your password on your settings page</a>
+			or you may <a href="/logout/">logout</a> and request a password reset.
 		</p>
 	</div>';
 
@@ -52,7 +52,8 @@ if (isset($_POST['submit'])) {
 		$email = $cfg['user_emails']['pass_forgot'];
 		$email['to'] = $useremail;
 		$map = array(
-			'reseturl' => WWWURL.'password/reset?uid='.$uid.'&hash='.urlencode($hash)
+			'reseturl' => WWWURL.'password/reset/uid:'.$uid
+				.'/hash:'.urlencode($hash).'/'
 		);
 
 		// Send out email
@@ -95,7 +96,7 @@ if (sizeof($error) > 0) {
 }
 ?>
 
-<form method="post" action="/password">
+<form method="post" action="/password/">
 <fieldset>
 	<legend>Reset Password Form</legend>
 	<div>
