@@ -32,6 +32,11 @@ $links = tw_event('adminMenu');
 foreach ($links AS $mod => $item) {
 	if (!is_array($item)) continue;
 
+	// Supports restricting based on specific user permission
+	if (tw_isloaded('user') && isset($item['perms'])) {
+		if (!check_user($item['perms'])) continue;
+	}
+
 	$T['content'] .= '
 	<li><a href="'.$item['url'].'">'.$item['text'].'</a></li>';
 }
