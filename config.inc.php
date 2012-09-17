@@ -125,10 +125,17 @@ $cfg = array(
 // Abs. local path to root directory
 define('RPATH', '/www/SomeWebsite.com/www/');
 
-// PREFIX Note: If changed, you must rename all your CSS and JS files!
-// css/<prefix>.<page>.css
-// js/<prefix>.<page>.js
-define('PREFIX', 'pre'); // Prefix used for cookies, file names, etc.
+/*
+ * PREFIX Note: If changed, you must rename all your CSS and JS files!
+ * recommended to change on initial creation
+ *
+ * Files:
+ * css/<prefix>.<page>.css
+ * js/<prefix>.<page>.js
+ *
+ * Also used for cookie names.
+ */
+define('PREFIX', 'cms');
 
 // Root domain name for this website
 define('DOMAIN', 'SomeWebsite.com');
