@@ -41,13 +41,16 @@ function user_adminMenu() {
  * and user verification
  */
 function user_onLoad() {
-	global $U;
+	global $U, $cfg;
 
 	$isuser = FALSE; // Default to no user until verified
 	$U = array(); // Empty setting for user prefs
 
 	// SQL Module is required
 	if (!tw_isloaded('sql')) return FALSE;
+
+	// Session config
+	session_set_cookie_params($cfg['user_expire'], BASEURL, DOMAIN);
 
 	// Login user if POST was sent
 	if (isset($_POST['login'])) {
@@ -68,19 +71,13 @@ function user_onLoad() {
 		return;
 	}
 
-	// User login checking
-	$estr = PREFIX.'_email';
-	$pstr = PREFIX.'_hash';
-	$email = isset($_COOKIE[$estr]) ? escape($_COOKIE[$estr]) : '';
-	$pass = isset($_COOKIE[$pstr]) ? escape($_COOKIE[$pstr]) : '';
-
-	// If both of these credentials cotain some information, process them
-	// otherwise isuer stays FALSE
+	// Verify session data
+	$email = isset($_SESSION['email']) ? escape($_SESSION['email']) : '';
+	$pass = isset($_SESSION['token']) ? escape($_SESSION['token']) : '';
 	if ($email !== '' && $pass !== '') {
 		$isuser = user_verify($U, $email, $pass);
 
-		// If cookies are set, and they did not validate
-		// then logout user to remove cookies and session
+		// If not valid, then force logout and destroy session
 		if (!$isuser) user_logout();
 	}
 
@@ -177,7 +174,7 @@ function user_showlogin($error = TRUE) {
 /*
  * Verify login credentials
  *
- * Salt flag adds salt to password before comparing
+ * $salt (bool): Adds salt to password before comparing
  */
 function user_verify(&$user, $email, $pass, $salt = FALSE) {
 	if ($email === '' || $pass === '') return FALSE;
@@ -186,7 +183,7 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
 				$email, __FILE__, __LINE__);
 	$user = sql_fetch_array();
 
-	// Validates email address
+	// Essentially email address
 	if ($user === FALSE) return FALSE;
 
 	// Verify the user has login permissions
@@ -195,7 +192,7 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
 		return FALSE;
 	}
 
-	// Validates password (real or cookie hash)
+	// Validates password (typed or session data)
 	if ($salt) {
 		if (!tw_chkhash($pass, $user['password'], $user['salt'])) {
 			unset($pass);
@@ -203,8 +200,8 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
 		}
 	}
 	else {
-		if ($user['password'] !== $pass) return FALSE;
-		/* TODO: Add session validation through IP checking to prevent hijacks */
+		// Verifies both password hash and login token
+		if (tw_token($user['password']) !== $pass) return FALSE;
 	}
 
 	// Unset sensitive variables
@@ -214,8 +211,7 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
 }
 
 /*
- * Verifies login credentials
- * and sets proper cookies if true
+ * Verifies login credentials and sets session data
  *
  * TRUE: Login successful
  * FALSE: Bad user/pass
@@ -225,10 +221,13 @@ function user_login(&$user, $email, $pass, $remember = TRUE) {
 
 	// Verify credentials
 	if (user_verify($user, $email, $pass, TRUE)) {
-		// Save cookies
-		$time = $remember ? NOW+$cfg['user_expire'] : 0;
-		setcookie(PREFIX.'_email', $email, $time, BASEURL);
-		setcookie(PREFIX.'_hash', $user['password'], $time, BASEURL);
+		if (!$remember) {
+			ini_set('session.cookie_lifetime', 0);
+		}
+
+		// Save session values
+		$_SESSION['email'] = $email;
+		$_SESSION['token'] = tw_token($user['password']);
 
 		// Run login event
 		tw_event('onUserLogin');
@@ -240,16 +239,14 @@ function user_login(&$user, $email, $pass, $remember = TRUE) {
 }
 
 /*
- * Logout user by resetting cookies and destroying current sessiona
+ * Logout user by resetting session and destroying current sessiona
  */
 function user_logout() {
-	// Delete cookies
-	setcookie(PREFIX.'_email', '', NOW-3360, BASEURL);
-	setcookie(PREFIX.'_hash', '', NOW-3360, BASEURL);
+	$_SESSION = array();
 
-	// Destroy session and start a new one
 	session_destroy();
 	session_start();
+	session_regenerate_id(TRUE);
 
 	// Run logout event
 	tw_event('onUserLogout');

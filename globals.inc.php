@@ -22,9 +22,6 @@ unset($HTTP_POST_VARS, $HTTP_GET_VARS, $HTTP_COOKIE_VARS,
 		$HTTP_SERVER_VARS, $HTTP_ENV_VARS, $HTTP_POST_FILES,
 		$HTTP_SESSION_VARS);
 
-// Start session tracking
-session_start();
-
 // Load base libraries
 require dirname(__FILE__).'/config.inc.php';
 require LPATH.'twcore.inc.php';
@@ -32,6 +29,11 @@ require LPATH.'security.inc.php';
 require LPATH.'utility.inc.php';
 require LPATH.'processing.inc.php';
 require LPATH.'template.inc.php';
+
+// Start session tracking
+ini_set('session.use_only_cookies', TRUE);
+session_name(PREFIX);
+session_start();
 
 // Move $_start to $cfg
 $cfg['start_time'] = $_start;

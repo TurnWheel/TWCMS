@@ -177,7 +177,7 @@ while ($notFound) {
 		// Break out of loop, file still not found
 		if ($sizeof === 1) break;
 
-		// Create new file string with parent
+		// Create new file string
 		array_pop($split);
 		$P['file'] = implode('_', $split);
 	}

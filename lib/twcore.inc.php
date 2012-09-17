@@ -248,6 +248,20 @@ function tw_chkhash($input, $enc, $salt_str = '') {
 
 /*
  * <TWCMS>
+ * Generates Security Token
+ * Uses combination of data points to generate security token
+ * Important for verifying users across forms, pages, or sessions
+ *
+ * $key: Starting key to merge token with
+ */
+function tw_token($key = '') {
+	$key .= USERIP;
+	$key .= escape($_SERVER['HTTP_USER_AGENT']);
+	return tw_genhash($key);
+}
+
+/*
+ * <TWCMS>
  * Encrypts a string based on config
  * (This is two-way encryption, for one-way see tw_genhash)
  */
