@@ -42,10 +42,14 @@ function error_adminMenu() {
 function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	global $cfg;
 
+	// Hardcoded variables that should not show up in dumps
+	unset($errcontext['cfg']['sql_pass']);
+
 	// Generate variable dump
 	$dump = '';
-	foreach ($errcontext AS $k => $v) {
-		$dump .= error_parse_dump($v, $k);
+
+	foreach ($errcontext AS $key => $val) {
+		$dump .= error_parse_dump($val, $key);
 	}
 
 	// Map of values for templates (email and html)
