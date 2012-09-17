@@ -34,7 +34,7 @@ foreach ($links AS $mod => $item) {
 
 	// Supports restricting based on specific user permission
 	if (tw_isloaded('user') && isset($item['perms'])) {
-		if (!check_user($item['perms'])) continue;
+		if (!user_hasperm($item['perms'])) continue;
 	}
 
 	$T['content'] .= '
