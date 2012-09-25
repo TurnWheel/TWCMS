@@ -71,10 +71,10 @@ function t_displayRes($type = 'css') {
 
 			if ($type === 'css') {
 				$html .= '<link rel="stylesheet" type="text/css"'
-					.'href="/css/'.$file.'" />';
+					.'href="'.BASEURL.'css/'.$file.'" />';
 			}
 			elseif ($type === 'js') {
-				$html .= '<script src="/js/'.$file.'"></script>';
+				$html .= '<script src="'.BASEURL.'js/'.$file.'"></script>';
 			}
 
 			$html .= "\n";
