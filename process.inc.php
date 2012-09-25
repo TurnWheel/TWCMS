@@ -34,9 +34,13 @@ $P = array();
 // Determines if a 404 error needs to be thrown (404)
 $P['404'] = FALSE;
 
+// Strip BASEURL from REQUESTURL, so baseurl becomes root
+$requrl = BASEURL === '/' ? BASEURL : str_replace(BASEURL, '', REQUESTURL);
+if ($requrl === '') $requrl = '/';
+
 // Define current URL as a constant without strings and achors
 // Dumb-ass work-around because PHP doesn't like colons in parse_url
-$url = str_replace(':', ';', REQUESTURL);
+$url = str_replace(':', ';', $requrl);
 $path = parse_url($url, PHP_URL_PATH);
 $path = str_replace(';', ':', $path);
 define('CURRURL', $path);
