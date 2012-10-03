@@ -35,7 +35,7 @@ $P = array();
 $P['404'] = FALSE;
 
 // Strip BASEURL from REQUESTURL, so baseurl becomes root
-$requrl = REQUESTURL === '/' ? BASEURL : str_replace(BASEURL, '', REQUESTURL);
+$requrl = BASEURL === '/' ? REQUESTURL : str_replace(BASEURL, '', REQUESTURL);
 if ($requrl === '') $requrl = '/';
 
 // Define current URL as a constant without strings and achors
