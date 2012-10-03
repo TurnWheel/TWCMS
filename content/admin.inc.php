@@ -37,8 +37,10 @@ foreach ($links AS $mod => $item) {
 		if (!user_hasperm($item['perms'])) continue;
 	}
 
+	$descrip = isset($item['descrip']) ? ': '.$item['descrip'] : '';
+
 	$T['content'] .= '
-	<li><a href="'.$item['url'].'">'.$item['text'].'</a></li>';
+	<li><a href="'.$item['url'].'">'.$item['text'].$descrip.'</a></li>';
 }
 
 $T['content'] .= '

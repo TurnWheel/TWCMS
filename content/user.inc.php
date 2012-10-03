@@ -19,11 +19,24 @@ $T['content'] = '
 </div>
 
 <h3>Account Options</h3>
-<ul>
-	<li>
-		<a href="/user/profile/">Update User Profile &amp; Change Password</a>:
-		Allows you to change your password, and update your personal profile.
-	</li>
-</ul>';
+<ul>';
+
+$links = tw_event('userMenu');
+foreach ($links AS $mod => $item) {
+	if (!is_array($item)) continue;
+
+	// Supports restricting based on specific user permission
+	if (isset($item['perms'])) {
+		if (!user_hasperm($item['perms'])) continue;
+	}
+
+	$descrip = isset($item['descrip']) ? ': '.$item['descrip'] : '';
+
+	$T['content'] .= '
+	<li><a href="'.$item['url'].'">'.$item['text'].$descrip.'</a></li>';
+}
+
+$T['content'] .= '
+</ul>'
 
 // EOF

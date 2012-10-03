@@ -36,6 +36,16 @@ function user_adminMenu() {
 	);
 }
 
+/* Displays menu link in user profile */
+function user_userMenu() {
+	return array(
+		'url' => '/user/profile/',
+		'text' => 'Update Profile',
+		'descrip' => 'Update your password, account settings,
+		or personal profile.'
+	);
+}
+
 /*
  * Handles all the pre-conditions, login forms, cookie mangement,
  * and user verification
