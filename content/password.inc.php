@@ -64,7 +64,7 @@ if (isset($_POST['submit'])) {
 		<div class="box success">
 			<p>
 				An email has been dispatched to the entered email address.
-				You should receive this email with in the next 30 minutes.
+				You should receive this email with in the next 15 minutes.
 				The email will contain further instructions on how to reset
 				your password.
 			</p>
@@ -80,7 +80,7 @@ ob_start();
 
 <p>
 	Enter your email address below to initiate the password reset process.
-	You should receive an email at that address within 10 minutes.
+	You should receive an email at that address within 15 minutes.
 	The email will contain further instructions on how to reset your password.
 </p>
 
