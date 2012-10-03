@@ -166,15 +166,15 @@ if (sizeof($error) > 0) {
 	<table cellspacing="0">
 		<tr class="row0">
 			<td><label for="currpass"<?php t_iserror($error, 'currpass'); ?>>Current Password</label></td>
-			<td><input type="text" name="currpass" id="currpass" value="" /></td>
+			<td><input type="password" name="currpass" id="currpass" value="" /></td>
 		</tr>
 		<tr class="row1">
 			<td><label for="newpass"<?php t_iserror($error, 'newpass'); ?>>New Password</label></td>
-			<td><input type="text" name="newpass" id="newpass" value="" /></td>
+			<td><input type="password" name="newpass" id="newpass" value="" /></td>
 		</tr>
 		<tr class="row0">
 			<td><label for="newpass2"<?php t_iserror($error, 'newpass2'); ?>>Re-Type Password</label></td>
-			<td><input type="text" name="newpass2" id="newpass2" value="" /></td>
+			<td><input type="password" name="newpass2" id="newpass2" value="" /></td>
 		</tr>
 		<tr class="row1">
 			<td colspan="2">
