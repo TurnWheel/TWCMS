@@ -40,7 +40,7 @@ foreach ($links AS $mod => $item) {
 	$descrip = isset($item['descrip']) ? ': '.$item['descrip'] : '';
 
 	$T['content'] .= '
-	<li><a href="'.$item['url'].'">'.$item['text'].$descrip.'</a></li>';
+	<li><a href="'.$item['url'].'">'.$item['text'].'</a>'.$descrip.'</li>';
 }
 
 $T['content'] .= '
