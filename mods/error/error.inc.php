@@ -26,14 +26,21 @@ function error_onLoad() {
 function error_adminMenu() {
 	global $cfg;
 
-	if ($cfg['error_savedb']) {
-		return array(
-			'url' => '/admin/forms/',
-			'text' => 'View Form Data'
-		);
+	if (!$cfg['error_savedb']) {
+		return FALSE;
 	}
 
-	return FALSE;
+	$menu = array(
+		'url' => '/admin/errors/',
+		'text' => 'View Error Data',
+	);
+
+	// Add super admin permissions
+	if (tw_isloaded('user')) {
+		$menu['perms'] = U_SUPER;
+	}
+
+	return $menu;
 }
 
 /*

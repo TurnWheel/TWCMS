@@ -156,8 +156,10 @@ define('U_NOTIFIED', 2);
 // High-level permissions:
 // EDITOR is partial access
 // ADMIN is full access
+// SUPER is system level access
 define('U_EDITOR', 4);
 define('U_ADMIN', 8);
+define('U_SUPER', 16);
 
 // Default perms for new accounts
 define('U_DEFAULT', $cfg['user_modreg'] ? 0 : U_LOGIN);
