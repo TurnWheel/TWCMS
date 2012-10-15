@@ -11,7 +11,7 @@
  * TODO: Allow each module to set cron interval
  */
 
-require '../globals.inc.php';
+require dirname(__FILE__).'/../globals.inc.php';
 
 /*
  * Determines if it is being run from CLI
