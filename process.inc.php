@@ -134,7 +134,8 @@ if ($P['root'] !== 'index') {
 	foreach ($P['pages'] AS $bcpage) {
 		// Make titles look nice (space and captialize)
 		// Use $prev to track previous url's
-		$T['bcrumbs'][p_url2name($bcpage)] = $prev = $prev.'/'.$bcpage;
+		$T['bcrumbs'][p_url2name($bcpage)] = $prev.'/'.$bcpage.'/';
+		$prev = $prev.'/'.$bcpage;
 	}
 }
 
@@ -267,10 +268,8 @@ tw_event('duringProcess');
 if ($T['header']  !== '' && $P['page'] !== strtolower($T['header'])) {
 	foreach ($T['bcrumbs'] AS $name => $url) {
 		// Locate pre-set header and remove
-		// Comparisions: /page === /page; /page/ === /page/
-		// /page/ === /page.'/'; /page === /page/
-		if ($url === CURRURL || $url === CURRURL.'/' ||
-				$url === substr(CURRURL, 0, -1)) {
+		// Comparision: /page/ === /page.'/'; /page/ === /page/
+		if ($url === CURRURL || $url === CURRURL.'/') {
 			unset($T['bcrumbs'][$name]);
 		}
 	}

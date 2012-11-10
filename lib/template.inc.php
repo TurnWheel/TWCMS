@@ -160,7 +160,7 @@ function t_bcrumbs($bcrumbs, $sep = '&gt;') {
 		// Display link if does not match current URL
 		// (checks for trailing slash as well)
 		if ($url !== CURRURL) {
-			$ret .= '<a href="'.$url.'/">'.$linkname.'</a>';
+			$ret .= '<a href="'.$url.'">'.$linkname.'</a>';
 			$ret .= ' <span>'.$sep.'</span> ';
 		}
 		// Display current url as bold
