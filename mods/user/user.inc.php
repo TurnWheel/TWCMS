@@ -186,32 +186,32 @@ function user_showlogin($error = TRUE) {
  *
  * $salt (bool): Adds salt to password before comparing
  */
-function user_verify(&$user, $email, $pass, $salt = FALSE) {
+function user_verify(&$U, $email, $pass, $salt = FALSE) {
 	if ($email === '' || $pass === '') return FALSE;
 
 	sql_query('SELECT * FROM user WHERE email = "%s" LIMIT 1',
 				$email, __FILE__, __LINE__);
-	$user = sql_fetch_array();
+	$U = sql_fetch_array();
 
 	// Essentially email address
-	if ($user === FALSE) return FALSE;
+	if ($U === FALSE) return FALSE;
 
 	// Verify the user has login permissions
-	if (!hasflag($user['flags'], U_LOGIN)) {
+	if (!hasflag($U['flags'], U_LOGIN)) {
 		define('LOGINDENIED', TRUE);
 		return FALSE;
 	}
 
 	// Validates password (typed or session data)
 	if ($salt) {
-		if (!tw_chkhash($pass, $user['password'], $user['salt'])) {
+		if (!tw_chkhash($pass, $U['password'], $U['salt'])) {
 			unset($pass);
 			return FALSE;
 		}
 	}
 	else {
 		// Verifies both password hash and login token
-		if (tw_token($user['password']) !== $pass) return FALSE;
+		if (tw_token($U['password']) !== $pass) return FALSE;
 	}
 
 	// Unset sensitive variables
@@ -226,18 +226,18 @@ function user_verify(&$user, $email, $pass, $salt = FALSE) {
  * TRUE: Login successful
  * FALSE: Bad user/pass
  */
-function user_login(&$user, $email, $pass, $remember = TRUE) {
+function user_login(&$U, $email, $pass, $remember = TRUE) {
 	global $cfg;
 
 	// Verify credentials
-	if (user_verify($user, $email, $pass, TRUE)) {
+	if (user_verify($U, $email, $pass, TRUE)) {
 		if (!$remember) {
 			ini_set('session.cookie_lifetime', 0);
 		}
 
 		// Save session values
 		$_SESSION['email'] = $email;
-		$_SESSION['token'] = tw_token($user['password']);
+		$_SESSION['token'] = tw_token($U['password']);
 
 		// Run login event
 		tw_event('onUserLogin');

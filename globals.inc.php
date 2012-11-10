@@ -59,4 +59,6 @@ foreach ($cfg['mods_enabled'] AS $mod) {
 	tw_loadmod($mod);
 }
 
+tw_event('onLoad');
+
 // EOF

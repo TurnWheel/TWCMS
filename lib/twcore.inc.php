@@ -38,9 +38,6 @@ function tw_loadmod($mod) {
 	// Mark module as loaded
 	$cfg['mods_loaded'][$mod] = TRUE;
 
-	// Run onLoad event just for this module
-	tw_event('onLoad', $mod);
-
 	return TRUE;
 }
 
