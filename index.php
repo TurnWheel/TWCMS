@@ -35,7 +35,6 @@ $header = isset($T['header']) ? $T['header'] : '';
 $content = isset($T['content']) ? $T['content'] : '';
 
 // Add jquery libraries to top
-t_addRes('js', 'jquery.min', 1, '');
 t_addRes('js', 'jquery.colorbox.min', 1, '');
 
 // Add default meta data
@@ -56,6 +55,7 @@ t_addMeta('robots', 'index, follow');
 	<!--[if IE]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <?php print t_displayRes('js'); ?>
 
 	<script>
