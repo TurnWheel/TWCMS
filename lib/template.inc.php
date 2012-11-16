@@ -135,7 +135,7 @@ function t_displayMeta($name = '') {
 */
 function t_exfile($dir, $name, $prefix = PREFIX) {
 	$fname = ($prefix ? $prefix.'.' : '').$name;
-	$fpath = $dir.'/'.$fname;
+	$fpath = RPATH.$dir.'/'.$fname;
 
 	return is_file($fpath) ? $fname.'?_='.filemtime($fpath) : FALSE;
 }
