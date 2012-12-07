@@ -174,6 +174,10 @@ define('REQUESTURL', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : 
 define('USERIP', isset($_SERVER['REMOTE_ADDR']) ?
 	htmlspecialchars($_SERVER['REMOTE_ADDR'], ENT_QUOTES, 'UTF-8') : 'N/A');
 
+// Check if the request came from AJAX
+define('ISAJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+	strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+
 define('REFERER', isset($_SERVER['HTTP_REFERER']) ?
 	htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8') : '(Direct)');
 
