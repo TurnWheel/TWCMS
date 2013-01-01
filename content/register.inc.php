@@ -116,35 +116,61 @@ if (sizeof($error) > 0) {
 	<div>
 		<table cellspacing="0">
 			<tr class="row0">
-				<td><label for="firstname"<?php t_iserror($error, 'firstname'); ?>>First Name</label></td>
-				<td><input type="text" name="firstname" id="firstname" value="<?php print $data['firstname']; ?>" /></td>
-			</tr>
-			<tr class="row1">
-				<td><label for="lastname"<?php t_iserror($error, 'lastname'); ?>>Last Name</label></td>
-				<td><input type="text" name="lastname" id="lastname" value="<?php print $data['lastname']; ?>" /></td>
-			</tr>
-			<tr class="row0">
+				<th scope="row">
+					<label for="reg_fname"<?php t_iserror($error, 'firstname'); ?>>First Name</label>
+				</th>
 				<td>
-					<label for="email"<?php t_iserror($error, 'email'); ?>>E-Mail</label><br />
-					<small>(This will be used for login)</small>
+					<input type="text" name="firstname" id="reg_fname" value="<?php print $data['firstname']; ?>" />
 				</td>
-				<td><input type="text" name="email" id="email" value="<?php print $data['email']; ?>" /></td>
 			</tr>
 			<tr class="row1">
-				<td><label for="phone"<?php t_iserror($error, 'phone'); ?>>Phone #</label></td>
-				<td><input type="text" name="phone" id="phone" value="<?php print $data['phone']; ?>" /></td>
+				<th scope="row">
+					<label for="reg_lname"<?php t_iserror($error, 'lastname'); ?>>Last Name</label>
+				</th>
+				<td>
+					<input type="text" name="lastname" id="reg_lname" value="<?php print $data['lastname']; ?>" />
+				</td>
 			</tr>
 			<tr class="row0">
-				<td><label for="zip"<?php t_iserror($error, 'zip'); ?>>Zip Code</label></td>
-				<td><input type="text" name="zip" id="zip" value="<?php print $data['zip']; ?>" /></td>
+				<th scope="row">
+					<label for="reg_email"<?php t_iserror($error, 'email'); ?>>E-Mail</label><br />
+					<small>(This will be used for login)</small>
+				</th>
+				<th>
+					<input type="text" name="email" id="reg_email" value="<?php print $data['email']; ?>" />
+				</td>
 			</tr>
 			<tr class="row1">
-				<td><label for="password"<?php t_iserror($error, 'password'); ?>>Password</label></td>
-				<td><input type="password" name="password" id="password" value="<?php print $data['password']; ?>" /></td>
+				<th scope="row">
+						<label for="reg_phone"<?php t_iserror($error, 'phone'); ?>>Phone #</label>
+				</th>
+				<td>
+					<input type="text" name="phone" id="reg_phone" value="<?php print $data['phone']; ?>" />
+				</td>
 			</tr>
 			<tr class="row0">
-				<td><label for="password2"<?php t_iserror($error, 'password2'); ?>>Verify Password</label></td>
-				<td><input type="password" name="password2" id="password2" value="<?php print $data['password2']; ?>" /></td>
+				<th scope="row">
+					<label for="reg_zip"<?php t_iserror($error, 'zip'); ?>>Zip Code</label>
+				</th>
+				<td>
+					<input type="text" name="zip" id="reg_zip" value="<?php print $data['zip']; ?>" />
+				</td>
+			</tr>
+			<tr class="row1">
+				<th scope="row">
+					<label for="reg_password"<?php t_iserror($error, 'password'); ?>>Password</label>
+				</th>
+				<td>
+					<input type="password" name="password" id="reg_password" value="<?php print $data['password']; ?>" />
+				</td>
+			</tr>
+			<tr class="row0">
+				<th scope="row">
+					<label for="reg_password2"<?php t_iserror($error, 'password2'); ?>>Verify Password</label>
+				</th>
+				<td>
+					<input type="password" name="password2" id="reg_password2" value="<?php print $data['password2']; ?>" />
+				</td>
 			</tr>
 		</table>
 	</div>
