@@ -290,4 +290,20 @@ function tw_dec($input) {
 	return substr($input, 0, strlen($input) - $pad);
 }
 
+/*
+ * Generate Receipt # from ID
+ *
+ * May seem complicated but it's not.
+ * The first half is just a short md5 of the week/year it was created,
+ * and the second half is the id number padded
+ */
+function tw_receipt($id, $date = 0) {
+	global $cfg, $U;
+
+	if ($date === 0) $date = NOW;
+
+	$date = strtoupper(substr(md5(date('WY', $date)), 4, 4));
+	return $date.'-'.str_pad($id, 4, '0', STR_PAD_LEFT);
+}
+
 // EOF
