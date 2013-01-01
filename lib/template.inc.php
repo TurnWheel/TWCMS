@@ -233,12 +233,15 @@ function t_iserror($err, $key, $return = FALSE) {
  * $select: Which "value" to mark as selected
  *
  * $return: Return or print? Default FALSE (prints)
+ * $nokey: If TRUE ignores array keys, and just uses value for both val/name
  */
-function t_select($opts, $select = '', $return = FALSE) {
+function t_select($opts, $select = '', $return = FALSE, $nokey = FALSE) {
 	$html = '';
-	foreach ($opts AS $val => $name) {
+	foreach ($opts AS $key => $name) {
+		if ($nokey) $key = $name;
+
 		$html .= '
-		<option value="'.$val.'"'.($select == $val ? ' selected="selected"' : '')
+		<option value="'.$key.'"'.($select == $key ? ' selected="selected"' : '')
 			.'>'.$name.'</option>';
 	}
 
