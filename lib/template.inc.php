@@ -214,13 +214,29 @@ function t_debug($html = TRUE, $return = TRUE) {
  *
  * $err = Array of errors
  * $key = Checks for this key inside $err
+ *	Optional array for key, returns if any of them are TRUE
  * $return = Print or return html? (Optional)
  */
 function t_iserror($err, $key, $return = FALSE) {
-	if (isset($err[$key])) {
+	$show = FALSE;
+
+	if (is_string($key) && isset($err[$key])) {
+		$show = TRUE;
+	}
+	elseif (is_array($key)) {
+		foreach ($key AS $k => $v) {
+			if (isset($err[$v])) {
+				$show = TRUE;
+				break;
+			}
+		}
+	}
+
+	if ($show) {
 		if ($return) return ' class="error"';
 		print ' class="error"';
 	}
+	else return FALSE;
 }
 
 /*
