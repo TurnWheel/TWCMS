@@ -264,6 +264,15 @@ else {
 // Run module event 'duringProcess'
 tw_event('duringProcess');
 
+/*
+ * AJAX Check
+ * Returns content directly, skipping template entirely
+ */
+if ($cfg['p_ajax'] && AJAX) {
+	print $T['content'];
+	exit;
+}
+
 // Swap bread crumbs for full title (only if this isnt already set)
 if ($T['header']  !== '' && $P['page'] !== strtolower($T['header'])) {
 	foreach ($T['bcrumbs'] AS $name => $url) {

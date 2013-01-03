@@ -37,6 +37,14 @@ $cfg = array(
 	'p_crumbTitles' => TRUE,
 
 	/*
+	 * Enable AJAX-friendly response?
+	 *
+	 * If a AJAX request is detected, the content
+	 * will be returned without the surrounding template
+	 */
+	'p_ajax' => TRUE,
+
+	/*
 	 * Load resources for root pages on subpages?
 	 *
 	 * If FALSE, it will not load parent resources for subpages
