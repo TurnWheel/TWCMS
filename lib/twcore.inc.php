@@ -8,6 +8,8 @@
  * the internals of TWCMS
  */
 
+if (!defined('SECURITY')) exit;
+
 /*
  * <TWCMS>
  * Loads specified TWCMS module (if enabled),
