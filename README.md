@@ -75,13 +75,13 @@ does not support multiple templates by default, but it would be
 trivial to include different template files based on a parameter or setting.
 
 **Resource Files (CSS & JS)**: Resource files are unique in TWCMS, as they are
-designed to be included by default. If you have page-specific CSS you
+designed to be included based on page name. If you have page-specific CSS you
 want to add to a page, rather than bloating your global CSS file, simply create
 a file in the "css" directory with the name of your page.
 
-For example: The page /about/history/ has some custom styling. All I have to do
-s create a file called */css/cms.about_history.css*. This file is automatically
-included on this page only. The format for JS files is the same.
+For example: If the page /about/history/ has some custom styling. All I need to do
+is add a file called */css/cms.about_history.css*. This file is automatically
+included on this page only. The also works for JS files.
 
 In addition to these page-specific resources, TWCMS has 3 pre-defined files:
 global, index, and subpage. As you might expect, global is included on every
@@ -104,7 +104,7 @@ automatically loaded if the module is enabled in the global config.inc.php file
 **Events**: Events are called with `tw_event(<event>)`, and allow exchange of
 information or updates across multiple modules. Each time an event is fired,
 the system goes through each loaded module looking for that function name. For
-example, on page load the even 'onLoad' is automatically called. So each module
-has <mod>_onLoad called, if such a function exists. Lots of events are used
+example, on page load the event 'onLoad' is automatically called. So each module
+has `<mod>_onLoad` called, if such a function exists. Lots of events are used
 throughout TWCMS. To learn more, search for tw_event calls in the code and get
 more detail from the source comments.
