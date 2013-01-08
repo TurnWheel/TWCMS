@@ -8,13 +8,12 @@
 // End session and logout
 user_logout();
 
-$ref = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
+$ref = isset($_SERVER['HTTP_REFERER']) ? html_escape($_SERVER['HTTP_REFERER']) : '/';
 $info = parse_url($ref);
 
 // If hostname is set, and does not much current host
 // then reset URL as / (home page)
-if (isset($info['host']) && !empty($info['host'])
-		&& $info['host'] !== DOMAIN) {
+if (isset($info['host']) && !empty($info['host']) && $info['host'] !== DOMAIN) {
 	$ref = '/';
 }
 

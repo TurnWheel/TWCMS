@@ -44,7 +44,7 @@ $cfg = array(
 
 			------
 			Registration Received @ {date}
-			Automated Email Sent By SomeWebsite.com'
+			Automated Email Sent By {domain}'
 		),
 
 		// Email for admin moderation
@@ -62,7 +62,7 @@ $cfg = array(
 
 			------
 			Registration Received @ {date}
-			Automated Email Sent By SomeWebsite.com'
+			Automated Email Sent By {domain}'
 		),
 
 		// Welcome message sent to user
@@ -78,7 +78,7 @@ $cfg = array(
 
 			------
 			Registration Received @ {date}
-			Automated Email Sent By SomeWebsite.com'
+			Automated Email Sent By {domain}'
 		),
 
 		// Account approved
@@ -100,44 +100,44 @@ $cfg = array(
 			Automated Email Sent By SomeWebsite.com'
 		),
 
-		// Request to reset password
+		// Request to reset passphrase
 		'pass_forgot' => array(
-			'subject' => '[TWCMS] Request for password reset',
-			'headers' => 'From: SomeWebsite<no-reply@somewebsite.com>',
-			'body' => 'A request was sent using the Password Recovery Tool
+			'subject' => '[TWCMS] Request for passphrase reset',
+			'headers' => 'From: TWCMS<no-reply@somewebsite.com>',
+			'body' => 'A request was sent using the Passphrase Recovery Tool
 			for this email address. If this request was not sent by you, please
 			ignore this email.
 
-			If you are attempting to reset your password, following the link below
-			to continue the password reset process.
+			If you are attempting to reset your passphrase, following the link below
+			to continue the passphrase reset process.
 
 			{reseturl}
 
-			The above link expires within 24 hours of password reset request.
-			If the link has expired, please use our Password Recovery Tool again
+			The above link expires within 24 hours of passphrase reset request.
+			If the link has expired, please use our Passphrase Recovery Tool again
 			to re-send the request.
 
 			------
-			Password Reset Request @ {data}
-			Automated Email Sent By SomeWebsite.com'
+			Passphrase Reset Request @ {data}
+			Automated Email Sent By {domain}'
 		),
 
-		// Password has been reset
+		// Passphrase has been reset
 		'pass_reset' => array(
-			'subject' => '[TWCMS] Password reset',
-			'headers' => 'From: SomeWebsite<no-reply@somewebsite.com>',
-			'body' => 'The password for your TWCMS account has been reset
-			using the Password Reset Tool.
+			'subject' => '[TWCMS] Passphrase reset',
+			'headers' => 'From: TWCMS<no-reply@somewebsite.com>',
+			'body' => 'The passphrase for your TWCMS account has been reset
+			using the Passphrase Reset Tool.
 
-			New Password: {password}
+			New Passphrase: {passphrase}
 
-			You may now login with the above auto-generated password.
-			It is suggested you immeditely change this password once logged in.
+			You may now login with the above auto-generated passphrase.
+			It is suggested you immeditely change this passphrase once logged in.
 			You can change your account profile at: {wwwurl}user/profile
 
 			----
-			Password Reset @ {date}
-			Automated Email Sent By SomeWebsite.com'
+			Passphrase Reset @ {date}
+			Automated Email Sent By {domain}'
 		),
 	)
 );

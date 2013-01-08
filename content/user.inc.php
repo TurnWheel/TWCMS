@@ -5,7 +5,9 @@
  * Part of TWCMS User Module
  */
 
-if (!ISUSER) return p_showerror(403);
+if (!ISUSER) {
+	return p_showerror(403);
+}
 
 $T['title'] = $T['header'] = 'Manage Your Account';
 

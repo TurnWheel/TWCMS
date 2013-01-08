@@ -8,7 +8,21 @@
 $T['title'] = $T['header'] = 'User Login';
 
 if (ISUSER) {
-	header('Location: /');
+	$ref = isset($_POST['referer']) ? html_escape($_POST['referer']) : '/';
+	$info = parse_url($ref);
+
+	// If hostname is set, and does not much current host
+	// then reset URL as / (home page)
+	if (isset($info['host']) && !empty($info['host']) && $info['host'] !== DOMAIN) {
+		$ref = '/';
+	}
+
+	// Exclude login page
+	if ($ref === '/login' || $ref === '/login/') {
+		$ref = '/';
+	}
+
+	header('Location: '.$ref);
 	return; // Skip rest of file
 }
 

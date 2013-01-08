@@ -41,7 +41,7 @@ function user_userMenu() {
 	return array(
 		'url' => '/user/profile/',
 		'text' => 'Update Profile',
-		'descrip' => 'Update your password, account settings,
+		'descrip' => 'Update your passphrase, account settings,
 		or personal profile.'
 	);
 }
@@ -147,7 +147,7 @@ function user_showlogin($error = TRUE) {
 		else {
 			$content .= '
 				<strong>Error!</strong> There was a problem with your login.
-				Please try entering your credentials again. Passwords are
+				Please try entering your credentials again. Passphrases are
 				case sensitive.';
 		}
 
@@ -165,15 +165,17 @@ function user_showlogin($error = TRUE) {
 			<label for="email"'.($failed ? ' class="error"' : '').'>Email:</label>
 			<input type="text" name="email" id="email" /><br />
 
-			<label for="pass"'.($failed ? ' class="error"' : '').'>Password:</label>
+			<label for="pass"'.($failed ? ' class="error"' : '').'>Passphrase:</label>
 			<input type="password" name="password" id="pass" /><br />
 
 			<input type="checkbox" name="remember" id="remember"
 				value="yes" checked="checked" />
 			<label for="remember">Stay Logged In?</label><br />
 
+			<input type="hidden" name="referer" value="'.REFERER.'" />
+
 			<button type="submit" name="login"><strong>Login</strong></button><br />
-			<a href="/password/">(Forgot Password)</a>
+			<a href="/password/">(Forgot Passphrase)</a>
 		</div>
 	</fieldset>
 	</form>';

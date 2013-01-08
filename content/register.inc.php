@@ -9,13 +9,15 @@
 
 // Make sure registration is enabled
 // or return a 403 forbidden error
-if (!$cfg['user_regenable']) return p_showerror(403);
+if (!$cfg['user_regenable']) {
+	return p_showerror(403);
+}
 
 $T['title'] = $T['header'] = 'Register Account';
 
 // Array of all form fields
 $fields = array('firstname','lastname','email','password',
-				'password2','phone','zip','accept');
+	'password2','phone','zip','accept');
 
 // Array of required fields
 $required = $fields; // (All Fields Required)
@@ -50,7 +52,7 @@ if (isset($_POST['register'])) {
 	// Check for unique email (if no email errors already)
 	if (!isset($error['email'])) {
 		sql_query('SELECT userid FROM user WHERE email = "%s" LIMIT 1',
-						$data['email'], __FILE__, __LINE__);
+			$data['email'], __FILE__, __LINE__);
 		if (sql_fetch_array() !== FALSE) {
 			$error['email'] = 'Email Address Already In Use';
 		}
@@ -69,7 +71,7 @@ if (isset($_POST['register'])) {
 		}
 		else {
 			$error['register'] = 'Failed to register; unknown error.
-							Verify you filled out all forms properly.';
+				Verify you filled out all forms properly.';
 		}
 	}
 }
@@ -89,7 +91,7 @@ if (sizeof($error) > 0) {
 		if (!is_string($err)) continue;
 
 		$errmsg[] = '<strong>'.ucwords(str_replace('_',' ',$key))
-					.': </strong> '.$err;
+			.': </strong> '.$err;
 	}
 
 	print '
@@ -113,67 +115,65 @@ if (sizeof($error) > 0) {
 <form method="post" action="/register/">
 <fieldset id="register">
 	<legend>Account Information</legend>
-	<div>
-		<table cellspacing="0">
-			<tr class="row0">
-				<th scope="row">
-					<label for="reg_fname"<?php t_iserror($error, 'firstname'); ?>>First Name</label>
-				</th>
-				<td>
-					<input type="text" name="firstname" id="reg_fname" value="<?php print $data['firstname']; ?>" />
-				</td>
-			</tr>
-			<tr class="row1">
-				<th scope="row">
-					<label for="reg_lname"<?php t_iserror($error, 'lastname'); ?>>Last Name</label>
-				</th>
-				<td>
-					<input type="text" name="lastname" id="reg_lname" value="<?php print $data['lastname']; ?>" />
-				</td>
-			</tr>
-			<tr class="row0">
-				<th scope="row">
-					<label for="reg_email"<?php t_iserror($error, 'email'); ?>>E-Mail</label><br />
-					<small>(This will be used for login)</small>
-				</th>
-				<th>
-					<input type="text" name="email" id="reg_email" value="<?php print $data['email']; ?>" />
-				</td>
-			</tr>
-			<tr class="row1">
-				<th scope="row">
-						<label for="reg_phone"<?php t_iserror($error, 'phone'); ?>>Phone #</label>
-				</th>
-				<td>
-					<input type="text" name="phone" id="reg_phone" value="<?php print $data['phone']; ?>" />
-				</td>
-			</tr>
-			<tr class="row0">
-				<th scope="row">
-					<label for="reg_zip"<?php t_iserror($error, 'zip'); ?>>Zip Code</label>
-				</th>
-				<td>
-					<input type="text" name="zip" id="reg_zip" value="<?php print $data['zip']; ?>" />
-				</td>
-			</tr>
-			<tr class="row1">
-				<th scope="row">
-					<label for="reg_password"<?php t_iserror($error, 'password'); ?>>Password</label>
-				</th>
-				<td>
-					<input type="password" name="password" id="reg_password" value="<?php print $data['password']; ?>" />
-				</td>
-			</tr>
-			<tr class="row0">
-				<th scope="row">
-					<label for="reg_password2"<?php t_iserror($error, 'password2'); ?>>Verify Password</label>
-				</th>
-				<td>
-					<input type="password" name="password2" id="reg_password2" value="<?php print $data['password2']; ?>" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table cellspacing="0">
+		<tr class="row0">
+			<th scope="row">
+				<label for="reg_fname"<?php t_iserror($error, 'firstname'); ?>>First Name</label>
+			</th>
+			<td>
+				<input type="text" name="firstname" id="reg_fname" value="<?php print $data['firstname']; ?>" />
+			</td>
+		</tr>
+		<tr class="row1">
+			<th scope="row">
+				<label for="reg_lname"<?php t_iserror($error, 'lastname'); ?>>Last Name</label>
+			</th>
+			<td>
+				<input type="text" name="lastname" id="reg_lname" value="<?php print $data['lastname']; ?>" />
+			</td>
+		</tr>
+		<tr class="row0">
+			<th scope="row">
+				<label for="reg_email"<?php t_iserror($error, 'email'); ?>>E-Mail</label><br />
+				<small>(This will be used for login)</small>
+			</th>
+			<th>
+				<input type="text" name="email" id="reg_email" value="<?php print $data['email']; ?>" />
+			</td>
+		</tr>
+		<tr class="row1">
+			<th scope="row">
+					<label for="reg_phone"<?php t_iserror($error, 'phone'); ?>>Phone #</label>
+			</th>
+			<td>
+				<input type="text" name="phone" id="reg_phone" value="<?php print $data['phone']; ?>" />
+			</td>
+		</tr>
+		<tr class="row0">
+			<th scope="row">
+				<label for="reg_zip"<?php t_iserror($error, 'zip'); ?>>Zip Code</label>
+			</th>
+			<td>
+				<input type="text" name="zip" id="reg_zip" value="<?php print $data['zip']; ?>" />
+			</td>
+		</tr>
+		<tr class="row1">
+			<th scope="row">
+				<label for="reg_password"<?php t_iserror($error, 'password'); ?>>Password</label>
+			</th>
+			<td>
+				<input type="password" name="password" id="reg_password" value="<?php print $data['password']; ?>" />
+			</td>
+		</tr>
+		<tr class="row0">
+			<th scope="row">
+				<label for="reg_password2"<?php t_iserror($error, 'password2'); ?>>Verify Password</label>
+			</th>
+			<td>
+				<input type="password" name="password2" id="reg_password2" value="<?php print $data['password2']; ?>" />
+			</td>
+		</tr>
+	</table>
 </fieldset>
 
 <div>
