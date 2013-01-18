@@ -31,7 +31,7 @@ function error_adminMenu() {
 	}
 
 	$menu = array(
-		'url' => '/admin/errors/',
+		'url' => '/admin/error/',
 		'text' => 'View Error Data',
 	);
 

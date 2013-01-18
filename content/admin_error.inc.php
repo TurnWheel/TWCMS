@@ -41,7 +41,9 @@ if (!$cfg['error_savedb']) {
 	</div>';
 }
 
-sql_query('SELECT eid, error, date, flags FROM error');
+sql_query('SELECT eid, error, date, flags
+	FROM error ORDER BY date DESC', '', __FILE__, __LINE__);
+
 $errors = array();
 while ($r = sql_fetch_array()) {
 	$errors[(int) $r['eid']] = array(
@@ -52,7 +54,7 @@ while ($r = sql_fetch_array()) {
 }
 
 $content .= '
-<table cellspacing="0" class="data">
+<table cellspacing="0" class="data" style="width:100%;">
 	<tr>
 		<th scope="col">#</th>
 		<th scope="col">Error</th>
