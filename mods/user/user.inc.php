@@ -192,7 +192,7 @@ function user_verify(&$U, $email, $pass, $salt = FALSE) {
 	if ($email === '' || $pass === '') return FALSE;
 
 	sql_query('SELECT * FROM user WHERE email = "%s" LIMIT 1',
-				$email, __FILE__, __LINE__);
+		$email, __FILE__, __LINE__);
 	$U = sql_fetch_array();
 
 	// Essentially email address
@@ -274,10 +274,13 @@ function user_logout() {
  * Required fields: email, password
  * flags will be set to U_DEFAULT unless specified otherwise
  *
+ * $notify: Optionally turn off all external notifications (emails)
+ * used only for "silent" registration
+ *
  * Returns FALSE on failure (bool)
  * Returns USERID on success (int)
  */
-function user_register($data) {
+function user_register($data, $notify = TRUE) {
 	global $cfg;
 
 	// Verify data
@@ -294,11 +297,11 @@ function user_register($data) {
 
 	// Save user registration information to DB
 	sql_query('INSERT INTO user ($keys) VALUES($vals)',
-				array_merge($data, array(
-					'salt' => $salt,
-					'date' => NOW,
-					'flags' => $flags
-				)), __FILE__, __LINE__);
+		array_merge($data, array(
+			'salt' => $salt,
+			'date' => NOW,
+			'flags' => $flags
+		)), __FILE__, __LINE__);
 
 	$userid = sql_insert_id();
 
@@ -321,13 +324,19 @@ function user_register($data) {
 	// Either a registration notification,
 	// or a mod email requesting activation
 	$email = FALSE;
-	if ($cfg['user_modreg']) $email = $cfg['user_emails']['modreg'];
-	elseif ($cfg['user_regnotify']) $email = $cfg['user_emails']['regnotify'];
+	if ($cfg['user_modreg']) {
+		$email = $cfg['user_emails']['modreg'];
+	}
+	elseif ($cfg['user_regnotify']) {
+		$email = $cfg['user_emails']['regnotify'];
+	}
 
-	if ($email !== FALSE) tw_sendmail($email, $map);
+	if ($email !== FALSE && $notify) {
+		tw_sendmail($email, $map);
+	}
 
 	// Should we send user a welcome message?
-	if ($cfg['user_welcome']) {
+	if ($cfg['user_welcome'] && $notify) {
 		tw_sendmail($cfg['user_emails']['welcome'], $map);
 	}
 
