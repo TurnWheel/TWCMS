@@ -9,7 +9,7 @@
 
 // Get user data based on ID
 sql_query('SELECT * FROM user WHERE userid = "%d" LIMIT 1',
-			(int) $H['id'], __FILE__, __LINE__);
+	(int) $H['id'], __FILE__, __LINE__);
 $user = sql_fetch_array();
 
 // Make sure user exists
@@ -51,7 +51,7 @@ if (isset($_POST['chstatus'])) {
 	// Check for U_LOGIN
 	// if true, remove U_LOGIN from flags
 	// otherwise add U_LOGIN from flags
-	if (hasflag($data['flags'], ULOGIN)) {
+	if (hasflag($data['flags'], U_LOGIN)) {
 		// Remove U_LOGIN
 		$data['flags'] = rmflag($data['flags'], U_LOGIN);
 	}
@@ -84,7 +84,7 @@ if (isset($_POST['chstatus'])) {
 	}
 
 	sql_query('UPDATE user SET flags = "%d" WHERE userid = "%d"',
-				array($data['flags'], $data['id']), __FILE__, __LINE__);
+		array($data['flags'], $data['id']), __FILE__, __LINE__);
 
 	print '
 	<div class="box success">
@@ -150,9 +150,9 @@ if (isset($_POST['pass'])) {
 		$hash = tw_genhash($_POST['newpass'], TRUE, $salt);
 
 		sql_query('UPDATE user SET password = "%s", salt = "%s"
-					WHERE userid = "%d"',
-					array($hash, $salt, $data['id']),
-					__FILE__, __LINE__);
+			WHERE userid = "%d"',
+			array($hash, $salt, $data['id']),
+			__FILE__, __LINE__);
 
 		print '
 		<div class="box success">

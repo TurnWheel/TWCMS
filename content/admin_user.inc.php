@@ -22,14 +22,15 @@ $T['title'] = $T['header'] = 'User Management';
 // Display table of users to manage
 $html = '';
 
-sql_query('SELECT * FROM user ORDER BY userid ASC', '', __FILE__, __LINE__);
+sql_query('SELECT * FROM user
+	ORDER BY userid ASC',
+	'', __FILE__, __LINE__);
 $users = array();
 while ($r = sql_fetch_array()) {
-	$users[] = array(
-		'id' => (int) $r['userid'],
-		'firstname' => escape($r['firstname']),
-		'lastname' => escape($r['lastname']),
-		'email' => escape($r['email']),
+	$users[(int) $r['userid']] = array(
+		'firstname' => html_escape($r['firstname']),
+		'lastname' => html_escape($r['lastname']),
+		'email' => html_escape($r['email']),
 		'date' => (int) $r['date'],
 		'flags' => (int) $r['flags']
 	);
@@ -48,28 +49,25 @@ $html .= '
 	</thead>
 	<tbody>';
 
-$i = 0;
-foreach ($users AS $user) {
+foreach ($users AS $id => $user) {
 	$html .= '
-	<tr class="table'.($i%2).'">
-		<td class="center">
-			<a href="/admin/user/'.$user['id'].'/">'.$user['id'].'</a>
+	<tr class="center">
+		<td>
+			<a href="/admin/user/'.$id.'/">'.$id.'</a>
 		</td>
-		<td class="center">
+		<td>
 			'.$user['firstname'].' '.$user['lastname'].'
 		</td>
-		<td class="center">'.$user['email'].'</td>
-		<td class="center">
+		<td>'.$user['email'].'</td>
+		<td>
 			'.(hasflag($user['flags'], U_LOGIN) ?
 				'<strong class="green">Enabled</strong>' :
 				'<strong class="red">Disabled</strong>').'
 		</td>
-		<td class="center">
-			<a href="/admin/user/'.$user['id'].'/">Manage</a>
+		<td>
+			<a href="/admin/user/'.$id.'/">Manage</a>
 		</td>
 	</tr>';
-
-	++$i;
 }
 
 $html .= '
