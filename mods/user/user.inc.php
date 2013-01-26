@@ -28,6 +28,10 @@
 
 if (!defined('SECURITY')) exit;
 
+/***
+ * Event Functions
+ ***/
+
 /* Displays menu link in admin */
 function user_adminMenu() {
 	return array(
@@ -102,6 +106,10 @@ function user_onLoad() {
 		$U['userid'] = (int) $U['userid'];
 	}
 }
+
+/***
+ * Template Functions
+ ***/
 
 /*
  * Generates HTML login form
@@ -182,6 +190,10 @@ function user_showlogin($error = TRUE) {
 
 	return $content;
 }
+
+/***
+ * Core Functions
+ ****/
 
 /*
  * Verify login credentials
@@ -346,6 +358,10 @@ function user_register($data, $notify = TRUE) {
 	return $userid;
 }
 
+/***
+ * Utility Functions
+ ***/
+
 /*
  * Permission Checks
  * Ex: user_hasperm(U_ADMIN)
@@ -377,6 +393,47 @@ function user_restrict($perm) {
 	else p_showerror(403);
 
 	return FALSE;
+}
+
+/***
+ * Admin Functions
+ ***/
+
+/*
+ * Get all relevant user information
+ * Password is not retreived
+ *
+ * Admin privledges required
+ */
+function user_get($uid) {
+	global $cfg;
+
+	$uid = (int) $uid;
+
+	if ($uid === 0) return FALSE;
+
+	// Verify Permissions
+	if (!user_hasperm(U_ADMIN)) return FALSE;
+
+	sql_query('SELECT userid, firstname, lastname, email, phone,
+			zip, date, flags
+		FROM user WHERE userid = "%d"',
+		$uid, __FILE__, __LINE__);
+
+	$u = sql_fetch_array();
+
+	if (!$u) return FALSE;
+
+	return array(
+		'userid' => $uid,
+		'firstname' => html_escape($u['firstname']),
+		'lastname' => html_escape($u['lastname']),
+		'email' => $u['email'],
+		'phone' => html_escape($u['phone']),
+		'zip' => html_escape($u['zip']),
+		'date' => (int) $u['date'],
+		'flags' => (int) $u['flags']
+	);
 }
 
 // End of file
