@@ -159,6 +159,7 @@ define('U_NOTIFIED', 2);
 // SUPER is system level access
 define('U_EDITOR', 4);
 define('U_STAFF', 8);
+define('U_ADMIN', 16);
 
 // "Super" gives access to higher-level CMS data
 // such as raw error reports or form data
