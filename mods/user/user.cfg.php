@@ -118,7 +118,7 @@ $cfg = array(
 			to re-send the request.
 
 			------
-			Passphrase Reset Request @ {data}
+			Passphrase Reset Request @ {date}
 			Automated Email Sent By {domain}'
 		),
 
