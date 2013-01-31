@@ -107,6 +107,13 @@ function user_onLoad() {
 	}
 }
 
+/*
+ * Cron Job; clean out forgot password table
+ */
+function user_onCron() {
+	return user_forgot_cron();
+}
+
 /***
  * Template Functions
  ***/
