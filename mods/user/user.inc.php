@@ -21,8 +21,8 @@
  * content/register_thankyou.inc.php
  * content/login.inc.php
  * content/logout.inc.php
- * js/<pre>.admin_user.js
- * css/<pre>.admin_user.css
+ * js/cms.admin_user.js
+ * css/cms.admin_user.css
  * ----
  */
 
