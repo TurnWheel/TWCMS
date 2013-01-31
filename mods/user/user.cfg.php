@@ -34,7 +34,7 @@ $cfg = array(
 		'regnotify' => array(
 			'to' => array('steven@turnwheel.com'),
 			'subject' => '[TWCMS] New Registration',
-			'headers' => 'From: SomeWebsite<contact@somewebsite.com>',
+			'headers' => 'From: SomeWebsite<contact@{domain}>',
 			'body' => 'A new user has registered an account.
 
 			-User Information-
@@ -51,7 +51,7 @@ $cfg = array(
 		'modreg' => array(
 			'to' => array('steven@turnwheel.com'),
 			'subject' => '[TWCMS] New Member: Approval Required',
-			'headers' => 'From: SomeWebsite<contact@somewebsite.com>',
+			'headers' => 'From: SomeWebsite<contact@{domain}>',
 			'body' => 'A new user has requested member access.
 
 			-User Information-
@@ -68,7 +68,7 @@ $cfg = array(
 		// Welcome message sent to user
 		'welcome' => array(
 			'subject' => 'Welcome to TWCMS!',
-			'headers' => 'From: SomeWebsite<contact@somewebsite.com>',
+			'headers' => 'From: SomeWebsite<contact@{domain}>',
 			'body' => 'Dear {firstname},
 
 			Welcome to TWCMS, and thank you for joining our website.
@@ -87,7 +87,7 @@ $cfg = array(
 		// Will only be sent if perm U_NOTIFIED is not set
 		'approved' => array(
 			'subject' => 'TWCMS Account Approved',
-			'headers' => 'Fromt: SomeWebsite<contact@somewebsite.com>',
+			'headers' => 'Fromt: SomeWebsite<contact@{domain}>',
 			'body' => '{firstname} {lastname}-
 
 			Your account for TWCMS has been approved by our moderators.
@@ -97,13 +97,13 @@ $cfg = array(
 
 			------
 			Registration Received @ {date}
-			Automated Email Sent By SomeWebsite.com'
+			Automated Email Sent By {domain}'
 		),
 
 		// Request to reset passphrase
 		'pass_forgot' => array(
 			'subject' => '[TWCMS] Request for passphrase reset',
-			'headers' => 'From: TWCMS<no-reply@somewebsite.com>',
+			'headers' => 'From: TWCMS<no-reply@{domain}>',
 			'body' => 'A request was sent using the Passphrase Recovery Tool
 			for this email address. If this request was not sent by you, please
 			ignore this email.
@@ -125,7 +125,7 @@ $cfg = array(
 		// Passphrase has been reset
 		'pass_reset' => array(
 			'subject' => '[TWCMS] Passphrase reset',
-			'headers' => 'From: TWCMS<no-reply@somewebsite.com>',
+			'headers' => 'From: TWCMS<no-reply@{domain}>',
 			'body' => 'The passphrase for your TWCMS account has been reset
 			using the Passphrase Reset Tool.
 
