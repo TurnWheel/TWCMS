@@ -41,17 +41,11 @@ if (!$cfg['error_savedb']) {
 	</div>';
 }
 
-sql_query('SELECT eid, error, date, flags
-	FROM error ORDER BY date DESC', '', __FILE__, __LINE__);
-
-$errors = array();
-while ($r = sql_fetch_array()) {
-	$errors[(int) $r['eid']] = array(
-		'error' => htmlentities($r['error']),
-		'date' => (int) $r['date'],
-		'flags' => (int) $r['flags']
-	);
+if (isset($H['id']) && $H['id'] !== 0) {
+	// TODO: Show full error details
 }
+
+$errors = error_getAll();
 
 $content .= '
 <table cellspacing="0" class="data" style="width:100%;">

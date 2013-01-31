@@ -17,6 +17,10 @@
  * ----
  */
 
+/***
+ * Events
+ ***/
+
 function error_onLoad() {
 	// Define global error handler
 	set_error_handler('error_handle');
@@ -154,6 +158,59 @@ function error_parse_val($value) {
 	if (is_null($value)) return 'NULL';
 
 	return '<strong>Unable to determine variable type.</strong>';
+}
+
+/***
+ * Admin functions
+ *
+ * Only applies if error_savedb is enabled
+ ***/
+
+/*
+ * Returns all errors in DB
+ *
+ * TODO: Work on $opts
+ */
+function error_getAll($opts = FALSE) {
+	$opts = array();
+
+	sql_query('SELECT eid, error, date, flags
+		FROM error ORDER BY date DESC', '', __FILE__, __LINE__);
+
+	$errors = array();
+	while ($r = sql_fetch_array()) {
+		$eid = (int) $r['eid'];
+		$errors[$eid] = array(
+			'error' => htmlentities($r['error']),
+			'date' => (int) $r['date'],
+			'flags' => (int) $r['flags']
+		);
+	}
+
+	return $errors;
+}
+
+/*
+ * Get a specific error
+ */
+function error_get($eid) {
+	$eid = (int) $eid;
+
+	if ($eid === 0) return FALSE;
+
+	sql_query('SELECT eid, error, date, flags
+		FROM error WHERE eid = "%d"
+		ORDER BY date DESC', $eid, __FILE__, __LINE__);
+
+	$e = sql_fetch_array();
+
+	if ($e === FALSE) return FALSE;
+
+	return array(
+		'error' => htmlentities($e['error']),
+		'date' => (int) $e['date'],
+		'flags' => (int) $e['flags']
+	);
 }
 
 // EOF
