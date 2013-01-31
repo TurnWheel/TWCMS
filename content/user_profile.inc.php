@@ -7,7 +7,11 @@
  * Allows user to edit profile and settings
  */
 
-if (!ISUSER) return p_showerror(403);
+// If not logged in, show login form
+if (!ISUSER) {
+	$T['content'] = user_showlogin(TRUE);
+	return;
+}
 
 $T['title'] = $T['header'] = 'Update User Profile';
 
@@ -34,23 +38,24 @@ if (isset($_POST['profile'])) {
 
 	// Verify all POST data and check for empty fields
 	foreach ($fields AS $field) {
-		$_POST[$field] = isset($_POST[$field]) ? html_escape($_POST[$field]) : '';
-		if ($_POST[$field] === '') $error[$field] = TRUE;
+		$data[$field] = isset($_POST[$field]) ? html_escape($_POST[$field]) : '';
+
+		if ($data[$field] === '') {
+			$error[$field] = TRUE;
+		}
 	}
 
 	// If no errors, update user fields
 	if (sizeof($error) === 0) {
-		foreach ($fields AS $field) {
-			$data[$field] = $_POST[$field];
+		$user = user_profile($data);
+
+		if (!$user) {
+			$error['firstname'] = TRUE;
 		}
+	}
 
-		sql_query('UPDATE user SET firstname = "%s", lastname = "%s",
-					phone = "%s", zip = "%s" WHERE userid = "%d" LIMIT 1',
-					array(
-						$data['firstname'], $data['lastname'],
-						$data['phone'], $data['zip'], $data['id']
-					), __FILE__, __LINE__);
-
+	// Display error or success?
+	if (sizeof($error) === 0) {
 		print '
 		<div class="box success">
 			<p>
@@ -67,13 +72,17 @@ if (isset($_POST['profile'])) {
 // Check for password update
 if (isset($_POST['pass'])) {
 	$fields = array('currpass', 'newpass', 'newpass2');
+
 	foreach ($fields AS $field) {
 		$_POST[$field] = isset($_POST[$field]) ? escape($_POST[$field]) : '';
-		if ($_POST[$field] === '') $error[$field] = TRUE;
+
+		if ($_POST[$field] === '') {
+			$error[$field] = TRUE;
+		}
 	}
 
 	// Verify current password
-	if (!tw_chkhash($_POST['currpass'], $U['password'], $U['salt'])) {
+	if (!user_chkpasswd($_POST['currpass'])) {
 		$error['currpass'] = 'Current password incorrect. Try again.';
 	}
 
@@ -84,13 +93,14 @@ if (isset($_POST['pass'])) {
 
 	// If no errors, update password
 	if (sizeof($error) === 0) {
-		$salt = '';
-		$hash = tw_genhash($_POST['newpass'], TRUE, $salt);
+		$passwd = user_passwd($_POST['newpass']);
 
-		sql_query('UPDATE user SET password = "%s", salt = "%s"
-					WHERE userid = "%d"',
-					array($hash, $salt, $data['id']), __FILE__, __LINE__);
+		if (!$passwd) {
+			$error['newpass'] = 'Unknown error. COuld not save password.';
+		}
+	}
 
+	if (sizeof($error) === 0) {
 		print '
 		<div class="box success">
 			<p>

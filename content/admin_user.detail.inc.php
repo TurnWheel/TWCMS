@@ -8,9 +8,7 @@
  */
 
 // Get user data based on ID
-sql_query('SELECT * FROM user WHERE userid = "%d" LIMIT 1',
-	(int) $H['id'], __FILE__, __LINE__);
-$user = sql_fetch_array();
+$user = user_get($H['id']);
 
 // Make sure user exists
 if ($user === FALSE) {
@@ -29,17 +27,6 @@ if ($user === FALSE) {
 
 $T['title'] = $T['header'] = 'Edit User Profile';
 
-$data = array(
-	'id' => (int) $H['id'],
-	'email' => html_escape($user['email']),
-	'firstname' => html_escape($user['firstname']),
-	'lastname' => html_escape($user['lastname']),
-	'phone' => html_escape($user['phone']),
-	'zip' => html_escape($user['zip']),
-	'date' => (int) $user['date'],
-	'flags' => (int) $user['flags']
-);
-
 // Start buffer
 ob_start();
 
@@ -48,51 +35,22 @@ $error = array();
 
 // Check for change in status
 if (isset($_POST['chstatus'])) {
-	// Check for U_LOGIN
-	// if true, remove U_LOGIN from flags
-	// otherwise add U_LOGIN from flags
-	if (hasflag($data['flags'], U_LOGIN)) {
-		// Remove U_LOGIN
-		$data['flags'] = rmflag($data['flags'], U_LOGIN);
+	$status = user_changeStatus($user);
+
+	// Status change successful?
+	if ($status !== FALSE) {
+		$user['flags'] = $status['flags'];
+		$user['active'] = $status['active'];
+
+		print '
+		<div class="box success">
+			<p>
+				<strong>Success!</strong> The users status has been updated.
+				'.(isset($status['notified']) ?
+				'They have been notified of this change.' : '').'
+			</p>
+		</div>';
 	}
-	else {
-		// Add U_LOGIN
-		$data['flags'] = addflag($data['flags'], U_LOGIN);
-
-		// Alert user of approval if user_modreg is enabled
-		// and they have not previously been notified
-		if ($cfg['user_modreg'] && !hasflag($data['flags'], U_NOTIFIED)) {
-			// Add U_NOTIFIED flag
-			$data['flags'] = addflag($data['flags'], U_NOTIFIED);
-
-			$map = array(
-				'date' => date($cfg['user_emails']['date'], NOW),
-				'firstname' => $data['firstname'],
-				'lastname' => $data['lastname'],
-				'wwwurl' => WWWURL,
-				'sslurl' => SSLURL
-			);
-
-			// Send out email
-			$email = $cfg['user_emails']['approved'];
-			$email['to'] = $data['email'];
-
-			tw_sendmail($cfg['user_emails']['approved'], $map);
-
-			$notified = TRUE;
-		}
-	}
-
-	sql_query('UPDATE user SET flags = "%d" WHERE userid = "%d"',
-		array($data['flags'], $data['id']), __FILE__, __LINE__);
-
-	print '
-	<div class="box success">
-		<p>
-			<strong>Success!</strong> The users status has been updated.
-			'.(isset($notified) ? 'They have been notified of this change.' : '').'
-		</p>
-	</div>';
 }
 
 // Check for submission of profile update
@@ -101,23 +59,22 @@ if (isset($_POST['profile'])) {
 
 	// Verify all POST data and check for empty fields
 	foreach ($fields AS $field) {
-		$_POST[$field] = isset($_POST[$field]) ? html_escape($_POST[$field]) : '';
-		if ($_POST[$field] === '') $error[$field] = TRUE;
+		$user[$field] = isset($_POST[$field]) ? html_escape($_POST[$field]) : '';
+
+		if ($user[$field] === '') {
+			$error[$field] = TRUE;
+		}
 	}
 
 	// If no errors, update user fields
 	if (sizeof($error) === 0) {
-		foreach ($fields AS $field) {
-			$data[$field] = $_POST[$field];
+		$update = user_profile($user);
+		if (!$update) {
+			$error['firstname'] = TRUE;
 		}
+	}
 
-		sql_query('UPDATE user SET firstname = "%s", lastname = "%s",
-					phone = "%s", zip = "%s" WHERE userid = "%d" LIMIT 1',
-					array(
-						$data['firstname'], $data['lastname'],
-						$data['phone'], $data['zip'], $data['id']
-					), __FILE__, __LINE__);
-
+	if (sizeof($error) === 0) {
 		print '
 		<div class="box success">
 			<p>
@@ -134,9 +91,12 @@ if (isset($_POST['profile'])) {
 // Check for password update
 if (isset($_POST['pass'])) {
 	$fields = array('newpass', 'newpass2');
+
 	foreach ($fields AS $field) {
 		$_POST[$field] = isset($_POST[$field]) ? escape($_POST[$field]) : '';
-		if ($_POST[$field] === '') $error[$field] = TRUE;
+		if ($_POST[$field] === '') {
+			$error[$field] = TRUE;
+		}
 	}
 
 	// Verify new passwords are equal
@@ -146,14 +106,14 @@ if (isset($_POST['pass'])) {
 
 	// If no errors, update password
 	if (sizeof($error) === 0) {
-		$salt = '';
-		$hash = tw_genhash($_POST['newpass'], TRUE, $salt);
+		$pass = user_passwd($_POST['newpass'], $user['id']);
 
-		sql_query('UPDATE user SET password = "%s", salt = "%s"
-			WHERE userid = "%d"',
-			array($hash, $salt, $data['id']),
-			__FILE__, __LINE__);
+		if (!$pass) {
+			$error['newpass'] = $error['newpass2'] = TRUE;
+		}
+	}
 
+	if (sizeof($error) === 0) {
 		print '
 		<div class="box success">
 			<p>
@@ -189,13 +149,13 @@ if (sizeof($error) > 0) {
 	<p><a href="/admin/user/">&laquo; Go Back To User Management</a></p>
 </div>
 
-<form method="post" action="/admin/user/<?php print $data['id']; ?>/">
+<form method="post" action="/admin/user/<?php print $user['id']; ?>/">
 <fieldset>
 	<legend>Account Status</legend>
 	<p>
 			<strong>Status:</strong>
 	<?php
-	if (hasflag($data['flags'], U_LOGIN)) {
+	if ($user['active']) {
 		print '
 		<strong class="green">Active</strong></p>
 		<button type="submit" name="chstatus">Disable Account</button><br />';
@@ -204,7 +164,7 @@ if (sizeof($error) > 0) {
 		print '
 		<strong class="red">Disabled</strong></p>';
 
-		if ($cfg['user_modreg'] && !hasflag($data['flags'], U_NOTIFIED)) {
+		if ($cfg['user_modreg'] && !hasflag($user['flags'], U_NOTIFIED)) {
 			print '
 			<p><strong>Important:</strong> This user will receive an
 			email notification when this account is approved</p>';
@@ -213,7 +173,7 @@ if (sizeof($error) > 0) {
 		print '
 		<button type="submit" name="chstatus">
 			'.($cfg['user_modreg'] ?
-				(hasflag($data['flags'], U_NOTIFIED) ? 'Enable Account' :
+				(hasflag($user['flags'], U_NOTIFIED) ? 'Enable Account' :
 					'Approve Account') :
 				'Enable Account').'
 		</button><br />';
@@ -222,33 +182,33 @@ if (sizeof($error) > 0) {
 </fieldset>
 </form>
 
-<form method="post" action="/admin/user/<?php print $data['id']; ?>/">
+<form method="post" action="/admin/user/<?php print $user['id']; ?>/">
 <fieldset>
 	<legend>Account Profile</legend>
 	<table cellspacing="0">
 		<tr class="row0">
 			<td><strong>Date Registered</strong></td>
-			<td><?php print date('m/d/Y H:i:s', $data['date']); ?>
+			<td><?php print date('m/d/Y H:i:s', $user['date']); ?>
 		</tr>
 		<tr class="row1">
 			<td><strong>Email</strong></td>
-			<td><?php print $data['email']; ?></td>
+			<td><?php print $user['email']; ?></td>
 		</tr>
 		<tr class="row0">
 			<td><label for="firstname"<?php t_iserror($error, 'firstname'); ?>>First Name</label></td>
-			<td><input type="text" name="firstname" id="firstname" value="<?php print $data['firstname']; ?>" /></td>
+			<td><input type="text" name="firstname" id="firstname" value="<?php print $user['firstname']; ?>" /></td>
 		</tr>
 		<tr class="row1">
 			<td><label for="lastname"<?php t_iserror($error, 'lastname'); ?>>Last Name</label></td>
-			<td><input type="text" name="lastname" id="lastname" value="<?php print $data['lastname']; ?>" /></td>
+			<td><input type="text" name="lastname" id="lastname" value="<?php print $user['lastname']; ?>" /></td>
 		</tr>
 		<tr class="row0">
 			<td><label for="phone"<?php t_iserror($error, 'phone'); ?>>Phone #</label></td>
-			<td><input type="text" name="phone" id="phone" value="<?php print $data['phone']; ?>" /></td>
+			<td><input type="text" name="phone" id="phone" value="<?php print $user['phone']; ?>" /></td>
 		</tr>
 		<tr class="row1">
 			<td><label for="zip"<?php t_iserror($error, 'zip'); ?>>Zip Code</label></td>
-			<td><input type="text" name="zip" id="zip" value="<?php print $data['zip']; ?>" /></td>
+			<td><input type="text" name="zip" id="zip" value="<?php print $user['zip']; ?>" /></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -259,7 +219,7 @@ if (sizeof($error) > 0) {
 </fieldset>
 </form>
 
-<form method="post" action="/admin/user/<?php print $data['id']; ?>/">
+<form method="post" action="/admin/user/<?php print $user['id']; ?>/">
 <fieldset>
 	<legend>Reset Password</legend>
 	<table cellspacing="0">

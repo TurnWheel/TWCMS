@@ -201,14 +201,19 @@ function user_showlogin($error = TRUE) {
  * $salt (bool): Adds salt to password before comparing
  */
 function user_verify(&$U, $email, $pass, $salt = FALSE) {
-	if ($email === '' || $pass === '') return FALSE;
+	// Verify input
+	if ($email === '' || $pass === '') {
+		return FALSE;
+	}
 
 	sql_query('SELECT * FROM user WHERE email = "%s" LIMIT 1',
 		$email, __FILE__, __LINE__);
 	$U = sql_fetch_array();
 
-	// Essentially email address
-	if ($U === FALSE) return FALSE;
+	// User not found
+	if ($U === FALSE) {
+		return FALSE;
+	}
 
 	// Verify the user has login permissions
 	if (!hasflag($U['flags'], U_LOGIN)) {
@@ -225,7 +230,9 @@ function user_verify(&$U, $email, $pass, $salt = FALSE) {
 	}
 	else {
 		// Verifies both password hash and login token
-		if (tw_token($U['password']) !== $pass) return FALSE;
+		if (tw_token($U['password']) !== $pass) {
+			return FALSE;
+		}
 	}
 
 	// Unset sensitive variables
@@ -396,7 +403,7 @@ function user_restrict($perm) {
 }
 
 /***
- * Admin Functions
+ * Interfance Functions
  ***/
 
 /*
@@ -406,17 +413,19 @@ function user_restrict($perm) {
  * Admin privledges required
  */
 function user_get($uid) {
-	global $cfg;
+	global $cfg, $U;
 
 	$uid = (int) $uid;
 
 	if ($uid === 0) return FALSE;
 
 	// Verify Permissions
-	if (!user_hasperm(U_ADMIN)) return FALSE;
+	if ($uid !== $U['userid'] && !user_hasperm(U_ADMIN)) {
+		return FALSE;
+	}
 
-	sql_query('SELECT userid, firstname, lastname, email, phone,
-			zip, date, flags
+	sql_query('SELECT userid, firstname, lastname,
+			email, phone, zip, date, flags
 		FROM user WHERE userid = "%d"',
 		$uid, __FILE__, __LINE__);
 
@@ -424,7 +433,10 @@ function user_get($uid) {
 
 	if (!$u) return FALSE;
 
+	$flags = (int) $u['flags'];
+
 	return array(
+		'id' => $uid,
 		'userid' => $uid,
 		'firstname' => html_escape($u['firstname']),
 		'lastname' => html_escape($u['lastname']),
@@ -432,8 +444,209 @@ function user_get($uid) {
 		'phone' => html_escape($u['phone']),
 		'zip' => html_escape($u['zip']),
 		'date' => (int) $u['date'],
-		'flags' => (int) $u['flags']
+		'flags' => $flags,
+		'active' => hasflag($flags, U_LOGIN),
+		'status' => user_getStatus($flags)
 	);
+}
+
+/*
+ * Verify raw password input matches account password
+ */
+function user_chkpasswd($pass) {
+	global $U;
+
+	return tw_chkhash($pass, $U['password'], $U['salt']);
+}
+
+/*
+ * Changes user passwd
+ *
+ * $pass: New password in plain text
+ * $uid: If admin, specify User ID, otherwise it uses current user
+ */
+function user_passwd($pass, $uid = 0) {
+	global $U;
+
+	// Which userid to change
+	$uid = (int) $uid === 0 ? $U['userid'] : (int) $uid;
+
+	// Validate permissions
+	if ($uid !== $U['userid'] && !user_hasperm(U_ADMIN)) {
+		return FALSE;
+	}
+
+	$salt = '';
+	$hash = tw_genhash($pass, TRUE, $salt);
+
+	sql_query('UPDATE user SET password = "%s", salt = "%s"
+		WHERE userid = "%d" LIMIT 1',
+		array($hash, $salt, $uid), __FILE__, __LINE__);
+
+	return TRUE;
+}
+
+/*
+ * Changes user profile
+ *
+ * $data: Array of fields. Does not verify, front-end must do that.
+ * Expects: firstname, lastname, phone, zip
+ *
+ * $uid: If admin, specifiy User ID, otherwise it uses current user
+ */
+function user_profile($data, $uid = 0) {
+	global $U;
+
+	// Which userid to change
+	$uid = (int) $uid === 0 ? $U['userid'] : (int) $uid;
+
+	// Validate permissions
+	if ($uid !== $U['userid'] && !user_hasperm(U_ADMIN)) {
+		return FALSE;
+	}
+
+	sql_query('UPDATE user SET firstname = "%s", lastname = "%s",
+		phone = "%s", zip = "%s" WHERE userid = "%d" LIMIT 1',
+		array(
+			$data['firstname'], $data['lastname'],
+			$data['phone'], $data['zip'], $uid
+		), __FILE__, __LINE__);
+
+	return TRUE;
+}
+
+/***
+ * Admin Functions
+ ***/
+
+/*
+ * Get all users in a single call
+ *
+ * Available to admin only
+ */
+function user_getAll($opts = FALSE) {
+	// TODO: Allow search options
+	$opts = array();
+
+	if (!user_hasperm(U_ADMIN)) return FALSE;
+
+	sql_query('SELECT * FROM user ORDER BY userid ASC',
+		'', __FILE__, __LINE__);
+
+	$users = array();
+	while ($r = sql_fetch_array()) {
+		$uid = (int) $r['userid'];
+		$flags = (int) $r['flags'];
+
+		$users[$uid] = array(
+			'firstname' => html_escape($r['firstname']),
+			'lastname' => html_escape($r['lastname']),
+			'email' => html_escape($r['email']),
+			'date' => (int) $r['date'],
+			'flags' => $flags,
+			'active' => hasflag($flags, U_LOGIN),
+			'status' => user_getStatus($flags)
+		);
+	}
+
+	return $users;
+}
+
+/*
+ * User status, based on flags
+ *
+ * TODO: Generate smart status based on permissions
+ */
+function user_getStatus($perms) {
+	return FALSE;
+}
+
+/*
+ * Returns an array of all enabled permissions in the given flag
+ *
+ * $text: Returns text name of permissions
+ */
+function user_getPerms($flags, $text = FALSE) {
+	global $cfg;
+
+	if (!isset($cfg['user_flags'])) return FALSE;
+
+	$perms = array();
+	foreach ($cfg['user_flags'] AS $f => $txt) {
+		if (hasflag($flags, $f)) {
+			$perms[] = $text ? $txt : $f;
+		}
+	}
+
+	return $perms;
+}
+
+/*
+ * This function toggles the U_LOGIN status of the specified user
+ *
+ * $user: All user information as provided by user_get()
+ *
+ * Note: If this is their first time being "approved", the user
+ * will receieve an auto email notification.
+ *
+ * Admin permissions required
+ */
+function user_changeStatus($user) {
+	global $cfg;
+
+	// Verify permissions
+	if (!user_hasperm(U_ADMIN)) return FALSE;
+
+	// Check for U_LOGIN
+	// if true, remove U_LOGIN from flags
+	// otherwise add U_LOGIN from flags
+	if (hasflag($user['flags'], U_LOGIN)) {
+		// Remove U_LOGIN
+		$user['flags'] = rmflag($user['flags'], U_LOGIN);
+	}
+	else {
+		// Add U_LOGIN
+		$user['flags'] = addflag($user['flags'], U_LOGIN);
+
+		// Alert user of approval if user_modreg is enabled
+		// and they have not previously been notified
+		if ($cfg['user_modreg'] && !hasflag($user['flags'], U_NOTIFIED)) {
+			// Add U_NOTIFIED flag
+			$user['flags'] = addflag($user['flags'], U_NOTIFIED);
+
+			$map = array(
+				'date' => date($cfg['user_emails']['date'], NOW),
+				'firstname' => $user['firstname'],
+				'lastname' => $user['lastname'],
+				'wwwurl' => WWWURL,
+				'sslurl' => SSLURL
+			);
+
+			// Send out email
+			$email = $cfg['user_emails']['approved'];
+			$email['to'] = $user['email'];
+
+			tw_sendmail($cfg['user_emails']['approved'], $map);
+
+			$notified = TRUE;
+		}
+	}
+
+	$q = sql_query('UPDATE user SET flags = "%d" WHERE userid = "%d"',
+			array($user['flags'], $user['id']), __FILE__, __LINE__);
+
+	if (!$q) return FALSE;
+
+	$status = array(
+		'flags' => $user['flags'],
+		'active' => hasflag($user['flags'], U_LOGIN)
+	);
+
+	if (isset($notified)) {
+		$status['notified'] = TRUE;
+	}
+
+	return $status;
 }
 
 // End of file

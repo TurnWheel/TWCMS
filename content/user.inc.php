@@ -5,8 +5,10 @@
  * Part of TWCMS User Module
  */
 
+// If not logged in, show login form
 if (!ISUSER) {
-	return p_showerror(403);
+	$T['content'] = user_showlogin(TRUE);
+	return;
 }
 
 $T['title'] = $T['header'] = 'Manage Your Account';

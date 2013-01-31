@@ -161,6 +161,14 @@ define('U_EDITOR', 4);
 define('U_ADMIN', 8);
 define('U_SUPER', 16);
 
+// Text for member flag details
+$cfg['user_flags'] = array(
+	U_LOGIN => 'Enabled',
+	U_NOTIFIED => 'Approved',
+	U_EDITOR => 'Editor',
+	U_ADMIN => 'Admin Access'
+);
+
 // Default perms for new accounts
 define('U_DEFAULT', $cfg['user_modreg'] ? 0 : U_LOGIN);
 

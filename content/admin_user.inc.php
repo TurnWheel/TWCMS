@@ -22,19 +22,7 @@ $T['title'] = $T['header'] = 'User Management';
 // Display table of users to manage
 $html = '';
 
-sql_query('SELECT * FROM user
-	ORDER BY userid ASC',
-	'', __FILE__, __LINE__);
-$users = array();
-while ($r = sql_fetch_array()) {
-	$users[(int) $r['userid']] = array(
-		'firstname' => html_escape($r['firstname']),
-		'lastname' => html_escape($r['lastname']),
-		'email' => html_escape($r['email']),
-		'date' => (int) $r['date'],
-		'flags' => (int) $r['flags']
-	);
-}
+$users = user_getAll();
 
 $html .= '
 <table cellspacing="0" class="data" style="width:100%;">
@@ -60,7 +48,7 @@ foreach ($users AS $id => $user) {
 		</td>
 		<td>'.$user['email'].'</td>
 		<td>
-			'.(hasflag($user['flags'], U_LOGIN) ?
+			'.($user['active'] ?
 				'<strong class="green">Enabled</strong>' :
 				'<strong class="red">Disabled</strong>').'
 		</td>
