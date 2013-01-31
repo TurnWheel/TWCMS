@@ -61,7 +61,7 @@ foreach ($headers AS $k => $val) {
 
 	// If value is a pure integer
 	// save as specific ID #
-	if (intval($val) !== 0) {
+	if (ctype_digit($val)) {
 		// Remove ID from main array
 		array_pop($H);
 
@@ -96,7 +96,7 @@ foreach ($headers AS $k => $val) {
 		// Save as associative array,
 		// but also check if it is an integer.
 		// Integers should always remain their type
-		$H[$ckey] = intval($cval) !== 0 ? intval($cval) : path_escape($cval);
+		$H[$ckey] = ctype_digit($cval) ? (int) $cval : path_escape($cval);
 	}
 }
 
