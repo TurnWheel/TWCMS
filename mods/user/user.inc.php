@@ -543,7 +543,7 @@ function user_forgot($email) {
 	}
 
 	// Verify Email Exists in Database
-	$uid = user_exists($useremail);
+	$uid = user_exists($email);
 
 	// Error if not found
 	if (!$uid) {
