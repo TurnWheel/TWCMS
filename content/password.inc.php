@@ -26,7 +26,7 @@ $useremail = isset($_POST['email']) ? escape($_POST['email']) : '';
 
 // Check for form submission
 if (isset($_POST['submit'])) {
-	$forgot = user_forget($useremail);
+	$forgot = user_forgot($useremail);
 
 	if (!$forgot) {
 		$error['email'] = TRUE;
