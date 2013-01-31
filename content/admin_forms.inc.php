@@ -7,7 +7,9 @@
  * allows exploration of all raw formdata collected over multiple forms
  */
 
-if (!tw_isloaded('forms')) return p_showerror(403);
+if (!tw_isloaded('forms') || !isset($cfg['forms'])) {
+	return p_showerror(403);
+}
 
 if (tw_isloaded('user')) {
 	// Require U_ADMIN permissions or throw error
@@ -130,9 +132,9 @@ $T['header'] = 'Viewing Form Data: "'.$fname.'"';
 print '
 <p><a href="/admin/forms/">&lt;&lt; Select Different Form</a></p>';
 
-sql_query('SELECT entryid AS id,data,name,date FROM forms
-			WHERE name = "%s"
-			ORDER BY date DESC', $fname, __FILE__, __LINE__);
+sql_query('SELECT entryid AS id, data, name, date
+	FROM forms WHERE name = "%s"
+	ORDER BY date DESC', $fname, __FILE__, __LINE__);
 ?>
 
 <table cellspacing="0">
