@@ -74,7 +74,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	);
 
 	// Insert var dump into MySQL DB if enabled
-	if ($cfg['error_savedb']) {
+	if ($cfg['error_savedb'] && tw_isloaded('sql')) {
 		$err_a = array($errstr, $errno, $errfile, $errline);
 
 		sql_query('INSERT INTO error SET date = "%d",error = "%s",dump = "%s"',
