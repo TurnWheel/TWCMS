@@ -561,15 +561,15 @@ function user_forgot($email) {
 		), __FILE__, __LINE__);
 
 	// Email variables
-	$email = $cfg['user_emails']['pass_forgot'];
-	$email['to'] = $email;
+	$template = $cfg['user_emails']['pass_forgot'];
+	$template['to'] = $email;
 	$map = array(
 		'reseturl' => WWWURL.'password/reset/uid:'.$uid
 			.'/hash:'.urlencode($hash).'/'
 	);
 
 	// Send out email
-	tw_sendmail($email, $map);
+	tw_sendmail($template, $map);
 
 	return TRUE;
 }
