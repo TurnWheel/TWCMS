@@ -492,11 +492,6 @@ function user_passwd($pass, $uid = 0) {
 	// Which userid to change
 	$uid = $uid === 0 ? $U['userid'] : (int) $uid;
 
-	// Validate permissions
-	if ($uid !== $U['userid'] && !user_hasperm(U_ADMIN)) {
-		return FALSE;
-	}
-
 	$salt = '';
 	$hash = tw_genhash($pass, TRUE, $salt);
 
