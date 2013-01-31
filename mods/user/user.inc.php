@@ -626,7 +626,7 @@ function user_forgot_reset($uid, $rid) {
 	$email = $cfg['user_emails']['pass_reset'];
 	$email['to'] = $user['email'];
 	$map = array(
-		'password' => $realpass
+		'passphrase' => $realpass
 	);
 
 	tw_sendmail($email, $map);
