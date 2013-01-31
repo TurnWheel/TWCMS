@@ -483,8 +483,14 @@ function user_chkpasswd($pass) {
 function user_passwd($pass, $uid = 0) {
 	global $U;
 
+	// Verify userid is set
+	$uid = (int) $uid;
+	if ($uid === 0 && !isset($U['userid'])) {
+		return FALSE;
+	}
+
 	// Which userid to change
-	$uid = (int) $uid === 0 ? $U['userid'] : (int) $uid;
+	$uid = $uid === 0 ? $U['userid'] : (int) $uid;
 
 	// Validate permissions
 	if ($uid !== $U['userid'] && !user_hasperm(U_ADMIN)) {
@@ -613,7 +619,7 @@ function user_forgot_reset($uid, $rid) {
 	// Generate random password, and save
 	$realpass = substr(tw_genhash(mt_rand()), 0, 10);
 
-	if (!user_passwd($realpass)) {
+	if (!user_passwd($realpass, $uid)) {
 		return FALSE;
 	}
 
