@@ -12,7 +12,7 @@ user_forgot_cron();
 
 // Headers used in password recovery
 $H['uid'] = isset($H['uid']) ? intval($H['uid']) : 0;
-$H['hash'] = isset($H['hash']) ? escape($H['hash']) : '';
+$H['hash'] = isset($H['hash']) ? $H['hash'] : '';
 
 // Validate headers
 if ($H['uid'] === 0 || $H['hash'] === '') {
@@ -29,7 +29,7 @@ if ($H['uid'] === 0 || $H['hash'] === '') {
 
 // Validate ID/Hash
 $rid = user_forgot_verify($H['uid'], $H['hash']);
-print_r($rid);
+
 // If no found, display error (most likely expired)
 if ($rid === FALSE) {
 	$T['content'] = '
