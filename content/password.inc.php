@@ -26,39 +26,12 @@ $useremail = isset($_POST['email']) ? escape($_POST['email']) : '';
 
 // Check for form submission
 if (isset($_POST['submit'])) {
-	// Validate email format
-	if (!valid_email($useremail)) $error['email'] = TRUE;
+	$forgot = user_forget($useremail);
 
-	// Verify Email Exists in Database
-	sql_query('SELECT userid FROM user WHERE email = "%s" LIMIT 1',
-				$useremail, __FILE__, __LINE__);
-	$u = sql_fetch_array();
-
-	// Error if not found
-	if ($u === FALSE) $error['email'] = TRUE;
-
-	// If no errors, process request
-	if (sizeof($error) === 0) {
-		$uid = (int) $u['userid']; // Patient ID
-		$hash = tw_genhash($uid.NOW); // Create a unique hash
-
-		// Setup temporary DB
-		sql_query('INSERT INTO user_pass ($keys) VALUES($vals)',
-					array('userid' => $uid,
-					'hash' => $hash,
-					'date' => NOW), __FILE__, __LINE__);
-
-		// Email variables
-		$email = $cfg['user_emails']['pass_forgot'];
-		$email['to'] = $useremail;
-		$map = array(
-			'reseturl' => WWWURL.'password/reset/uid:'.$uid
-				.'/hash:'.urlencode($hash).'/'
-		);
-
-		// Send out email
-		tw_sendmail($email, $map);
-
+	if (!$forgot) {
+		$error['email'] = TRUE;
+	}
+	else {
 		// Show successful message
 		$T['content'] = '
 		<div class="box success">

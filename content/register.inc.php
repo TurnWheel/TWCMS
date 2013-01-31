@@ -51,7 +51,7 @@ if (isset($_POST['register'])) {
 
 	// Check for unique email (if no email errors already)
 	if (!isset($error['email'])) {
-		if (!user_unique($data['email'])) {
+		if (user_exists($data['email']) !== FALSE) {
 			$error['email'] = 'Email Address Already In Use';
 		}
 	}

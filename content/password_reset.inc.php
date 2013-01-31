@@ -7,10 +7,8 @@
 
 $T['title'] = $T['header'] = 'Password Reset';
 
-// Delete password recovery entries
-// that are more than 24 hours old
-sql_query('DELETE FROM user_pass WHERE date < '.(NOW-86400),
-			'', __FILE__, __LINE__);
+// Force run of forgot_cron, which clears out old hashes
+user_forgot_cron();
 
 // Headers used in password recovery
 $H['uid'] = isset($H['uid']) ? intval($H['uid']) : 0;
@@ -30,13 +28,10 @@ if ($H['uid'] === 0 || $H['hash'] === '') {
 }
 
 // Validate ID/Hash
-sql_query('SELECT recoverid FROM user_pass
-			WHERE userid = "%d" AND hash = "%s"',
-				array($H['uid'], $H['hash']));
-$r = sql_fetch_array();
+$rid = user_forgot_verify($H['uid'], $H['hash']);
 
 // If no found, display error (most likely expired)
-if ($r === FALSE) {
+if ($rid === FALSE) {
 	$T['content'] = '
 	<div class="box error">
 		<p>
@@ -84,49 +79,20 @@ if (!isset($_POST['accept'])) {
 	return FALSE; // Skip rest of file
 }
 
-// Get user email address
-sql_query('SELECT email FROM user WHERE userid = "%d" LIMIT 1', $H['uid']);
-$user = sql_fetch_array();
+$reset = user_forgot_reset($H['uid'], $rid);
 
-// Make sure patient exists (should never happen)
-if ($user === FALSE) {
+if ($reset === FALSE) {
 	$T['content'] = '
 	<div class="box error">
 		<p>
-			<strong>Error!</strong> The account password you are trying to
-			reset no longer exists. This is an error message you should never see.
-			If you are seeing this, please
+			<strong>Error!</strong> Password reset failed. This should not
+			happen unless something went terribly wrong. Please
 			<a href="/contact/">report this to the site administrator.</a>
 		</p>
 	</div>';
 
 	return FALSE; // Skip rest of file
 }
-
-// Generate New Password
-$rid = (int) $r['recoverid']; // Recover ID
-
-// Generate random password and salt
-$salt = '';
-$realpass = substr(tw_genhash(mt_rand()), 0, 10);
-$hash = tw_genhash($realpass, TRUE, $salt);
-
-// Update password in DB
-sql_query('UPDATE user SET password = "%s", salt = "%s"
-			WHERE userid = "%d" LIMIT 1',
-				array($hash, $salt, $H['uid']));
-
-// Remove temporary password recovery entry
-sql_query('DELETE FROM user_pass WHERE recoverid = "'.$rid.'" LIMIT 1');
-
-// Email variables
-$email = $cfg['user_emails']['pass_reset'];
-$email['to'] = $user['email'];
-$map = array(
-	'password' => $realpass
-);
-
-tw_sendmail($email, $map);
 
 // Display success message
 $T['content'] = '
@@ -135,8 +101,11 @@ $T['content'] = '
 			<strong>Success!</strong> You password has been reset.
 			You should receive an email within the next 15 minutes
 			containing your new password. If you do not receive this email,
-			check your Spam folders. Otherwise, you may want to attempt
-			<a href="/password/">another password reset</a>.
+			check your Spam folders.
+		</p>
+		<p>
+			If you fail to receive the email, you can always attempt another
+			<a href="/password/">Password Reset</a>.
 		</p>
 	</div>';
 

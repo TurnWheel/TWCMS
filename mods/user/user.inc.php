@@ -403,14 +403,18 @@ function user_restrict($perm) {
 }
 
 /*
- * Is this email address unique?
+ * Does this user exists?
+ * Returns userid if TRUE, otherwise returns FALSE
  */
-function user_unique($email) {
+function user_exists($email) {
 
 	sql_query('SELECT userid FROM user WHERE email = "%s" LIMIT 1',
 		$email, __FILE__, __LINE__);
+	$u = sql_fetch_array();
 
-	return sql_fetch_array() === FALSE;
+	if (!$u) return FALSE;
+
+	return (int) $u['userid'];
 }
 
 /***
@@ -522,6 +526,120 @@ function user_profile($data, $uid = 0) {
 			$data['firstname'], $data['lastname'],
 			$data['phone'], $data['zip'], $uid
 		), __FILE__, __LINE__);
+
+	return TRUE;
+}
+
+/*
+ * Forgot password?
+ * Step 1: Send email with link to step 2
+ */
+function user_forgot($email) {
+	global $cfg;
+
+	// Validate email format
+	if (!valid_email($email)) {
+		return FALSE;
+	}
+
+	// Verify Email Exists in Database
+	$uid = user_exists($useremail);
+
+	// Error if not found
+	if (!$uid) {
+		return FALSE;
+	}
+
+	// Create unique hash and save to DB
+	$hash = tw_genhash($uid.NOW);
+
+	sql_query('INSERT INTO user_pass ($keys) VALUES ($vals)',
+		array(
+			'userid' => $uid,
+			'hash' => $hash,
+			'date' => NOW
+		), __FILE__, __LINE__);
+
+	// Email variables
+	$email = $cfg['user_emails']['pass_forgot'];
+	$email['to'] = $email;
+	$map = array(
+		'reseturl' => WWWURL.'password/reset/uid:'.$uid
+			.'/hash:'.urlencode($hash).'/'
+	);
+
+	// Send out email
+	tw_sendmail($email, $map);
+
+	return TRUE;
+}
+
+/*
+ * Forgot password
+ * Step 2: Verify valid uid & hash input
+ *
+ * FALSE on failure
+ * (int) recoverid on success
+ */
+function user_forgot_verify($uid, $hash) {
+
+	sql_query('SELECT recoverid FROM user_pass
+		WHERE userid = "%d" AND hash = "%s"',
+		array($H['uid'], $H['hash']));
+
+	$r = sql_fetch_array();
+
+	if ($r === FALSE) return FALSE;
+
+	return (int) $r['recoverid'];
+}
+
+/*
+ * Forgot password
+ * Step 3: Complete Reset and send email
+ */
+function user_forgot_reset($uid, $rid) {
+	global $cfg;
+
+	// Get user email address
+	sql_query('SELECT email FROM user WHERE userid = "%d" LIMIT 1',
+		$H['uid'], __FILE__, __LINE__);
+	$user = sql_fetch_array();
+
+	if (!$user) {
+		return FALSE;
+	}
+
+	// Generate random password, and save
+	$realpass = substr(tw_genhash(mt_rand()), 0, 10);
+
+	if (!user_passwd($realpass)) {
+		return FALSE;
+	}
+
+	// Remove temporary password recovery entry
+	sql_query('DELETE FROM user_pass WHERE recoverid = "%d" LIMIT 1',
+		$rid, __FILE__, __LINE__);
+
+	// Email variables
+	$email = $cfg['user_emails']['pass_reset'];
+	$email['to'] = $user['email'];
+	$map = array(
+		'password' => $realpass
+	);
+
+	tw_sendmail($email, $map);
+
+	return TRUE;
+}
+
+/*
+ * Delete password recovery entries
+ * that are more than 24 hours old
+ */
+function user_forgot_cron() {
+	sql_query('DELETE FROM user_pass WHERE date < '.(NOW-86400),
+		'', __FILE__, __LINE__);
 
 	return TRUE;
 }
