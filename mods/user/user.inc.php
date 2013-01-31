@@ -561,15 +561,15 @@ function user_forgot($email) {
 		), __FILE__, __LINE__);
 
 	// Email variables
-	$template = $cfg['user_emails']['pass_forgot'];
-	$template['to'] = $email;
+	$etemp = $cfg['user_emails']['pass_forgot'];
+	$etemp['to'] = $email;
 	$map = array(
 		'reseturl' => WWWURL.'password/reset/uid:'.$uid
 			.'/hash:'.urlencode($hash).'/'
 	);
 
 	// Send out email
-	tw_sendmail($template, $map);
+	tw_sendmail($etemp, $map);
 
 	return TRUE;
 }
@@ -585,7 +585,7 @@ function user_forgot_verify($uid, $hash) {
 
 	sql_query('SELECT recoverid FROM user_pass
 		WHERE userid = "%d" AND hash = "%s"',
-		array($H['uid'], $H['hash']));
+		array($uid, $hash));
 
 	$r = sql_fetch_array();
 
@@ -603,7 +603,7 @@ function user_forgot_reset($uid, $rid) {
 
 	// Get user email address
 	sql_query('SELECT email FROM user WHERE userid = "%d" LIMIT 1',
-		$H['uid'], __FILE__, __LINE__);
+		$uid, __FILE__, __LINE__);
 	$user = sql_fetch_array();
 
 	if (!$user) {
