@@ -158,15 +158,18 @@ define('U_NOTIFIED', 2);
 // ADMIN is full access
 // SUPER is system level access
 define('U_EDITOR', 4);
-define('U_ADMIN', 8);
-define('U_SUPER', 16);
+define('U_STAFF', 8);
 
-// Text for member flag details
+// "Super" gives access to higher-level CMS data
+// such as raw error reports or form data
+define('U_SUPER', 128);
+
+// Text representation of permissions
 $cfg['user_flags'] = array(
 	U_LOGIN => 'Enabled',
 	U_NOTIFIED => 'Approved',
-	U_EDITOR => 'Editor',
-	U_ADMIN => 'Admin Access'
+	U_STAFF => 'Staff',
+	U_ADMIN => 'Admin Area'
 );
 
 // Default perms for new accounts

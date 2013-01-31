@@ -10,8 +10,8 @@
 // If user module is enabled, use user_restrict
 // as this uses the built in user permission system
 if (tw_isloaded('user')) {
-	// Require U_ADMIN permissions or throw error
-	if (!user_restrict(U_ADMIN)) return;
+	// Require U_SUPER permissions or throw error
+	if (!user_restrict(U_SUPER)) return;
 }
 
 // If no user module, fallback to built-in HTTP auth
