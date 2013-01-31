@@ -2,7 +2,7 @@
 /*
  * TWCMS <Module>
  *
- * Mod Version: 1.0
+ * Mod Version: 1.2
  * Author: Steven Bower
  * TurnWheel Designs (cc) 2012
  *
