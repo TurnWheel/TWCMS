@@ -51,9 +51,7 @@ if (isset($_POST['register'])) {
 
 	// Check for unique email (if no email errors already)
 	if (!isset($error['email'])) {
-		sql_query('SELECT userid FROM user WHERE email = "%s" LIMIT 1',
-			$data['email'], __FILE__, __LINE__);
-		if (sql_fetch_array() !== FALSE) {
+		if (!user_unique($data['email'])) {
 			$error['email'] = 'Email Address Already In Use';
 		}
 	}

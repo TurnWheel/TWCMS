@@ -402,6 +402,17 @@ function user_restrict($perm) {
 	return FALSE;
 }
 
+/*
+ * Is this email address unique?
+ */
+function user_unique($email) {
+
+	sql_query('SELECT userid FROM user WHERE email = "%s" LIMIT 1',
+		$email, __FILE__, __LINE__);
+
+	return sql_fetch_array() === FALSE;
+}
+
 /***
  * Interfance Functions
  ***/
