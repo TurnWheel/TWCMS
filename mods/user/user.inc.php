@@ -584,8 +584,8 @@ function user_forgot($email) {
 function user_forgot_verify($uid, $hash) {
 
 	sql_query('SELECT recoverid FROM user_pass
-		WHERE userid = "%d" AND hash = "%s"',
-		array($uid, $hash));
+		WHERE userid = "%d" AND hash = "%s" LIMIT 1',
+		array($uid, $hash), __FILE__, __LINE__);
 
 	$r = sql_fetch_array();
 
@@ -606,7 +606,7 @@ function user_forgot_reset($uid, $rid) {
 		$uid, __FILE__, __LINE__);
 	$user = sql_fetch_array();
 
-	if (!$user) {
+	if ($user === FALSE) {
 		return FALSE;
 	}
 

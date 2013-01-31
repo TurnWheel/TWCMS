@@ -29,7 +29,7 @@ if ($H['uid'] === 0 || $H['hash'] === '') {
 
 // Validate ID/Hash
 $rid = user_forgot_verify($H['uid'], $H['hash']);
-
+print_r($rid);
 // If no found, display error (most likely expired)
 if ($rid === FALSE) {
 	$T['content'] = '
