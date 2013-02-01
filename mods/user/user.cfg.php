@@ -154,14 +154,13 @@ define('U_LOGIN', 1);
 define('U_NOTIFIED', 2);
 
 // High-level permissions:
-// EDITOR is partial access
+// STAFF is partial access
 // ADMIN is full access
-// SUPER is system level access
 define('U_STAFF', 4);
 define('U_ADMIN', 8);
 
 // "Super" gives access to higher-level CMS data
-// such as raw error reports or form data
+// such as raw error reports
 define('U_SUPER', 128);
 
 // Text representation of permissions
