@@ -66,7 +66,9 @@ function tw_event($func, $mod = FALSE, $input = array()) {
 		return $event;
 	}
 	elseif (function_exists($mod.'_'.$func)) {
-		return array(call_user_func($mod.'_'.$func, $input));
+		return array(
+			$mod => call_user_func($mod.'_'.$func, $input)
+		);
 	}
 
 	return FALSE;
