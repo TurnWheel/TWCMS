@@ -187,6 +187,29 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 }
 
 /*
+ * Returns associative array
+ * Most commonly used method
+ */
+function sql_array($id = -1) {
+	global $cfg;
+
+	if ($id !== -1) $cfg['sql']['id'] = $id;
+	return mysql_fetch_assoc($cfg['sql']['id']);
+}
+
+/*
+ * sql_fetch_array and sql_fetch_assoc are
+ * legacy left overs, and are just aliases of 'sql_array'
+ */
+function sql_fetch_array($id = -1) {
+	return sql_array($id);
+}
+
+function sql_fetch_assoc($id = -1) {
+	return sql_array($id);
+}
+
+/*
  * SQL Query Tracking
  *
  * Starts tracking queries for different purposes
@@ -248,17 +271,6 @@ function sql_track_end($db = FALSE) {
 		// Re-connect to default DB
 		sql_onLoad();
 	}
-}
-
-/*
- * Returns associative array
- * Most commonly used method
- */
-function sql_fetch_array($id = -1) {
-	global $cfg;
-
-	if ($id !== -1) $cfg['sql']['id'] = $id;
-	return mysql_fetch_assoc($cfg['sql']['id']);
 }
 
 /*
