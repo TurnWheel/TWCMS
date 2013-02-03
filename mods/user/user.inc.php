@@ -255,8 +255,6 @@ function user_verify(&$U, $email, $pass, $salt = FALSE) {
  * FALSE: Bad user/pass
  */
 function user_login(&$U, $email, $pass, $remember = TRUE) {
-	global $cfg;
-
 	// Verify credentials
 	if (user_verify($U, $email, $pass, TRUE)) {
 		if (!$remember) {
@@ -435,7 +433,7 @@ function user_exists($email) {
  * Admin privledges required
  */
 function user_get($uid) {
-	global $cfg, $U;
+	global $U;
 
 	$uid = (int) $uid;
 
