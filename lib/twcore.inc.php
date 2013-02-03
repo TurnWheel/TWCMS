@@ -31,11 +31,8 @@ function tw_loadmod($mod) {
 	// SECURITY: Should be include safe
 	require MPATH.$mod.'/'.$mod.'.inc.php';
 
-	// Load config file and merge config into global cfg
-	$ncfg = tw_loadcfg($mod);
-	if ($ncfg !== FALSE) {
-		$cfg = array_merge($cfg, $ncfg);
-	}
+	// Load config file, which auto merges with global $cfg
+	tw_loadcfg($mod);
 
 	// Mark module as loaded
 	$cfg['mods_loaded'][$mod] = TRUE;
@@ -93,14 +90,26 @@ function tw_msg($msg, $file = __FILE__, $line = __LINE__, $newline = TRUE) {
 /*
  * <TWCMS>
  * Load config file for specified module
- * and return config array
+ * and return config array, while merging with global config
+ *
+ * $merge: Automatically merge new config with global config
+ * Format: $cfg[<modname>] = loadcfg(<modname>)
+ *
+ * Returns full config array for specified module,
+ * or empty array if non is set.
+ * Returns FALSE if config file could not be found.
  */
-function tw_loadcfg($mod) {
+function tw_loadcfg($mod, $merge = TRUE) {
 	// Load config file for this module
 	if (is_file(MPATH.$mod.'/'.$mod.'.cfg.php')) {
+		$gcfg = $GLOBALS['cfg'];
 		require MPATH.$mod.'/'.$mod.'.cfg.php';
 
-		if (isset($cfg)) return $cfg;
+		if ($merge) {
+			$GLOBALS['cfg'][$mod] = isset($cfg) ? $cfg : array();
+		}
+
+		return isset($cfg) ? $cfg : array();
 	}
 
 	return FALSE;
