@@ -9,7 +9,7 @@
 
 // Make sure registration is enabled
 // or return a 403 forbidden error
-if (!$cfg['user_regenable']) return p_showerror(403);
+if (!$cfg['user']['regenable']) return p_showerror(403);
 
 $T['title'] = $T['header'] = 'Thank You!';
 
@@ -17,7 +17,7 @@ $T['content'] = '
 <div class="box success">
 	<p>';
 
-if ($cfg['user_modreg']) {
+if ($cfg['user']['modreg']) {
 	$T['content'] .= '
 		<strong>Success!</strong> Your registration information has
 		been received. Your account must be approved by a moderator

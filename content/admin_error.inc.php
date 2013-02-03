@@ -25,7 +25,7 @@ $T['title'] = $T['header'] = 'View Error Data';
 
 $content = '';
 
-if (!$cfg['error_savedb']) {
+if (!$cfg['error']['savedb']) {
 	$content .= '
 	<div class="box notice">
 		<p>

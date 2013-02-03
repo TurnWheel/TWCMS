@@ -9,7 +9,7 @@
 
 // Make sure registration is enabled
 // or return a 403 forbidden error
-if (!$cfg['user_regenable']) {
+if (!$cfg['user']['regenable']) {
 	return p_showerror(403);
 }
 

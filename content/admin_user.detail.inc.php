@@ -164,7 +164,7 @@ if (sizeof($error) > 0) {
 		print '
 		<strong class="red">Disabled</strong></p>';
 
-		if ($cfg['user_modreg'] && !hasflag($user['flags'], U_NOTIFIED)) {
+		if ($cfg['user']['modreg'] && !hasflag($user['flags'], U_NOTIFIED)) {
 			print '
 			<p><strong>Important:</strong> This user will receive an
 			email notification when this account is approved</p>';
@@ -172,7 +172,7 @@ if (sizeof($error) > 0) {
 
 		print '
 		<button type="submit" name="chstatus">
-			'.($cfg['user_modreg'] ?
+			'.($cfg['user']['modreg'] ?
 				(hasflag($user['flags'], U_NOTIFIED) ? 'Enable Account' :
 					'Approve Account') :
 				'Enable Account').'
