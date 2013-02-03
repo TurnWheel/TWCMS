@@ -5,8 +5,7 @@
  * Form Module CFG
  */
 
-$cfg = array();
-$cfg['forms'] = array(
+$cfg = array(
 	'contact' => array(
 		// Array of field names to process
 		'fields' => array('name', 'email', 'message'),

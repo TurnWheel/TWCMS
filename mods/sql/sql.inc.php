@@ -19,8 +19,8 @@ function sql_onLoad() {
 	global $cfg;
 
 	// Connect to SQL Server
-	sql_connect($cfg['sql_host'], $cfg['sql_user'],
-		$cfg['sql_pass'],$cfg['sql_name']);
+	sql_connect($cfg['sql']['host'], $cfg['sql']['user'],
+		$cfg['sql']['pass'], $cfg['sql']['name']);
 
 	return TRUE;
 }

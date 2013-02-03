@@ -7,26 +7,26 @@
 
 $cfg = array(
 	// Seconds until cookies expire (default 604800, or 1 month)
-	'user_expire' => 604800,
+	'expire' => 604800,
 
 	// Enable registration??
 	// This allows you to temporarily or permanently
 	// disable user registration. Simply blocks access to register page.
-	'user_regenable' => TRUE,
+	'regenable' => TRUE,
 
 	// Notify moderator of new registrations?
-	'user_regnotify' => TRUE,
+	'regnotify' => TRUE,
 
 	// Require mod approval on registration?
 	// Overrides regnotify setting
-	'user_modreg' => TRUE,
+	'modreg' => TRUE,
 
 	// Send welcome email to new registrations?
-	'user_welcome' => FALSE,
+	'welcome' => FALSE,
 
 	// Email templates and configuration as part of the user system
 	// This includes user/mod notifications, and mod approval
-	'user_emails' => array(
+	'emails' => array(
 		// Format of dates in emails
 		'date' => 'g:ia T \o\n F j, Y',
 
@@ -164,7 +164,7 @@ define('U_ADMIN', 8);
 define('U_SUPER', 128);
 
 // Text representation of permissions
-$cfg['user_flags'] = array(
+$cfg['flags'] = array(
 	U_LOGIN => 'Enabled',
 	U_NOTIFIED => 'Approved',
 	U_STAFF => 'Staff',
@@ -172,7 +172,7 @@ $cfg['user_flags'] = array(
 );
 
 // Default perms for new accounts
-define('U_DEFAULT', $cfg['user_modreg'] ? 0 : U_LOGIN);
+define('U_DEFAULT', $cfg['modreg'] ? 0 : U_LOGIN);
 
 // Default perms for guests
 define('U_GUEST', 0);

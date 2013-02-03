@@ -36,10 +36,10 @@ function mc_send($data) {
 	);
 
 	// Setup main data to send
-	$url = $cfg['mc_ep'].'?method=listSubscribe';
+	$url = $cfg['mailchimp']['ep'].'?method=listSubscribe';
 	$mcdata = array(
-		'apikey' => $cfg['mc_key'],
-		'id' => $cfg['mc_listid'],
+		'apikey' => $cfg['mailchimp']['key'],
+		'id' => $cfg['mailchimp']['listid'],
 		'email_address' => $data['email'],
 		'email_type' => 'html',
 		'merge_vars' => $mvars,

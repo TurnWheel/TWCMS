@@ -64,7 +64,7 @@ function user_onLoad() {
 	if (!tw_isloaded('sql')) return FALSE;
 
 	// Session config
-	session_set_cookie_params($cfg['user_expire'], BASEURL, DOMAIN);
+	session_set_cookie_params($cfg['user']['expire'], BASEURL, DOMAIN);
 
 	// Login user if POST was sent
 	if (isset($_POST['login'])) {
@@ -350,11 +350,11 @@ function user_register($data, $notify = TRUE) {
 	// Either a registration notification,
 	// or a mod email requesting activation
 	$email = FALSE;
-	if ($cfg['user_modreg']) {
-		$email = $cfg['user_emails']['modreg'];
+	if ($cfg['user']['modreg']) {
+		$email = $cfg['user']['emails']['modreg'];
 	}
-	elseif ($cfg['user_regnotify']) {
-		$email = $cfg['user_emails']['regnotify'];
+	elseif ($cfg['user']['regnotify']) {
+		$email = $cfg['user']['emails']['regnotify'];
 	}
 
 	if ($email !== FALSE && $notify) {
@@ -362,8 +362,8 @@ function user_register($data, $notify = TRUE) {
 	}
 
 	// Should we send user a welcome message?
-	if ($cfg['user_welcome'] && $notify) {
-		tw_sendmail($cfg['user_emails']['welcome'], $map);
+	if ($cfg['user']['welcome'] && $notify) {
+		tw_sendmail($cfg['user']['emails']['welcome'], $map);
 	}
 
 	// Register event
@@ -569,7 +569,7 @@ function user_forgot($email) {
 		), __FILE__, __LINE__);
 
 	// Email variables
-	$etemp = $cfg['user_emails']['pass_forgot'];
+	$etemp = $cfg['user']['emails']['pass_forgot'];
 	$etemp['to'] = $email;
 	$map = array(
 		'reseturl' => WWWURL.'password/reset/uid:'.$uid
@@ -630,7 +630,7 @@ function user_forgot_reset($uid, $rid) {
 		$rid, __FILE__, __LINE__);
 
 	// Email variables
-	$email = $cfg['user_emails']['pass_reset'];
+	$email = $cfg['user']['emails']['pass_reset'];
 	$email['to'] = $user['email'];
 	$map = array(
 		'passphrase' => $realpass
@@ -706,10 +706,10 @@ function user_getStatus($perms) {
 function user_getPerms($flags, $text = FALSE) {
 	global $cfg;
 
-	if (!isset($cfg['user_flags'])) return FALSE;
+	if (!isset($cfg['user']['flags'])) return FALSE;
 
 	$perms = array();
-	foreach ($cfg['user_flags'] AS $f => $txt) {
+	foreach ($cfg['user']['flags'] AS $f => $txt) {
 		if (hasflag($flags, $f)) {
 			$perms[] = $text ? $txt : $f;
 		}
@@ -747,12 +747,12 @@ function user_changeStatus($user) {
 
 		// Alert user of approval if user_modreg is enabled
 		// and they have not previously been notified
-		if ($cfg['user_modreg'] && !hasflag($user['flags'], U_NOTIFIED)) {
+		if ($cfg['user']['modreg'] && !hasflag($user['flags'], U_NOTIFIED)) {
 			// Add U_NOTIFIED flag
 			$user['flags'] = addflag($user['flags'], U_NOTIFIED);
 
 			$map = array(
-				'date' => date($cfg['user_emails']['date'], NOW),
+				'date' => date($cfg['user']['emails']['date'], NOW),
 				'firstname' => $user['firstname'],
 				'lastname' => $user['lastname'],
 				'wwwurl' => WWWURL,
@@ -760,10 +760,10 @@ function user_changeStatus($user) {
 			);
 
 			// Send out email
-			$email = $cfg['user_emails']['approved'];
+			$email = $cfg['user']['emails']['approved'];
 			$email['to'] = $user['email'];
 
-			tw_sendmail($cfg['user_emails']['approved'], $map);
+			tw_sendmail($cfg['user']['emails']['approved'], $map);
 
 			$notified = TRUE;
 		}

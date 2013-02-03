@@ -10,23 +10,22 @@ $cfg = array(
 
 	// Host name for SQL Database
 	// 'localhost' works for most installations
-	'sql_host' => 'localhost',
+	'host' => 'localhost',
 
 	// SQL Username (Should NOT be 'root')
-	'sql_user' => 'somewebsite',
+	'user' => 'somewebsite',
 
 	// Password for SQL User
-	'sql_pass' => 'SQLPass123',
+	'pass' => 'SQLPass123',
 
 	// Name of MySQL DB To connect to
-	'sql_name' => 'somewebsite',
-);
+	'name' => 'somewebsite',
 
-/*
- * SQL Global Params
- * These defaults do not change
- */
-$cfg['sql'] = array(
+
+	/*
+	* SQL Global Params
+	* These defaults do not change
+	*/
 	'id' => 0, // Stores current query reference
 	'time' => 0, // Stores total execution time
 	'count' => 0, // Counts number of queries
@@ -34,6 +33,6 @@ $cfg['sql'] = array(
 );
 
 // Prefix for SQL tables
-define('SQL_PREFIX', '');
+define('SQL_PREFIX', 'cms_');
 
 // EOF

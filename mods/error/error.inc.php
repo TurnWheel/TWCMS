@@ -30,7 +30,7 @@ function error_onLoad() {
 function error_adminMenu() {
 	global $cfg;
 
-	if (!$cfg['error_savedb']) {
+	if (!$cfg['error']['savedb']) {
 		return FALSE;
 	}
 
@@ -67,14 +67,14 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	$map = array(
 		'error_str' => $errstr,
 		'error_num' => $errno,
-		'error_name' => $cfg['error_vals'][$errno],
+		'error_name' => $cfg['error']['vals'][$errno],
 		'error_file' => $errfile,
 		'error_line' => $errline,
 		'htmldump' => $dump
 	);
 
 	// Insert var dump into MySQL DB if enabled
-	if ($cfg['error_savedb'] && tw_isloaded('sql')) {
+	if ($cfg['error']['savedb'] && tw_isloaded('sql')) {
 		$err_a = array($errstr, $errno, $errfile, $errline);
 
 		sql_query('INSERT INTO error SET date = "%d",error = "%s",dump = "%s"',
@@ -86,7 +86,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	}
 
 	// Display template if enabled
-	if ($cfg['error_template']) {
+	if ($cfg['error']['template']) {
 		$file = CPATH.($cfg['debug'] ? 'error.php.debug.html' : 'error.php.html');
 
 		if (is_file($file)) {
@@ -96,7 +96,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	}
 
 	// Send email
-	tw_sendmail($cfg['error_email'], $map);
+	tw_sendmail($cfg['error']['email'], $map);
 
 	// End processing
 	exit;
