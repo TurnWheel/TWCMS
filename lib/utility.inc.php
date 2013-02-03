@@ -213,16 +213,6 @@ function img_resize($type, $orig, $new, $size, $quality = 75) {
 }
 
 /*
- * Generate random unique receipt #
- * based on ID of entry;
- * Ex: gen_receipt(24);
- * -> 00024-a0ce3dc4
- */
-function gen_receipt($id) {
-	return str_pad($id,5,'0',STR_PAD_LEFT).'-'.substr(sha1(uniqid('',TRUE)),0,8);
-}
-
-/*
  * ISO-81601 Date Format for PHP 4
  * PHP5: date('c')
  */
