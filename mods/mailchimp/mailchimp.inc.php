@@ -15,12 +15,10 @@
 if (!defined('SECURITY')) exit;
 
 /*
- * $data is an array of input
- * accepts any MVAR, and
- * REQUIRES 'email' key
- * for sending email_address
+ * $data is an array of input accepts any MVAR, and
+ * REQUIRES 'email' key for entered user
  */
-function mc_send($data) {
+function mailchimp_send($data) {
 	global $cfg;
 
 	// email must be set in $data
@@ -31,8 +29,8 @@ function mc_send($data) {
 	// API merge_vars
 	// See documentation for options
 	$mvars = array(
-		'FNAME' => $data['fname'],
-		'LNAME' => $data['lname']
+		'FNAME' => isset($data['fname']) ? $data['fname'] : '',
+		'LNAME' => isset($data['lname']) ? $data['lname'] : ''
 	);
 
 	// Setup main data to send
