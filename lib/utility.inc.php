@@ -43,22 +43,22 @@ function hasflag_list($text, $compare, $incFlag = TRUE) {
 
 /*
  * <TWCMS>
- * Removes specified flag from value
- * Ex: rmflag(29, 4) -> 25
- * Ex: rmflag(25, 4) -> 25
- */
-function rmflag($val, $flag) {
-	return $val & ~$flag;
-}
-
-/*
- * <TWCMS>
  * Adds specified flag to value
  * Ex: addflag(25, 4) -> 29
  * Ex: addflag(29, 4) -> 29
  */
 function addflag($val, $flag) {
 	return $val | $flag;
+}
+
+/*
+ * <TWCMS>
+ * Removes specified flag from value
+ * Ex: rmflag(29, 4) -> 25
+ * Ex: rmflag(25, 4) -> 25
+ */
+function rmflag($val, $flag) {
+	return $val & ~$flag;
 }
 
 /*
