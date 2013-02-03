@@ -34,7 +34,7 @@ if (isset($H['id']) && $H['id'] !== 0) {
 		WHERE entryid = "%d" LIMIT 1',
 		$H['id'], __FILE__, __LINE__);
 
-	$info = sql_fetch_array();
+	$info = sql_array();
 
 	// Display error if no data found
 	if ($info === FALSE) {
@@ -108,7 +108,7 @@ if ($fname === '') {
 		print '<li><em>No data available for viewing</em></li>';
 	}
 	else {
-		while ($r = sql_fetch_array()) {
+		while ($r = sql_array()) {
 			print '
 			<li><a href="/admin/forms/form:'.$r['name'].'/">'
 			.ucwords($r['name']).'</a></li>';
@@ -146,7 +146,7 @@ sql_query('SELECT entryid AS id, data, name, date
 <?php
 // Format data into tables
 $k = 0;
-while ($r = sql_fetch_array()) {
+while ($r = sql_array()) {
 	print '
 	<tr class="table'.($k%2).'">
 		<td class="center">

@@ -292,7 +292,7 @@ function sql_data_seek($n, $id = -1) {
  */
 function sql_nextid($col, $tbl) {
 	sql_query('SELECT MAX('.$col.') AS max FROM '.$tbl, '', __FILE__, __LINE__);
-	$r = sql_fetch_array();
+	$r = sql_array();
 	$max = intval($r['max'])+1;
 
 	return $max > 0 ? $max+1 : 1;

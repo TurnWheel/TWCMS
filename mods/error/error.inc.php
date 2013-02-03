@@ -54,7 +54,8 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	global $cfg;
 
 	// Hardcoded variables that should not show up in dumps
-	unset($errcontext['cfg']['sql_pass']);
+	unset($errcontext['cfg']['sql']['pass'],
+		$errocontext['cfg']['sql']['user']);
 
 	// Generate variable dump
 	$dump = '';
@@ -178,7 +179,7 @@ function error_getAll($opts = FALSE) {
 		FROM error ORDER BY date DESC', '', __FILE__, __LINE__);
 
 	$errors = array();
-	while ($r = sql_fetch_array()) {
+	while ($r = sql_array()) {
 		$eid = (int) $r['eid'];
 		$errors[$eid] = array(
 			'error' => htmlentities($r['error']),
@@ -202,7 +203,7 @@ function error_get($eid) {
 		FROM error WHERE eid = "%d"
 		ORDER BY date DESC', $eid, __FILE__, __LINE__);
 
-	$e = sql_fetch_array();
+	$e = sql_array();
 
 	if ($e === FALSE) return FALSE;
 

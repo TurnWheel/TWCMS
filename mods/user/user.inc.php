@@ -215,7 +215,7 @@ function user_verify(&$U, $email, $pass, $salt = FALSE) {
 
 	sql_query('SELECT * FROM user WHERE email = "%s" LIMIT 1',
 		$email, __FILE__, __LINE__);
-	$U = sql_fetch_array();
+	$U = sql_array();
 
 	// User not found
 	if ($U === FALSE) {
@@ -415,7 +415,7 @@ function user_exists($email) {
 
 	sql_query('SELECT userid FROM user WHERE email = "%s" LIMIT 1',
 		$email, __FILE__, __LINE__);
-	$u = sql_fetch_array();
+	$u = sql_array();
 
 	if (!$u) return FALSE;
 
@@ -449,7 +449,7 @@ function user_get($uid) {
 		FROM user WHERE userid = "%d"',
 		$uid, __FILE__, __LINE__);
 
-	$u = sql_fetch_array();
+	$u = sql_array();
 
 	if (!$u) return FALSE;
 
@@ -593,7 +593,7 @@ function user_forgot_verify($uid, $hash) {
 		WHERE userid = "%d" AND hash = "%s" LIMIT 1',
 		array($uid, $hash), __FILE__, __LINE__);
 
-	$r = sql_fetch_array();
+	$r = sql_array();
 
 	if ($r === FALSE) return FALSE;
 
@@ -610,7 +610,7 @@ function user_forgot_reset($uid, $rid) {
 	// Get user email address
 	sql_query('SELECT email FROM user WHERE userid = "%d" LIMIT 1',
 		$uid, __FILE__, __LINE__);
-	$user = sql_fetch_array();
+	$user = sql_array();
 
 	if ($user === FALSE) {
 		return FALSE;
@@ -669,7 +669,7 @@ function user_getAll($opts = FALSE) {
 		'', __FILE__, __LINE__);
 
 	$users = array();
-	while ($r = sql_fetch_array()) {
+	while ($r = sql_array()) {
 		$uid = (int) $r['userid'];
 		$flags = (int) $r['flags'];
 
