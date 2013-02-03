@@ -29,7 +29,7 @@ unset($HTTP_POST_VARS, $HTTP_GET_VARS, $HTTP_COOKIE_VARS,
  */
 
 // CMS Version, update on each new release
-define('VERSION', 'TWCMS 1.5');
+define('VERSION', 'TWCMS 1.6');
 
 // Utility constants
 define('NOW', time());
