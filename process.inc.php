@@ -76,12 +76,6 @@ foreach ($headers AS $k => $val) {
 
 		++$lastid;
 	}
-	// If _ is present, just remove
-	// Underscores are illegal characters
-	elseif (strpos($val, '_') !== FALSE) {
-		array_pop($H);
-		$P['404'] = TRUE;
-	}
 	// If : is present, separate for variable
 	// to use as key (cat:5); cat => 5
 	elseif (strpos($val, ':') !== FALSE) {
@@ -97,6 +91,12 @@ foreach ($headers AS $k => $val) {
 		// but also check if it is an integer.
 		// Integers should always remain their type
 		$H[$ckey] = ctype_digit($cval) ? (int) $cval : path_escape($cval);
+	}
+	// If _ is present, just remove
+	// Underscores are illegal characters
+	elseif (strpos($val, '_') !== FALSE) {
+		array_pop($H);
+		$P['404'] = TRUE;
 	}
 }
 
