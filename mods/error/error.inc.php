@@ -55,7 +55,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 
 	// Hardcoded variables that should not show up in dumps
 	unset($errcontext['cfg']['sql']['pass'],
-		$errocontext['cfg']['sql']['user']);
+		$errcontext['cfg']['sql']['user']);
 
 	// Generate variable dump
 	$dump = '';
