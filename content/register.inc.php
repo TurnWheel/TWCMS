@@ -135,7 +135,7 @@ if (sizeof($error) > 0) {
 				<label for="reg_email"<?php t_iserror($error, 'email'); ?>>E-Mail</label><br />
 				<small>(This will be used for login)</small>
 			</th>
-			<th>
+			<td>
 				<input type="text" name="email" id="reg_email" value="<?php print $data['email']; ?>" />
 			</td>
 		</tr>
