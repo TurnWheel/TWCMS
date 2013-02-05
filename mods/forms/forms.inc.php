@@ -71,9 +71,8 @@ function form_process($name, &$error) {
 
 	// Save data to DB if enabled
 	if (tw_isloaded('sql') && $fcfg['savedb']) {
-		sql_query('INSERT INTO forms
-					SET data = "%s", date = "%d", name = "%s"',
-						array(serialize($data), NOW, $name), __FILE__, __LINE__);
+		sql_query('INSERT INTO forms SET data = "%s", date = "%d", name = "%s"',
+			array(serialize($data), NOW, $name), __FILE__, __LINE__);
 	}
 
 	/* Handle emailing */

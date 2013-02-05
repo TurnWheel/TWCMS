@@ -73,6 +73,10 @@ if (isset($H['id']) && $H['id'] !== 0) {
 		$key = html_escape($key);
 		$value = html_escape($value);
 
+		if (is_array($value)) {
+			$value = implode(', ', $value);
+		}
+
 		$T['content'] .= '
 		<tr class="'.($k%2).'">
 			<th scope="row">'.ucwords(str_replace('_',' ',$key)).'</th>
