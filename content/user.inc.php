@@ -40,6 +40,15 @@ foreach ($links AS $mod => $item) {
 	<li><a href="'.$item['url'].'">'.$item['text'].'</a>'.$descrip.'</li>';
 }
 
+// Link to admin if they have permissions
+if (user_hasperm(U_ADMIN)) {
+	$T['content'] .= '
+	<li>
+		<a href="/admin/">Admin Area</a>: Admin tools and user management
+		<span class="red">(RESTRICTED)</span>
+	</li>';
+}
+
 $T['content'] .= '
 </ul>';
 
