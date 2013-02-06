@@ -95,4 +95,15 @@ function p_url2name($url) {
 		str_replace('-', ' ', $url))));
 }
 
+/*
+ * Returns JSON response with proper headers,
+ * and ends execution of script
+ */
+function p_endjson($array) {
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Content-type: application/json');
+	print json_encode($array);
+	exit;
+}
+
 // EOF
