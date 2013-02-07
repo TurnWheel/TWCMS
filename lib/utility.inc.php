@@ -441,7 +441,11 @@ function google_latlng($addr) {
 		return array($loc['lat'], $loc['lng']);
 	}
 
-	print_r($json);
+	// If requests are happening to quickly, pause for a moment
+	if ($json['status'] === 'OVER_QUERY_LIMIT') {
+		usleep(500000);
+		return FALSE;
+	}
 
 	return FALSE;
 }
