@@ -132,27 +132,27 @@ if (sizeof($error) > 0) {
 		</tr>
 		<tr class="row0">
 			<th scope="row">
-				<label for="reg_email"<?php t_iserror($error, 'email'); ?>>E-Mail</label><br />
-				<small>(This will be used for login)</small>
-			</th>
-			<td>
-				<input type="text" name="email" id="reg_email" value="<?php print $data['email']; ?>" />
-			</td>
-		</tr>
-		<tr class="row1">
-			<th scope="row">
-					<label for="reg_phone"<?php t_iserror($error, 'phone'); ?>>Phone #</label>
+				<label for="reg_phone"<?php t_iserror($error, 'phone'); ?>>Phone #</label>
 			</th>
 			<td>
 				<input type="text" name="phone" id="reg_phone" value="<?php print $data['phone']; ?>" />
 			</td>
 		</tr>
-		<tr class="row0">
+		<tr class="row1">
 			<th scope="row">
 				<label for="reg_zip"<?php t_iserror($error, 'zip'); ?>>Zip Code</label>
 			</th>
 			<td>
 				<input type="text" name="zip" id="reg_zip" value="<?php print $data['zip']; ?>" />
+			</td>
+		</tr>
+		<tr class="row0">
+			<th scope="row">
+				<label for="reg_email"<?php t_iserror($error, 'email'); ?>>E-Mail</label><br />
+				<small>(This will be used for login)</small>
+			</th>
+			<td>
+				<input type="text" name="email" id="reg_email" value="<?php print $data['email']; ?>" />
 			</td>
 		</tr>
 		<tr class="row1">
