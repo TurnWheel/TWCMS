@@ -644,8 +644,8 @@ function user_forgot_reset($uid, $rid) {
  * that are more than 24 hours old
  */
 function user_forgot_cron() {
-	sql_query('DELETE FROM user_pass WHERE date < '.(NOW-86400),
-		'', __FILE__, __LINE__);
+	sql_query('DELETE FROM user_pass WHERE date < %d',
+		(NOW-86400), __FILE__, __LINE__);
 
 	return TRUE;
 }
