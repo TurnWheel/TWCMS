@@ -23,9 +23,9 @@ $cfg = array(
 
 
 	/*
-	* SQL Global Params
-	* These defaults do not change
-	*/
+	 * SQL Global Params
+	 * These defaults do not change
+	 */
 	'id' => 0, // Stores current query reference
 	'time' => 0, // Stores total execution time
 	'count' => 0, // Counts number of queries
