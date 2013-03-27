@@ -75,6 +75,15 @@ function form_process($name, &$error) {
 			array(serialize($data), NOW, $name), __FILE__, __LINE__);
 	}
 
+	// Call newsletter event if newsletter option is enabled
+	// and newsletter field is set in POST data
+	if (isset($fcfg['newsletter']) && $fcfg['newsletter']
+		&& isset($fcfg['newsletter_field'])
+		&& isset($_POST[$fcfg['newsletter_field']])) {
+		$subinput = array('email' => $data['email']);
+		tw_event('onSubscribe', FALSE, $subinput);
+	}
+
 	/* Handle emailing */
 
 	// Generate map of form variables

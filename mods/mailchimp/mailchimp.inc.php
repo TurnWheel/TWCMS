@@ -14,6 +14,10 @@
 
 if (!defined('SECURITY')) exit;
 
+function mailchimp_onSubscribe($data) {
+	return mailchimp_send($data);
+}
+
 /*
  * $data is an array of input accepts any MVAR, and
  * REQUIRES 'email' key for entered user

@@ -13,6 +13,12 @@ $cfg = array(
 		// Array of required fields
 		'required' => array('name', 'email', 'message'),
 
+		// Enable newsletter subscription integration?
+		//'newsletter' => TRUE,
+
+		// Name of checkbox field to enable/disable newsletter signup
+		//'newsletter_field' => 'newsletter',
+
 		// Save received data to DB?
 		// Requires 'sql' module to be enabled
 		'savedb' => TRUE,
