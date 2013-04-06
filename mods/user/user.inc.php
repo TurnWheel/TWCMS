@@ -382,6 +382,10 @@ function user_register($data, $notify = TRUE) {
  */
 function user_hasperm($perm) {
 	global $U;
+
+	// Sanity Check
+	if (!isset($U['flags'])) return FALSE;
+
 	return $perm === 0 || hasflag($U['flags'], $perm);
 }
 
