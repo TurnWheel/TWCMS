@@ -33,7 +33,7 @@ $(function() {
 
 	// Handle confirmation buttons
 	$('button.confirm').click(function() {
-		var c = confirm('Are you SURE you want to do this?'+
+		var c = confirm('Are you SURE you want to do this? '+
 							'This action can not be un-done!');
 		if (!c) return false;
 		else {
