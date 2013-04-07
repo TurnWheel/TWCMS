@@ -2,7 +2,7 @@
 /*
  * TWCMS <Module>
  *
- * Mod Version: 0.5
+ * Mod Version: 0.6
  * Author: Steven Bower
  * TurnWheel Designs (cc) 2012
  *
@@ -78,9 +78,16 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	if ($cfg['error']['savedb'] && tw_isloaded('sql')) {
 		$err_a = array($errstr, $errno, $errfile, $errline);
 
-		sql_query('INSERT INTO error SET date = "%d",error = "%s",dump = "%s"',
-						array(NOW, serialize($err_a), serialize($errcontext)),
-						__FILE__, __LINE__);
+		// Encode serailized arrays with base64,
+		// so as to prevent character encoding issues
+		$save = array(
+			'date' => NOW,
+			'error' => base64_encode(serialize($err_a)),
+			'dump' => base64_encode(serialize($errcontext))
+		);
+
+		sql_query('INSERT INTO error ($keys) VALUES ($vals)',
+			$save, __FILE__, __LINE__);
 
 		// Add insert id to replacement map
 		$map['error_sqlid'] = sql_insert_id();
@@ -179,12 +186,24 @@ function error_getAll($opts = FALSE) {
 		FROM error ORDER BY date DESC', '', __FILE__, __LINE__);
 
 	$errors = array();
-	while ($r = sql_array()) {
-		$eid = (int) $r['eid'];
+	while ($e = sql_array()) {
+		$eid = (int) $e['eid'];
+
+		// Parse error array
+		// Format: array($errstr, $errno, $errfile, $errline);
+		$e['error'] = base64_decode($e['error']);
+		$err = html_escape(unserialize($e['error']));
+
 		$errors[$eid] = array(
-			'error' => htmlentities($r['error']),
-			'date' => (int) $r['date'],
-			'flags' => (int) $r['flags']
+			// Make guess on error array
+			'error_str' => isset($err[0]) ? $err[0] : 'N/A',
+			'error_num' => isset($err[1]) ? $err[1] : 'N/A',
+			'error_file' => isset($err[2]) ? $err[2] : 'N/A',
+			'error_line' => isset($err[3]) ? $err[3] : 'N/A',
+
+			'error' => htmlentities($e['error']),
+			'date' => (int) $e['date'],
+			'flags' => (int) $e['flags']
 		);
 	}
 
@@ -199,7 +218,7 @@ function error_get($eid) {
 
 	if ($eid === 0) return FALSE;
 
-	sql_query('SELECT eid, error, date, flags
+	sql_query('SELECT eid, error, dump, date, flags
 		FROM error WHERE eid = "%d"
 		ORDER BY date DESC', $eid, __FILE__, __LINE__);
 
@@ -207,8 +226,37 @@ function error_get($eid) {
 
 	if ($e === FALSE) return FALSE;
 
+	/*
+	 * Generate Variable Dump
+	 *
+	 * Try try/catch block determines if there is a offset
+	 * error with the array (which is common), and switches
+	 * to just showing the raw dump.
+	 */
+	try {
+		$context = unserialize(base64_decode($e['dump']));
+		$dump = '';
+
+		foreach ($context AS $key => $val) {
+			$dump .= error_parse_dump($val, $key);
+		}
+	} catch (ErrorException $e) {
+		$context = html_escape(base64_decode($e['dump']));
+	}
+
+	// Parse error array
+	// Format: array($errstr, $errno, $errfile, $errline);
+	$err = html_escape(unserialize(base64_decode($e['error'])));
+
 	return array(
+		// Make guess on error array
+		'error_str' => isset($err[0]) ? $err[0] : 'N/A',
+		'error_num' => isset($err[1]) ? $err[1] : 'N/A',
+		'error_file' => isset($err[2]) ? $err[2] : 'N/A',
+		'error_line' => isset($err[3]) ? $err[3] : 'N/A',
+
 		'error' => htmlentities($e['error']),
+		'dump' => $dump,
 		'date' => (int) $e['date'],
 		'flags' => (int) $e['flags']
 	);

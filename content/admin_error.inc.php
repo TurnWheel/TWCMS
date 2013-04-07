@@ -41,9 +41,51 @@ if (!$cfg['error']['savedb']) {
 	</div>';
 }
 
-if (isset($H['id']) && $H['id'] !== 0) {
-	// TODO: Show full error details
+/*
+ * Show full error details
+ */
+$eid = isset($H['id']) ? (int) $H['id'] : 0;
+if ($eid !== 0) {
+	$error = error_get($eid);
+	$content = '';
+
+	if ($error === FALSE) {
+		$T['content'] .= '
+		<div class="box error">
+			<p>
+				<strong>Error:</strong>
+				Could not locate specified error.
+			</p>
+		</div>';
+		return;
+	}
+
+	$T['title'] = $T['header'] = 'Error Data (#'.$eid.')';
+	$content = '
+	<a href="/admin/error/">&lt;&lt; Back To Error List</a>';
+
+	$vals = $cfg['error']['vals'];
+	$error_name = isset($vals[$error['error_num']]) ? $vals[$error['error_num']] : 'N/A';
+
+	$content .= '
+	<div id="error">
+		<h2>Error Details</h2>
+		<strong>Date:</strong> '.date('c', $error['date']).'<br />
+		<strong>Error: </strong> '.$error['error_str'].'<br />
+		<strong>Errno:</strong> '.$error['error_num'].' ('.$error_name.')<br />
+		<strong>File:</strong> '.$error['error_file'].'<br />
+		<strong>Line:</strong> '.$error['error_line'].'<br />
+	</div><br /><br />
+
+	<div id="dump">
+		<h2>Variable Dump</h2>
+		'.$error['dump'].'
+	</div>';
+
+	$T['content'] = $content;
+	return;
 }
+/* END Full Error Details */
 
 $errors = error_getAll();
 
@@ -61,8 +103,9 @@ foreach ($errors AS $id => $error) {
 	<tr class="table'.($i%2).'">
 		<td><a href="/admin/error/'.$id.'/">#'.$id.'</a></td>
 		<td>
-			<span title="'.$error['error'].'">
-				'.truncate($error['error'], 100).'
+			<span title="'.$error['error_str'].'">
+				'.basename($error['error_file']).': '.$error['error_line'].';
+				'.truncate($error['error_str'], 60).'
 			</span>
 		</td>
 		<td>'.date('c', $error['date']).'</td>
