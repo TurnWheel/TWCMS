@@ -57,9 +57,6 @@ if (isset($_POST['chstatus'])) {
 if (isset($_POST['chperms'])) {
 	$flags = isset($_POST['flags']) ? $_POST['flags'] : array();
 	$perms = user_updatePerms($user, $flags);
-	print_r($flags);
-	var_dump($perms);
-
 
 	if ($perms !== FALSE) {
 		$user['flags'] = $perms;
