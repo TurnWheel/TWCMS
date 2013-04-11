@@ -33,8 +33,8 @@ $cfg = array(
 		// Email for admin notification
 		'regnotify' => array(
 			'to' => array('steven@turnwheel.com'),
-			'subject' => '[TWCMS] New Registration',
-			'headers' => 'From: SomeWebsite<contact@{domain}>',
+			'subject' => '[{sitename}] New Registration',
+			'headers' => 'From: {sitename}<contact@{domain}>',
 			'body' => 'A new user has registered an account.
 
 			-User Information-
@@ -50,8 +50,8 @@ $cfg = array(
 		// Email for admin moderation
 		'modreg' => array(
 			'to' => array('steven@turnwheel.com'),
-			'subject' => '[TWCMS] New Member: Approval Required',
-			'headers' => 'From: SomeWebsite<contact@{domain}>',
+			'subject' => '[{sitename}] New Member: Approval Required',
+			'headers' => 'From: {sitename}<contact@{domain}>',
 			'body' => 'A new user has requested member access.
 
 			-User Information-
@@ -67,11 +67,11 @@ $cfg = array(
 
 		// Welcome message sent to user
 		'welcome' => array(
-			'subject' => 'Welcome to TWCMS!',
-			'headers' => 'From: SomeWebsite<contact@{domain}>',
+			'subject' => 'Welcome to {sitename}!',
+			'headers' => 'From: {sitename}<contact@{domain}>',
 			'body' => 'Dear {firstname},
 
-			Welcome to TWCMS, and thank you for joining our website.
+			Welcome to {sitename}, and thank you for joining our website.
 
 			You may now login at to our website by going to:
 			{wwwurl}login
@@ -86,14 +86,14 @@ $cfg = array(
 		// to the user to notify their account is now active
 		// Will only be sent if perm U_NOTIFIED is not set
 		'approved' => array(
-			'subject' => 'TWCMS Account Approved',
-			'headers' => 'From: SomeWebsite<contact@{domain}>',
+			'subject' => '{sitename} Account Approved',
+			'headers' => 'From: {sitename}<contact@{domain}>',
 			'body' => '{firstname} {lastname}-
 
-			Your account for TWCMS has been approved by our moderators.
+			Your account for {sitename} has been approved by our moderators.
 			You may now login to your account at {wwwurl}login
 
-			Thank you for joining TWCMS.
+			Thank you for joining {sitename}.
 
 			------
 			Registration Received @ {date}
@@ -102,8 +102,8 @@ $cfg = array(
 
 		// Request to reset passphrase
 		'pass_forgot' => array(
-			'subject' => '[TWCMS] Request for passphrase reset',
-			'headers' => 'From: TWCMS<no-reply@{domain}>',
+			'subject' => '[{sitename}] Request for passphrase reset',
+			'headers' => 'From: {sitename}<no-reply@{domain}>',
 			'body' => 'A request was sent using the Passphrase Recovery Tool
 			for this email address. If this request was not sent by you, please
 			ignore this email.
@@ -124,9 +124,9 @@ $cfg = array(
 
 		// Passphrase has been reset
 		'pass_reset' => array(
-			'subject' => '[TWCMS] Passphrase reset',
-			'headers' => 'From: TWCMS<no-reply@{domain}>',
-			'body' => 'The passphrase for your TWCMS account has been reset
+			'subject' => '[{sitename}] Passphrase reset',
+			'headers' => 'From: {sitename}<no-reply@{domain}>',
+			'body' => 'The passphrase for your {sitename} account has been reset
 			using the Passphrase Reset Tool.
 
 			New Passphrase: {passphrase}

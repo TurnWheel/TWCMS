@@ -51,21 +51,21 @@ $cfg = array(
 				// Body of email with {} for var replacements
 				// {date} is provided by the library
 				// Tabs (\t) are automatically stripped
-				'body' => '{name} has contacted you through SomeWebsite.com:
+				'body' => '{name} has contacted you through {domain}:
 
 				{message}
 
 				------
 				Replies to this email go to {email}
 				Message Sent @ {date}
-				Automated Email Sent By SomeWebsite.com'
+				Automated Email Sent By {domain}'
 			),
 			'user' => array(
 				'enable' => FALSE,
 				// Field name to grab "to" email from
 				'to' => 'email',
-				'subject' => 'Thankyou for contacting TWCMS',
-				'headers' => 'From: SomeWebsite<contact@somewebsite.com>',
+				'subject' => 'Thankyou for contacting {sitename}',
+				'headers' => 'From: {sitename}<contact@{domain}>',
 				'body' => 'Thank you for contacting us.
 
 				If your message contained an inquiry, we will try to reply
@@ -75,7 +75,7 @@ $cfg = array(
 
 				------
 				Message Received @ {date}
-				Automated Email Sent By SomeWebsite.com'
+				Automated Email Sent By {domain}'
 			),
 		),
 	)

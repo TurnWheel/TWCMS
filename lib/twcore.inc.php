@@ -181,6 +181,7 @@ function tw_sendmail($mail, $map = array()) {
 	$df = isset($mail['date']) ? $mail['date'] : $cfg['email_date'];
 
 	$map = array_merge($map, array(
+		'sitename' => SITENAME,
 		'domain' => DOMAIN,
 		'url' => FULLURL,
 		'wwwurl' => WWWURL,

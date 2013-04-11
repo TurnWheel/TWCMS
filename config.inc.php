@@ -130,6 +130,9 @@ $cfg = array(
 );
 
 /* Define constants */
+// Default site name? (CHANGE ON INSTALLATION)
+define('SITENAME', 'TWCMS');
+
 // Abs. local path to root directory
 define('RPATH', '/www/SomeWebsite.com/www/');
 
