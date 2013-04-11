@@ -87,7 +87,7 @@ $cfg = array(
 		// Will only be sent if perm U_NOTIFIED is not set
 		'approved' => array(
 			'subject' => 'TWCMS Account Approved',
-			'headers' => 'Fromt: SomeWebsite<contact@{domain}>',
+			'headers' => 'From: SomeWebsite<contact@{domain}>',
 			'body' => '{firstname} {lastname}-
 
 			Your account for TWCMS has been approved by our moderators.
