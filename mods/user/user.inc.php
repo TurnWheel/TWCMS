@@ -721,7 +721,7 @@ function user_getPerms($flags, $text = FALSE) {
 }
 
 /*
- * This function toggles the U_LOGIN status of the specified user
+ * Toggles the U_LOGIN status of the specified user
  *
  * $user: All user information as provided by user_get()
  *
@@ -786,6 +786,43 @@ function user_changeStatus($user) {
 	}
 
 	return $status;
+}
+
+/*
+ * Updates set permissons
+ * $user: Current user data
+ * $flags: Array of permission values
+ *
+ * Returns: FALSE on failure; final $flags value if successful
+ */
+function user_updatePerms($user, $flags) {
+	global $cfg;
+
+	// Check permissions
+	if (!user_hasperm(U_ADMIN)) return FALSE;
+
+	// ID and flags have to be set
+	if (!isset($user['id']) || !isset($user['flags'])) {
+		return FALSE;
+	}
+
+	// Starting point needs to account for existing U_LOGIN flag,
+	// since this is handeled uniquely by user_changeStatus
+	$perms = hasflag($user['flags'], U_LOGIN) ? U_LOGIN : 0;
+
+	foreach ($flags AS $n => $v) {
+		$v = (int) $v;
+		// Skip U_LOGIN if passed accidentally
+		if ($v === 0 || $v === U_LOGIN) continue;
+
+		$perms = addflag($perms, (int) $v);
+	}
+
+	// Update user with new permissions
+	sql_query('UPDATE user SET flags = "%d" WHERE userid = "%d" LIMIT 1',
+		array($perms, $user['id']), __FILE__, __LINE__);
+
+	return $perms;
 }
 
 // End of file

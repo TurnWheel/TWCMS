@@ -33,7 +33,7 @@ ob_start();
 // Stores error arrays
 $error = array();
 
-// Check for change in status
+// Watch for change in status
 if (isset($_POST['chstatus'])) {
 	$status = user_changeStatus($user);
 
@@ -53,7 +53,28 @@ if (isset($_POST['chstatus'])) {
 	}
 }
 
-// Check for submission of profile update
+// Watch for change in permissions
+if (isset($_POST['chperms'])) {
+	$flags = isset($_POST['flags']) ? $_POST['flags'] : array();
+	$perms = user_updatePerms($user, $flags);
+	print_r($flags);
+	var_dump($perms);
+
+
+	if ($perms !== FALSE) {
+		$user['flags'] = $perms;
+
+		print '
+		<div class="box success">
+			<p>
+				<strong>Success!</strong> The permissions on this account
+				have been updated.
+			</p>
+		</div>';
+	}
+}
+
+// Watch for submission of profile changes
 if (isset($_POST['profile'])) {
 	$fields = array('firstname', 'lastname', 'phone', 'zip');
 
@@ -88,7 +109,7 @@ if (isset($_POST['profile'])) {
 	}
 }
 
-// Check for password update
+// Watch for password change
 if (isset($_POST['pass'])) {
 	$fields = array('newpass', 'newpass2');
 
@@ -179,6 +200,34 @@ if (sizeof($error) > 0) {
 		</button><br />';
 	}
 	?>
+</fieldset>
+</form>
+
+<form method="post" action="/admin/user/<?php print $user['id']; ?>/">
+<fieldset>
+	<legend>Permissions</legend>
+	<strong>Available Access Levels</strong>
+	<ul style="list-style:none;">
+	<?php
+	$i = 0;
+	foreach ($cfg['user']['flags'] AS $flag => $name) {
+		// Skip U_LOGIN has this is uniquely handeled by Account Status
+		if ($flag === U_LOGIN) continue;
+
+		$check  = hasflag($user['flags'], $flag);
+
+		print '
+		<li>
+			<input type="checkbox" name="flags[]" value="'.$flag
+			.'" id="flag_'.$i.'"'.($check ? ' checked="checked"' : '').' />
+			<label for="flag_'.$i.'">'.$name.'</label>
+		</li>';
+
+		++$i;
+	}
+	?>
+	</ul>
+	<button type="submit" name="chperms">Update Permissions</button>
 </fieldset>
 </form>
 
