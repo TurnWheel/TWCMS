@@ -36,7 +36,9 @@ if (!defined('SECURITY')) exit;
 function user_adminMenu() {
 	return array(
 		'url' => '/admin/user/',
-		'text' => 'User Management'
+		'text' => 'User Management',
+		'descrip' => 'View, edit, and approve member profiles',
+		'perms' => U_ADMIN
 	);
 }
 

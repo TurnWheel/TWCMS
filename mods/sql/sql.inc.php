@@ -350,7 +350,8 @@ function sql_adminMenu() {
 	if ($cfg['email_savedb']) {
 		/*return array(
 			'url' => '/admin/emails/',
-			'text' => 'System Emails'
+			'text' => 'System Emails',
+			'descrip' => 'View all raw emails sent through this system'
 		);*/
 	}
 }

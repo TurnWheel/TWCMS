@@ -19,10 +19,17 @@ if (!defined('SECURITY')) exit;
 
 /* Adds link to admin area */
 function files_adminMenu() {
-	return array(
+	$menu = array(
 		'url' => '/admin/files/',
-		'text' => 'Manage Resource Files'
+		'text' => 'Manage Resource Files',
+		'descrip' => 'Add or Delete uploaded files'
 	);
+
+	if (tw_isloaded('user')) {
+		$menu['perms'] = FILES_U_ADMIN;
+	}
+
+	return $menu;
 }
 
 /***
