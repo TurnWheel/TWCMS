@@ -122,7 +122,7 @@ $cfg = array(
 	 */
 	'mods_enabled' => array(
 		'sql', 'error', 'forms',
-		'user', 'mailchimp'
+		'user', 'mailchimp', 'files'
 	),
 
 	// Used internally to track which modules have been loaded
