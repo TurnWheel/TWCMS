@@ -19,10 +19,18 @@ if (!defined('SECURITY')) exit;
 
 /* Displays menu link in admin */
 function forms_adminMenu() {
-	return array(
+	$menu = array(
 		'url' => '/admin/forms/',
-		'text' => 'View Form Data'
+		'text' => 'View Form Data',
+		'descrip' => 'Displays all saved data from various forms,
+		such as contact form'
 	);
+
+	if (tw_isloaded('user')) {
+		$menu['perms'] = EVENT_U_ADMIN;
+	}
+
+	return $menu;
 }
 
 /*
