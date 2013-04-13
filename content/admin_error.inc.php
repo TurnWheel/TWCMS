@@ -68,7 +68,7 @@ if ($eid !== 0) {
 	$error_name = isset($vals[$error['error_num']]) ? $vals[$error['error_num']] : 'N/A';
 
 	$content .= '
-	<div id="error">
+	<div id="e_error" class="errbox">
 		<h2>Error Details</h2>
 		<strong>Date:</strong> '.date('c', $error['date']).'<br />
 		<strong>Error: </strong> '.$error['error_str'].'<br />
@@ -77,12 +77,12 @@ if ($eid !== 0) {
 		<strong>Line:</strong> '.$error['error_line'].'<br />
 	</div><br /><br />
 
-	<div id="e_trace">
+	<div id="e_trace" class="errbox">
 		<h2>Full Callstack (Backtrace)</h2>
 		'.$error['trace'].'
 	</div>
 
-	<div id="dump">
+	<div id="e_dump" class="errbox">
 		<h2>Variable Dump</h2>
 		'.$error['dump'].'
 	</div>';

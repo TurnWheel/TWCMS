@@ -40,15 +40,15 @@ pre {
 	margin: 0;
 	color: #000;
 }
-.array {
-	padding-left: 20px;
-	margin: 0;
-}
-.box {
+.errbox {
 	border: 1px solid #000;
 	background-color: #F0F0F0;
 	margin: 0 auto;
 	padding: 5px;
+}
+.errbox .array {
+	padding-left: 20px;
+	margin: 0;
 }
 </style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -83,7 +83,7 @@ $(function() {
 <body>
 	<div>
 	<h1>Error</h1>
-		<div id="e_error" class="box">
+		<div id="e_error" class="errbox">
 			<h2>Error Details</h2>
 			<strong>Error: </strong> {error_str}<br />
 			<strong>Errno:</strong> {error_num} ({error_name})<br />
@@ -91,12 +91,12 @@ $(function() {
 			<strong>Line:</strong> {error_line}<br />
 		</div><br /><br />
 
-		<div id="e_trace" class="box">
+		<div id="e_trace" class="errbox">
 			<h2>Full Callstack (Backtrace)</h2>
 			{htmltrace}
 		</div><br /><br />
 
-		<div id="e_dump" class="box">
+		<div id="e_dump" class="errbox">
 			<h2>Variable Dump</h2>
 			{htmldump}
 		</div>

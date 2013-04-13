@@ -8,27 +8,29 @@
 
 @import "/css/jquery.dataTables.css";
 
-
-#error {
-	border: solid 1px #000;
-	background-color: #F0F0F0;
-	margin: 0 auto;
+#e_error {
 	width: 500px;
 }
-#dump {
-	border: solid 1px #000;
-	background-color: #F0F0F0;
-	margin: 0 auto;
+#e_trace {
+	width: 500px;
+}
+#e_dump {
 	width: 600px;
 	padding: 2px;
 	padding-left: 5px;
 }
-#dump a {
+#e_dump a {
 	padding: 0;
 	margin: 0;
 	color: #000;
 }
-#dump .array {
+.errbox {
+	border: 1px solid #000;
+	background-color: #F0F0F0;
+	margin: 0 auto;
+	padding: 5px;
+}
+.errbox .array {
 	padding-left: 20px;
 	margin: 0;
 }
