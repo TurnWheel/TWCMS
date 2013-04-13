@@ -41,6 +41,9 @@ img, a img {
 	border: 0;
 	outline: 0;
 }
+ul, ol {
+	list-style-position: inside;
+}
 h1 {
 	display: none;
 }
@@ -74,6 +77,7 @@ hr {
 	margin: 30px 0 25px 0;
 	color: #D9D9D9;
 }
+
 
 /* Tables */
 table {
