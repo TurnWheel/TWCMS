@@ -72,6 +72,12 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	$htmltrace = '';
 
 	foreach ($backtrace AS $num => $info) {
+		// For some reason backtrace does not always return these values
+		if (!isset($info['file']) || !isset($info['line'])
+			|| !isset($info['function'])) {
+			continue;
+			}
+
 		// Returns file path, excluding the "ROOTPATH" as defined by config
 		$file = str_replace(RPATH, '', $info['file']);
 
@@ -273,6 +279,12 @@ function error_get($eid) {
 	$htmltrace = '';
 
 	foreach ($backtrace AS $num => $info) {
+		// For some reason backtrace does not always return these values
+		if (!isset($info['file']) || !isset($info['line'])
+			|| !isset($info['function'])) {
+			continue;
+		}
+
 		// Returns file path, excluding the "ROOTPATH" as defined by config
 		$file = str_replace(RPATH, '', $info['file']);
 
