@@ -80,7 +80,7 @@ if ($eid !== 0) {
 	<div id="e_trace" class="errbox">
 		<h2>Full Callstack (Backtrace)</h2>
 		'.$error['trace'].'
-	</div>
+	</div><br /><br />
 
 	<div id="e_dump" class="errbox">
 		<h2>Variable Dump</h2>
