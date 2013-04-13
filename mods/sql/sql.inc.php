@@ -321,10 +321,9 @@ function sql_nextid($col, $tbl) {
 /*
  * Gets auto_increment ID of latest INSERT query
  */
-function sql_insert_id($id = -1) {
+function sql_insert_id() {
 	global $cfg;
-
-	return ($id === -1) ? mysqli_insert_id() : mysqli_insert_id($id);
+	return (int) mysqli_insert_id($cfg['sql']['con']);
 }
 
 /*
