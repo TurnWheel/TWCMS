@@ -193,6 +193,9 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 		// Execute query, save to resource global
 		// and check for errors
 		if (!$cfg['sql']['id'] = mysqli_query($cfg['sql']['con'], $q)) {
+			// Pass $file through a filter to remote meaningless paths
+			$file = str_replace(realpath(RPATH), '', $file);
+
 			sql_error('<strong>Bad SQL Query</strong> ('.$file.':'.$line.'):
 						'.htmlentities($q).'<br />
 						<strong>'.mysqli_error($cfg['sql']['con']).'</strong>');
@@ -270,9 +273,9 @@ function sql_track_start() {
 function sql_track_end($db = FALSE) {
 	global $cfg;
 
+	$start = $cfg['sql']['track_start'];
 	$stats = $cfg['sql']['qstats'];
 	$end = sizeof($stats);
-	$start = $cfg['sql']['track_start'];
 
 	// End tracking regardless
 	unset($cfg['sql']['track_start']);
