@@ -59,7 +59,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 		$errcontext['cfg']['sql']['user']);
 
 	// Save backtrace information
-	$backtrace = debug_backtrace();
+	$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
 	// Generate variable dump
 	$dump = '';
