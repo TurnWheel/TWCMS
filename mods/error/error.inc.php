@@ -62,28 +62,10 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
 	// Generate variable dump HTML
-	$dump = '';
-
-	foreach ($errcontext AS $key => $val) {
-		$dump .= error_parse_dump($val, $key);
-	}
+	$htmldump = error_html_dump($errcontext);
 
 	// Generate trace HTML
-	$htmltrace = '';
-
-	foreach ($backtrace AS $num => $info) {
-		// For some reason backtrace does not always return these values
-		if (!isset($info['file']) || !isset($info['line'])
-			|| !isset($info['function'])) {
-			continue;
-			}
-
-		// Returns file path, excluding the "ROOTPATH" as defined by config
-		$file = str_replace(RPATH, '', $info['file']);
-
-		$htmltrace .= $num.': <strong>'.$info['function'].'</strong>'
-			.' ('.$file.':'.$info['line'].')<br />';
-	}
+	$htmltrace = error_html_trace($backtrace);
 
 	// Map of values for templates (email and html)
 	$map = array(
@@ -92,7 +74,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 		'error_name' => $cfg['error']['vals'][$errno],
 		'error_file' => $errfile,
 		'error_line' => $errline,
-		'htmldump' => $dump,
+		'htmldump' => $htmldump,
 		'htmltrace' => $htmltrace
 	);
 
@@ -134,7 +116,46 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 }
 
 /*
- * Parse out a variable dump into readable format
+ * Loops through backtrace and returns an html readable format
+ */
+function error_html_trace($trace) {
+	$html = '<ol>';
+
+	foreach ($trace AS $num => $info) {
+		// For some reason backtrace does not always return these values
+		if (!isset($info['file'])
+			|| !isset($info['line'])
+			|| !isset($info['function'])) {
+			continue;
+		}
+
+		// Returns file path, excluding the "ROOTPATH" as defined by config
+		$file = str_replace(realpath(RPATH), '', $info['file']);
+
+		$html .= '<li><strong>'.$info['function'].'</strong>'
+			.' ('.$file.':'.$info['line'].') #'.$num.'</li>';
+	}
+
+	$html .= '</ol>';
+
+	return $html;
+}
+
+/*
+ * Loops through a dump array and returns its HTML value
+ */
+function error_html_dump($dump) {
+	$html = '';
+
+	foreach ($dump AS $key => $val) {
+		$html .= error_parse_dump($val, $key);
+	}
+
+	return $html;
+}
+
+/*
+ * Converts variable into HTML readable format
  */
 function error_parse_dump($value, $name, $level = 0) {
 	// Skip GLOBALS, as it causes too much recursion
@@ -148,7 +169,7 @@ function error_parse_dump($value, $name, $level = 0) {
 
 			$i = 0;
 			foreach($value as $key2 => $value2) {
-				$text .= ' ['.error_parse_val($key2) . '] = '.
+				$text .= ' ['.error_parse_type($key2) . '] = '.
 					error_parse_dump($value2, '', $level+1).
 					(++$i !== $count ? ',' : '') .
 					'<br />'."\n";
@@ -168,9 +189,9 @@ function error_parse_dump($value, $name, $level = 0) {
 }
 
 /*
- * Parse a variable value based on type
+ * Return a string description based on values type
  */
-function error_parse_val($value) {
+function error_parse_type($value) {
 	if (is_bool($value)) return $value ? 'TRUE' : 'FALSE';
 	if (is_int($value) || is_float($value)) return $value;
 
@@ -239,7 +260,9 @@ function error_getAll($opts = FALSE) {
 function error_get($eid) {
 	$eid = (int) $eid;
 
-	if ($eid === 0) return FALSE;
+	if ($eid === 0) {
+		return FALSE;
+	}
 
 	sql_query('SELECT eid, error, dump, trace, date, flags
 		FROM error WHERE eid = "%d"
@@ -247,50 +270,26 @@ function error_get($eid) {
 
 	$e = sql_array();
 
-	if ($e === FALSE) return FALSE;
-
-	/*
-	 * Generate Variable Dump
-	 *
-	 * Try try/catch block determines if there is a offset
-	 * error with the array (which is common), and switches
-	 * to just showing the raw dump.
-	 */
-	try {
-		$context = unserialize(base64_decode($e['dump']));
-		$dump = '';
-
-		foreach ($context AS $key => $val) {
-			$dump .= error_parse_dump($val, $key);
-		}
-	} catch (ErrorException $e) {
-		$context = html_escape(base64_decode($e['dump']));
+	if ($e === FALSE) {
+		return FALSE;
 	}
+
+	// Prase dump
+	$dump = $e['dump'] === '' ? array()
+		: unserialize(base64_decode($e['dump']));
+	$htmldump = error_html_dump($dump);
+
+	// Parse backtrace
+	$trace = $e['trace'] === '' ? array()
+		: unserialize(base64_decode($e['trace']));
+
+	$htmltrace = error_html_trace($trace);
 
 	// Parse error array
 	// Format: array($errstr, $errno, $errfile, $errline);
-	$err = html_escape(unserialize(base64_decode($e['error'])));
-
-	// Parse backtrace
-	$backtrace = $e['trace'] === '' ? array() :
-		unserialize(base64_decode($e['trace']));
-
-	// Generate trace HTML
-	$htmltrace = '';
-
-	foreach ($backtrace AS $num => $info) {
-		// For some reason backtrace does not always return these values
-		if (!isset($info['file']) || !isset($info['line'])
-			|| !isset($info['function'])) {
-			continue;
-		}
-
-		// Returns file path, excluding the "ROOTPATH" as defined by config
-		$file = str_replace(RPATH, '', $info['file']);
-
-		$htmltrace .= $num.': <strong>'.$info['function'].'</strong>'
-			.' ('.$file.':'.$info['line'].')<br />';
-	}
+	$err = $e['error'] === '' ? array()
+		: unserialize(base64_decode($e['error']));
+	$err = html_escape($err);
 
 	return array(
 		// Make guess on error array
@@ -300,8 +299,9 @@ function error_get($eid) {
 		'error_line' => isset($err[3]) ? $err[3] : 'N/A',
 
 		'error' => htmlentities($e['error']),
-		'dump' => $dump,
+		'dump' => $htmldump,
 		'trace' => $htmltrace,
+
 		'date' => (int) $e['date'],
 		'flags' => (int) $e['flags']
 	);
