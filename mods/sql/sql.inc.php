@@ -186,7 +186,7 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 		if (!$cfg['sql']['id'] = mysqli_query($q, $cfg['sql']['con'])) {
 			sql_error('<strong>Bad SQL Query</strong> ('.$file.':'.$line.'):
 						'.htmlentities($q).'<br />
-						<strong>'.mysqli_error().'</strong>');
+						<strong>'.mysqli_error($cfg['sql']['con']).'</strong>');
 		}
 
 		// Save all query stats
