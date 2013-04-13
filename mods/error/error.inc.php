@@ -266,8 +266,19 @@ function error_get($eid) {
 	$err = html_escape(unserialize(base64_decode($e['error'])));
 
 	// Parse backtrace
-	$trace = $e['trace'] === '' ? array() :
+	$backtrace = $e['trace'] === '' ? array() :
 		unserialize(base64_decode($e['trace']));
+
+	// Generate trace HTML
+	$htmltrace = '';
+
+	foreach ($backtrace AS $num => $info) {
+		// Returns file path, excluding the "ROOTPATH" as defined by config
+		$file = str_replace(RPATH, '', $info['file']);
+
+		$htmltrace .= $num.': <strong>'.$info['function'].'</strong>'
+			.' ('.$file.':'.$info['line'].')<br />';
+	}
 
 	return array(
 		// Make guess on error array
@@ -278,7 +289,7 @@ function error_get($eid) {
 
 		'error' => htmlentities($e['error']),
 		'dump' => $dump,
-		'trace' => $trace,
+		'trace' => $htmltrace,
 		'date' => (int) $e['date'],
 		'flags' => (int) $e['flags']
 	);

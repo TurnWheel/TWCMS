@@ -77,6 +77,11 @@ if ($eid !== 0) {
 		<strong>Line:</strong> '.$error['error_line'].'<br />
 	</div><br /><br />
 
+	<div id="e_trace">
+		<h2>Full Callstack (Backtrace)</h2>
+		'.$error['trace'].'
+	</div>
+
 	<div id="dump">
 		<h2>Variable Dump</h2>
 		'.$error['dump'].'
