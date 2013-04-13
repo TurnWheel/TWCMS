@@ -179,7 +179,7 @@ function error_parse_dump($value, $name, $level = 0) {
 		}
 		else $text = 'array()';
 	}
-	else $text = error_parse_val($value);
+	else $text = error_parse_type($value);
 
 	if ($level === 0) {
 		$text = '$'.$name.' = '.$text.';<br />'."\n";
