@@ -12,7 +12,7 @@
 if (!defined('SECURITY')) exit;
 
 /*
- * TW Event Function
+ * TWCMS Event Function
  * Simply calls sql_connect with proper cfg params
  */
 function sql_onLoad() {
@@ -23,6 +23,24 @@ function sql_onLoad() {
 		$cfg['sql']['pass'], $cfg['sql']['name']);
 
 	return TRUE;
+}
+
+/*
+ * TWCMS Event Function
+ * Displays menu link in admin
+ */
+function sql_adminMenu() {
+	global $cfg;
+
+	// Only display item if email saving is enabled
+	// This is not stricly related to SQL module
+	if ($cfg['email_savedb']) {
+		/*return array(
+			'url' => '/admin/emails/',
+			'text' => 'System Emails',
+			'descrip' => 'View all raw emails sent through this system'
+		);*/
+	}
 }
 
 /*
@@ -50,14 +68,14 @@ function sql_connect($host, $user, $password = '', $name = '') {
 	global $cfg;
 
 	// Verify Credentials and connect
-	if (!$cfg['sql']['con'] = mysql_pconnect($host, $user, $password)) {
+	if (!$cfg['sql']['con'] = mysqli_connect($host, $user, $password)) {
 		sql_error('Could not connect to MySQL Server'
 					.' (Host: '.$host.' | User: '.$user.')', TRUE);
 	}
 
 	// Select Database
-	if ($name !== '' && !mysql_select_db($name)) {
-		mysql_close($cfg['sql']['con']);
+	if ($name !== '' && !mysqli_select_db($name)) {
+		mysqli_close($cfg['sql']['con']);
 		sql_error('Database could not be selected (DB: '.$name.')', TRUE);
 	}
 
@@ -73,9 +91,11 @@ function sql_close() {
 
 	// See if we need to free existing mysql query
 	if ($cfg['sql']['con']) {
-		if ($cfg['sql']['id']) @mysql_free_result($cfg['sql']['id']);
+		if ($cfg['sql']['id']) {
+			@sql_free_result();
+		}
 
-		return mysql_close($cfg['sql']['con']);
+		return mysqli_close($cfg['sql']['con']);
 	}
 	else return FALSE;
 }
@@ -163,10 +183,10 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 
 		// Execute query, save to resource global
 		// and check for errors
-		if (!$cfg['sql']['id'] = mysql_query($q, $cfg['sql']['con'])) {
+		if (!$cfg['sql']['id'] = mysqli_query($q, $cfg['sql']['con'])) {
 			sql_error('<strong>Bad SQL Query</strong> ('.$file.':'.$line.'):
 						'.htmlentities($q).'<br />
-						<strong>'.mysql_error().'</strong>');
+						<strong>'.mysqli_error().'</strong>');
 		}
 
 		// Save all query stats
@@ -194,7 +214,7 @@ function sql_array($id = -1) {
 	global $cfg;
 
 	if ($id !== -1) $cfg['sql']['id'] = $id;
-	return mysql_fetch_assoc($cfg['sql']['id']);
+	return mysqli_fetch_assoc($cfg['sql']['id']);
 }
 
 /*
@@ -274,13 +294,13 @@ function sql_track_end($db = FALSE) {
 }
 
 /*
- * See php.net/mysql_data_seek
+ * See php.net/mysqli_data_seek
  */
 function sql_data_seek($n, $id = -1) {
 	global $cfg;
 
 	if ($id !== -1) $cfg['sql']['id'] = $id;
-	mysql_data_seek($cfg['sql']['id'], $n);
+	mysqli_data_seek($cfg['sql']['id'], $n);
 }
 
 /*
@@ -304,17 +324,14 @@ function sql_nextid($col, $tbl) {
 function sql_insert_id($id = -1) {
 	global $cfg;
 
-	return ($id === -1) ? mysql_insert_id() : mysql_insert_id($id);
+	return ($id === -1) ? mysqli_insert_id() : mysqli_insert_id($id);
 }
 
 /*
- * Frees up memory from query
+ * Frees up memory from last query
  */
-function sql_free_result($id = -1) {
-	global $cfg;
-
-	if ($id !== -1) $cfg['sql']['id'] = $id;
-	return mysql_free_result($cfg['sql']['id']);
+function sql_free_result() {
+	return mysqli_free_result();
 }
 
 /*
@@ -326,7 +343,7 @@ function sql_num_rows($id = -1) {
 	global $cfg;
 
 	if ($id !== -1) $cfg['sql']['id'] = $id;
-	return mysql_num_rows($cfg['sql']['id']);
+	return mysqli_num_rows($cfg['sql']['id']);
 }
 
 /*
@@ -339,21 +356,6 @@ function sql_error($err, $halt = FALSE) {
 	trigger_error($err, E_USER_ERROR);
 
 	if ($halt) exit;
-}
-
-/* Displays menu link in admin */
-function sql_adminMenu() {
-	global $cfg;
-
-	// Only display item if email saving is enabled
-	// This is not stricly related to SQL module
-	if ($cfg['email_savedb']) {
-		/*return array(
-			'url' => '/admin/emails/',
-			'text' => 'System Emails',
-			'descrip' => 'View all raw emails sent through this system'
-		);*/
-	}
 }
 
 // EOF
