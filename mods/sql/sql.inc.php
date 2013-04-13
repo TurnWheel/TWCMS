@@ -74,7 +74,7 @@ function sql_connect($host, $user, $password = '', $name = '') {
 	}
 
 	// Select Database
-	if ($name !== '' && !mysqli_select_db($name)) {
+	if ($name !== '' && !mysqli_select_db($cfg['sql']['con'], $name)) {
 		mysqli_close($cfg['sql']['con']);
 		sql_error('Database could not be selected (DB: '.$name.')', TRUE);
 	}
