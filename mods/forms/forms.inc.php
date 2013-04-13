@@ -27,7 +27,7 @@ function forms_adminMenu() {
 	);
 
 	if (tw_isloaded('user')) {
-		$menu['perms'] = FORMS_U_ADMIN;
+		//$menu['perms'] = FORMS_U_ADMIN;
 	}
 
 	return $menu;
