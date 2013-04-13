@@ -24,21 +24,18 @@ pre {
 	margin: 0;
 	font-family: "Courier New", sans-serif;
 }
-#error {
-	border: solid 1px #000;
-	background-color: #F0F0F0;
-	margin: 0 auto;
+#e_error {
 	width: 500px;
 }
-#dump {
-	border: solid 1px #000;
-	background-color: #F0F0F0;
-	margin: 0 auto;
+#e_trace {
+	width: 500px;
+}
+#e_dump {
 	width: 600px;
 	padding: 2px;
 	padding-left: 5px;
 }
-#dump a {
+#e_dump a {
 	padding: 0;
 	margin: 0;
 	color: #000;
@@ -47,37 +44,46 @@ pre {
 	padding-left: 20px;
 	margin: 0;
 }
-</style>
-<script>
-function init() {
-	if (typeof(document.getElementsByTagName) == "undefined") return;
-
-	var a = null;
-	var elements = document.getElementsByTagName("div");
-
-	for(var i = 0; i != elements.length; ++i) {
-		if (elements[i].className != "array") continue;
-
-		a = document.createElement("a");
-		a.appendChild(document.createTextNode("Show"));
-
-		a.href = "javascript:void(0);";
-		a.onclick = function() {
-			var show = this.nextSibling.style.display == "none";
-			this.nextSibling.style.display = show ? "block" : "none";
-			this.replaceChild(document.createTextNode(show ? "Hide" : "Show"),this.firstChild);
-		};
-
-		elements[i].parentNode.insertBefore(a, elements[i]);
-		elements[i].style.display = "none";
-	}
+.box {
+	border: 1px solid #000;
+	background-color: #F0F0F0;
+	margin: 0 auto;
+	padding: 5px;
 }
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script>
+$(function() {
+	$('#e_dump div.array').each(function() {
+		var array = $(this);
+
+		var elm = $('<a href="#">Show</a>');
+		elm.click(function(e) {
+			e.preventDefault();
+			var self = $(this);
+			var sibling = self.next('div.array');
+			var hidden = sibling.is(':hidden');
+
+			if (hidden) {
+				sibling.show();
+				self.text('Hide');
+			}
+			else {
+				sibling.hide();
+				self.text('Show');
+			}
+		});
+
+		elm.insertBefore(array);
+		array.hide();
+	});
+});
 </script>
 </head>
 <body>
 	<div>
 	<h1>Error</h1>
-		<div id="error">
+		<div id="e_error" class="box">
 			<h2>Error Details</h2>
 			<strong>Error: </strong> {error_str}<br />
 			<strong>Errno:</strong> {error_num} ({error_name})<br />
@@ -85,7 +91,12 @@ function init() {
 			<strong>Line:</strong> {error_line}<br />
 		</div><br /><br />
 
-		<div id="dump">
+		<div id="e_trace" class="box">
+			<h2>Full Callstack (Backtrace)</h2>
+			{backtrace}
+		</div><br /><br />
+
+		<div id="e_dump" class="box">
 			<h2>Variable Dump</h2>
 			{htmldump}
 		</div>

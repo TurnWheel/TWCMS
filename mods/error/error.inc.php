@@ -58,6 +58,9 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	unset($errcontext['cfg']['sql']['pass'],
 		$errcontext['cfg']['sql']['user']);
 
+	// Save backtrace information
+	$backtrace = debug_backtrace();
+
 	// Generate variable dump
 	$dump = '';
 
@@ -72,7 +75,8 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 		'error_name' => $cfg['error']['vals'][$errno],
 		'error_file' => $errfile,
 		'error_line' => $errline,
-		'htmldump' => $dump
+		'htmldump' => $dump,
+		'backtrace' => print_r($backtrace, TRUE)
 	);
 
 	// Insert var dump into MySQL DB if enabled
@@ -84,7 +88,8 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 		$save = array(
 			'date' => NOW,
 			'error' => base64_encode(serialize($err_a)),
-			'dump' => base64_encode(serialize($errcontext))
+			'dump' => base64_encode(serialize($errcontext)),
+			'trace' => base64_encode(serialize($backtrace))
 		);
 
 		sql_query('INSERT INTO error ($keys) VALUES ($vals)',
@@ -219,7 +224,7 @@ function error_get($eid) {
 
 	if ($eid === 0) return FALSE;
 
-	sql_query('SELECT eid, error, dump, date, flags
+	sql_query('SELECT eid, error, dump, trace, date, flags
 		FROM error WHERE eid = "%d"
 		ORDER BY date DESC', $eid, __FILE__, __LINE__);
 
@@ -249,6 +254,10 @@ function error_get($eid) {
 	// Format: array($errstr, $errno, $errfile, $errline);
 	$err = html_escape(unserialize(base64_decode($e['error'])));
 
+	// Parse backtrace
+	$trace = $e['trace'] === '' ? array() :
+		unserialize(base64_decode($e['trace']));
+
 	return array(
 		// Make guess on error array
 		'error_str' => isset($err[0]) ? $err[0] : 'N/A',
@@ -258,6 +267,7 @@ function error_get($eid) {
 
 		'error' => htmlentities($e['error']),
 		'dump' => $dump,
+		'trace' => $trace,
 		'date' => (int) $e['date'],
 		'flags' => (int) $e['flags']
 	);
