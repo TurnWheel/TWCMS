@@ -61,11 +61,22 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 	// Save backtrace information
 	$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
-	// Generate variable dump
+	// Generate variable dump HTML
 	$dump = '';
 
 	foreach ($errcontext AS $key => $val) {
 		$dump .= error_parse_dump($val, $key);
+	}
+
+	// Generate trace HTML
+	$htmltrace = '';
+
+	foreach ($backtrace AS $num => $info) {
+		// Returns file path, excluding the "ROOTPATH" as defined by config
+		$file = str_replace(RPATH, '', $info['file']);
+
+		$htmltrace .= $num.': <strong>'.$info['function'].'</strong>'
+			.' ('.$file.':'.$info['line'].')<br />';
 	}
 
 	// Map of values for templates (email and html)
@@ -76,7 +87,7 @@ function error_handle($errno, $errstr, $errfile, $errline, $errcontext) {
 		'error_file' => $errfile,
 		'error_line' => $errline,
 		'htmldump' => $dump,
-		'backtrace' => print_r($backtrace, TRUE)
+		'htmltrace' => $htmltrace
 	);
 
 	// Insert var dump into MySQL DB if enabled
