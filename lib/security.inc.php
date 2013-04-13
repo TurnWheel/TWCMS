@@ -30,7 +30,8 @@ function escape($v, $html = FALSE) {
 		return $v;
 	}
 
-	return tw_isloaded('sql') && !$html ? mysql_real_escape_string($v)
+	return tw_isloaded('sql') && !$html
+			? mysqli_real_escape_string($cfg['sql']['con'], $v)
 			: htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 
