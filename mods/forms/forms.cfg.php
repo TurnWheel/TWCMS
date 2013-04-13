@@ -83,7 +83,7 @@ $cfg = array(
 
 /* Constants */
 if (tw_isloaded('user')) {
-	define('EVENT_U_ADMIN', U_ADMIN);
+	define('FORMS_U_ADMIN', U_ADMIN);
 }
 
 // EOF
