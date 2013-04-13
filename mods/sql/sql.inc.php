@@ -183,7 +183,7 @@ function sql_query($q, $vals = array(), $file = __FILE__, $line = __LINE__) {
 
 		// Execute query, save to resource global
 		// and check for errors
-		if (!$cfg['sql']['id'] = mysqli_query($q, $cfg['sql']['con'])) {
+		if (!$cfg['sql']['id'] = mysqli_query($cfg['sql']['con'], $q)) {
 			sql_error('<strong>Bad SQL Query</strong> ('.$file.':'.$line.'):
 						'.htmlentities($q).'<br />
 						<strong>'.mysqli_error($cfg['sql']['con']).'</strong>');
