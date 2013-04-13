@@ -105,6 +105,15 @@ function sql_close() {
  * with support for single strings and arrays
  *
  * All values are automatically escaped for MySQL input
+ *
+ * NOTE: This intentionally bypasses mysqli_prepare, because
+ * the standard prepare function is ugly, clumbsy, and has no useful
+ * features to speak of. This is a much more usable and simple alternative.
+ * 
+ * It is not without it's faults, however. This method relies heavily
+ * on printf string formats, which can cause issues with certain
+ * SQL syntaxes (such as LIKE "%%s%"). I have not yet come up with
+ * a workaround for these issues, but they are rare enough to ignore for now.
  */
 function sql_prepare($q, $vals) {
 	// Escape vals if it is a string or array
