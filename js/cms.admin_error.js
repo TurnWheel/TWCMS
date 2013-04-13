@@ -18,7 +18,7 @@ $(function() {
 
 
 $(function() {
-	$('#dump div.array').each(function() {
+	$('#e_dump div.array').each(function() {
 		var array = $(this);
 
 		var elm = $('<a href="#">Show</a>');
