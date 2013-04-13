@@ -92,7 +92,7 @@ function sql_close() {
 	// See if we need to free existing mysql query
 	if ($cfg['sql']['con']) {
 		if ($cfg['sql']['id']) {
-			@sql_free_result();
+			@sql_free_result($cfg['sql']['id']);
 		}
 
 		return mysqli_close($cfg['sql']['con']);
@@ -329,8 +329,11 @@ function sql_insert_id() {
 /*
  * Frees up memory from last query
  */
-function sql_free_result() {
-	return mysqli_free_result();
+function sql_free_result($id = -1) {
+	global $cfg;
+
+	if ($id !== -1) $cfg['sql']['id'] = $id;
+	return mysqli_free_result($cfg['sql']['id']);
 }
 
 /*
