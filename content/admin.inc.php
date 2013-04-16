@@ -21,12 +21,17 @@ else {
 $T['title'] = $T['header'] = 'Restricted Area';
 
 $T['content'] = '
-<p>
-	This is a restricted area. You must have ADMIN permissions to view this page.
-</p>';
+<div class="box notice">
+	<p>
+		<strong>NOTICE</strong><br />
+		This is a restricted area. All information accessible
+		through this tool is for administrative use only.<br />
+		Please use carefully.
+	</p>
+</div>';
 
 $T['content'] .= '
-<ul>';
+<ul style="list-style:none;">';
 
 $links = tw_event('adminMenu');
 foreach ($links AS $mod => $item) {
@@ -37,13 +42,17 @@ foreach ($links AS $mod => $item) {
 		if (!user_hasperm($item['perms'])) continue;
 	}
 
-	$descrip = isset($item['descrip']) ? ': '.$item['descrip'] : '';
+	$descrip = isset($item['descrip']) ? $item['descrip'] : '';
 
 	$T['content'] .= '
-	<li><a href="'.$item['url'].'">'.$item['text'].'</a>'.$descrip.'</li>';
+	<li class="box">
+		<a href="'.$item['url'].'" class="icon admin-'.$mod.'">'.$item['text'].'</a><br />
+		<p>'.$descrip.'</p>
+	</li>';
 }
 
 $T['content'] .= '
-</ul>';
+</ul>
+<div class="clear"></div>';
 
 // EOF

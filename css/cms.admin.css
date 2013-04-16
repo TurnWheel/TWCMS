@@ -9,3 +9,13 @@
 #content_inner {
 	width: 80%;
 }
+
+/* Admin Icons */
+
+.icon.admin-event:before { content: '\2691'; } /* '⚑' */
+.icon.admin-content:before { content: '\270e'; } /* '✎' */
+.icon.admin-files:before { content: '\e711'; } /* '' */
+.icon.admin-gallery:before { content: '🌄'; } /* '\1f304' */
+.icon.admin-user:before { content: '👥'; } /* '\1f465' */
+.icon.admin-list:before { content: '💼'; } /* '\1f4bc' */
+.icon.admin-forms:before { content: '📄'; } /* '\1f4c4' */

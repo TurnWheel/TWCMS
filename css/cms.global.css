@@ -11,6 +11,9 @@
 /* ColorBox plugin */
 @import "/css/jquery.colorbox.css";
 
+/* Custom Icon Set */
+@import "/css/cms._icons.css";
+
 /* Global Defintions */
 * {
 	margin: 0;
@@ -357,6 +360,25 @@ footer .copyright a:hover {
 }
 .box.error strong {
 	color: #FF0000;
+}
+
+/* List-item Boxes */
+li.box {
+	width: 45%;
+	float: left;
+	padding: 5px;
+	margin-right: 20px;
+	min-height: 125px;
+	cursor: pointer;
+}
+li.box:hover {
+	background: #CCC;
+	border-color: #0073ff;
+}
+
+/* Icons */
+.icon {
+	padding-left: 15px;
 }
 
 /* Colors */
