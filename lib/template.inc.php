@@ -247,6 +247,7 @@ function t_iserror($err, $key, $return = FALSE) {
  * Result: <option value="CA">California</option>
  *
  * $select: Which "value" to mark as selected
+ * Can be array of possible values, must match value of $opt
  *
  * $return: Return or print? Default FALSE (prints)
  * $nokey: If TRUE ignores array keys, and just uses value for both val/name
@@ -256,8 +257,16 @@ function t_select($opts, $select = '', $return = FALSE, $nokey = FALSE) {
 	foreach ($opts AS $key => $name) {
 		if ($nokey) $key = $name;
 
+		$marksel = FALSE;
+		if (is_array($select) && in_array($key, $select)) {
+			$marksel = TRUE;
+		}
+		elseif ($select == $key) {
+			$marksel = TRUE;
+		}
+
 		$html .= '
-		<option value="'.$key.'"'.($select == $key ? ' selected="selected"' : '')
+		<option value="'.$key.'"'.($marksel ? ' selected="selected"' : '')
 			.'>'.$name.'</option>';
 	}
 
