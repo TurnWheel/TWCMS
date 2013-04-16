@@ -346,15 +346,15 @@ if (!ISINDEX) {
 // Load root page resources
 // if checking parent, or if there is no parent
 if ($cfg['res_checkRoot'] || $P['root'] === $P['page']) {
-	t_addRes('css', $P['root'], 2);
-	t_addRes('js', $P['root'], 2);
+	t_addRes('css', $P['root'], 3);
+	t_addRes('js', $P['root'], 3);
 }
 
 // Check for current page resources
 // if current page different from root
 if ($P['root'] !== $P['page']) {
-	t_addRes('css', $P['page'], 2);
-	t_addRes('js', $P['page'], 2);
+	t_addRes('css', $P['page'], 4);
+	t_addRes('js', $P['page'], 4);
 }
 
 /*
