@@ -24,27 +24,39 @@ function upload_gethtml($name = '', $path = '', $url = '', $field = 'imgs', $max
 	$types = implode('|', $cfg['upload']['types']);
 	$size = $cfg['upload']['maxsize'];
 
-	$html = '<input type="hidden" name="MAX_FILE_SIZE" value="'.$size.'" />'."\n".
-		'<input type="file" class="multi" '.
+	$html = '<div class="upload-input">
+		<input type="hidden" name="MAX_FILE_SIZE" value="'.$size.'" />'.
+		"\n".'<input type="file" class="multi" '.
 		'name="'.$field.'[]" accept="'.$types.'" '.
-		'multiple="multiple" maxlength="'.$max.'" />';
+		'multiple="multiple" maxlength="'.$max.'" />
+		</div>';
 
 	// Check if we need to display existing images
 	if ($name !== '' && $path !== '' && $url !== '') {
-		$current = upload_get($name, $path, $url, FALSE);
+		$curr = upload_get($name, $path, $url, FALSE);
 
 		// If no images, nothing left to do
-		if ($current === FALSE) return $html;
+		if ($curr === FALSE) return $html;
 
-		foreach ($current AS $key => $imgs) {
+		// (Neat trick to move key to top of array)
+		// Move 'default' to top so it always appears first
+		if (isset($curr['default'])) {
+			$temp = array('default' => $curr['default']);
+			unset($curr['default']);
+			$curr = $temp + $curr;
+		}
+
+		foreach ($curr AS $key => $imgs) {
 			$thumb = $imgs['thumb'];
+			$default = $key === 'default';
+
 			$html .= '
-			<div class="upload-current-image">
+			<div class="upload-image">
 				<img src="'.$thumb.'" title="Image '.$key.'" alt="Image '.$key.'" /><br />
 
-				<input type="checkbox" name="defimg" id="upload-default-'.$key.
-				'" value="'.($key === 'default' ? 0 : $key).'"'.
-				($key === 'default' ? ' checked="checked"' : '').' />
+				<input type="radio" name="defimg" id="upload-default-'.$key.
+				'" value="'.($default ? 0 : $key).'"'.
+				($default ? ' checked="checked"' : '').' />
 				<label for="upload-default-'.$key.'">Default Image?</label><br />
 
 				<input type="checkbox" name="delimgs[]" value="'.$key.'" id="upload-delete-'.$key.'" />
@@ -94,6 +106,11 @@ function upload_get($name, $path, $url, $retdef = TRUE) {
 		$ext = $pinfo['extension'];
 
 		$num = str_replace('.thumb.'.$ext, '', $fname);
+
+		// Check for default image
+		if (strpos($fname, 'default.') !== FALSE) {
+			$num = 'default';
+		}
 
 		$images[$num]['thumb'] = $url.$name.'/'.$fname;
 	}
@@ -145,7 +162,7 @@ function upload_delete($name, $path, $key = 'default') {
  * Process and save images from a form
  * Generates all sizes and organizes into $path using $name as identifier
  */
-function upload_process($files, $name, $path, $default = 0, $delete = array()) {
+function upload_process($files, $name, $path, $default = '', $delete = array()) {
 	global $cfg;
 
 	// Verify inputs
@@ -165,25 +182,27 @@ function upload_process($files, $name, $path, $default = 0, $delete = array()) {
 		upload_delete($name, $path, $key);
 	}
 
-	foreach ($files['error'] AS $key => $error) {
-		if ($error === UPLOAD_ERR_OK) {
+	if (isset($files['error'])) {
+		foreach ($files['error'] AS $key => $error) {
+			if ($error === UPLOAD_ERR_OK) {
 
-			// Verify Extension with mime type
-			$ext = str_replace('image/', '', $files['type'][$key]);
+				// Verify Extension with mime type
+				$ext = str_replace('image/', '', $files['type'][$key]);
 
-			// If ext is not in allowed list, skip this entry
-			if (array_search($ext, $cfg['upload']['types']) === FALSE) {
-				continue;
-			}
+				// If ext is not in allowed list, skip this entry
+				if (array_search($ext, $cfg['upload']['types']) === FALSE) {
+					continue;
+				}
 
-			// Verify file size
-			$size = $files['size'][$key];
+				// Verify file size
+				$size = $files['size'][$key];
 
-			if ($size <= $cfg['upload']['maxsize']) {
-				$save[] = array(
-					'name' => $files['tmp_name'][$key],
-					'ext' => $ext === 'jpeg' ? 'jpg' : $ext
-				);
+				if ($size <= $cfg['upload']['maxsize']) {
+					$save[] = array(
+						'name' => $files['tmp_name'][$key],
+						'ext' => $ext === 'jpeg' ? 'jpg' : $ext
+					);
+				}
 			}
 		}
 	}
@@ -200,9 +219,15 @@ function upload_process($files, $name, $path, $default = 0, $delete = array()) {
 	}
 
 	// Rename files and resize
-	foreach ($save AS $key => $info) {
+	foreach ($save AS $k => $info) {
 		$tmp = $info['name'];
 		$ext = $info['ext'];
+		$key = upload_key($tmp);
+
+		// Set the first image as default
+		if ($k === 0) {
+			$default = $key;
+		}
 
 		$base = $dir.$key;
 		$fname = $base.'.orig.'.$ext;
@@ -229,6 +254,20 @@ function upload_process($files, $name, $path, $default = 0, $delete = array()) {
 	return $status;
 }
 
+/***
+ * Internal Helpers
+ ***/
+
+/*
+ * Returns unique key for that file.
+ * Note: This only works on original files,
+ * since the resizes share the key of the original.
+ */
+function upload_key($file) {
+	if (!is_file($file)) return FALSE;
+
+	return substr(sha1_file($file), 0, 8);
+}
 
 /*
  * Sets default image
@@ -241,18 +280,25 @@ function upload_default($name, $path, $key) {
 
 	$dir = $path.$name.'/';
 
-	$default = glob($dir.'default.thumb.*');
-	$first = glob($dir.$key.'.thumb.*');
+	$default = glob($dir.'default.*');
+	$first = glob($dir.$key.'.orig.*');
 
-	// If there is no default, and the default files exist
-	// then rename those files to 'default' explicitly
-	if ($default == array() && $first !== array()) {
+	// If the new "default" files exist, start processing
+	if ($first !== array()) {
+		// Is there an existing default file?
+		// Then rename them and simply remove the 'default.' prefix
+		if ($default !== array()) {
+			foreach ($default AS $k => $file) {
+				rename($file, str_replace('default.', '', $file));
+			}
+		}
+
 		$path = pathinfo($first[0]);
 		$ext = $path['extension'];
 
-		rename($dir.$key.'.thumb.'.$ext, $dir.'default.thumb.'.$ext);
-		rename($dir.$key.'.large.'.$ext, $dir.'default.large.'.$ext);
-		rename($dir.$key.'.orig.'.$ext, $dir.'default.orig.'.$ext);
+		rename($dir.$key.'.thumb.'.$ext, $dir.'default.'.$key.'.thumb.'.$ext);
+		rename($dir.$key.'.large.'.$ext, $dir.'default.'.$key.'.large.'.$ext);
+		rename($dir.$key.'.orig.'.$ext, $dir.'default.'.$key.'.orig.'.$ext);
 
 		return TRUE;
 	}
