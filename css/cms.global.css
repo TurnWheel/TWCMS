@@ -363,7 +363,7 @@ footer .copyright a:hover {
 }
 
 /* List-item Boxes */
-li.box {
+#content li.box {
 	width: 45%;
 	float: left;
 	padding: 5px;

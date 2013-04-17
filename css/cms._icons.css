@@ -19,13 +19,10 @@
 	margin-right: 0.2em;
 	padding-top: 0.2em;
 	text-align: center;
-	/* opacity .8 */
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1em;
-/* you can be more comfortable with increased icons size */
-/* Uncomment for 3D effect */
-/* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+	text-shadow: 2px 2px 2px rgba(127, 127, 127, 0.4);
 }
 
 .icon-flag:before { content: '\2691'; } /* '⚑' */
