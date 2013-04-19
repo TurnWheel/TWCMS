@@ -280,6 +280,8 @@ function user_login(&$U, $email, $pass, $remember = TRUE) {
  * Logout user by resetting session and destroying current sessiona
  */
 function user_logout() {
+	global $U;
+
 	$_SESSION = array();
 
 	session_destroy();
