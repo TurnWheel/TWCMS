@@ -282,6 +282,10 @@ function user_login(&$U, $email, $pass, $remember = TRUE) {
 function user_logout() {
 	global $U;
 
+	if (!ISUSER) {
+		return FALSE;
+	}
+
 	$_SESSION = array();
 
 	session_destroy();
